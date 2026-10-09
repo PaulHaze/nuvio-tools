@@ -1,10 +1,12 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "listio",
+	"name": "nuvio-tools",
 	"main": "@astrojs/cloudflare/entrypoints/server",
 	"compatibility_date": "2026-09-27",
 	"compatibility_flags": ["nodejs_compat"],
 	"workers_dev": true,
+	// Self-hosters: replace this domain with your own custom domain, or delete this line.
+	"routes": [{ "pattern": "nuvio-tools.com", "custom_domain": true }],
 	"vars": { "ADDON_ID": "org.listio.addon" },
 	"kv_namespaces": [
 		{

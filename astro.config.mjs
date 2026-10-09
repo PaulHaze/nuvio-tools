@@ -11,6 +11,7 @@ const nodeDev = process.env.NODE_DEV === '1';
 
 // https://astro.build/config
 export default defineConfig({
+	site: 'https://nuvio-tools.com',
 	output: 'server',
 	adapter: nodeDev
 		? undefined

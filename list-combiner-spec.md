@@ -134,7 +134,7 @@ One Stremio-protocol catalog addon, named **Listio**, installed once in Nuvio.
 ## 7. Stack & hosting
 
 Astro + TypeScript on Cloudflare Workers, Workers KV for storage, HTTP Basic Auth for login.
-Default `*.workers.dev` address; custom domain optional later. (ADR 0002)
+Served at `nuvio-tools.com` (a Worker custom domain). The `*.workers.dev` address stays enabled until the custom domain is verified, then is disabled. (ADR 0002)
 
 External services (all free keys): Trakt client ID, MDBList API key, TMDB API key.
 
