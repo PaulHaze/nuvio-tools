@@ -6,13 +6,14 @@ Astra's verdict is **FAIL**, with 1 critical finding. Opus raised 1 warning and 
 
 ## Issues
 
-### 1. Continue cannot recover a create that actually failed  [Critical] · raised by Astra
+### 1. Continue cannot recover a create that actually failed [Critical] · raised by Astra
 
-- **What it is:** Before sending the "create list" request, the import runner marks the create as uncertain (`uncertainCreate = true`). It leaves that flag set for *every* failed response. On every later Continue, the runner only looks for an existing list with that name:
+- **What it is:** Before sending the "create list" request, the import runner marks the create as uncertain (`uncertainCreate = true`). It leaves that flag set for _every_ failed response. On every later Continue, the runner only looks for an existing list with that name:
   - If the saved index has no single matching name, Continue throws.
   - If it has one, Continue fetches that list and throws when it doesn't exist.
 
   Neither path can repair the list or start creation again. Creating a list (`putList`) also takes two storage writes, index first and then `list:{id}`. If the second write fails, the index keeps an entry that points to no list.
+
 - **Evidence (Astra's reproduction):** Astra ran the committed runner against the real `POST /api/lists`, `GET /api/lists`, `GET/PUT /api/lists/{id}` and the real storage code, using an in-memory KV store that could inject faults. Only matching was stubbed, returning one confident Title. The list was named `Test` with input `Brick (2005)`.
   1. Make exactly the first `kv.put('list:test', …)` fail. All later storage operations are healthy.
   2. Import stops with the API's HTTP 500 error. Storage contains only `index`, and the run keeps no list ID.
@@ -20,6 +21,7 @@ Astra's verdict is **FAIL**, with 1 critical finding. Opus raised 1 warning and 
   4. Every further Continue repeats the same 404. The orphan is permanent, not a KV delay. Reopening the import page also rejects `Test` as an existing name, and that list's editor can't load.
 
   Failing the first `kv.put('index', …)` instead left nothing saved. Every Continue then only fetched the empty index and reported that the create outcome was still unknown. In both cases the one-off fault had passed, and no further create or save was attempted. The healthy control run completed with exactly one match request, one index read, one create and one save.
+
 - **Why it matters:** A short-lived create failure makes the promised Continue workflow useless. The user has to throw away the matched results and start again by hand. In the partial-index case, a broken list entry also has to be cleaned up, and it blocks reusing the name. The form stays locked the whole time the run is stopped. The existing uncertain-create tests only simulate a successful create that shows up late, so they don't catch these failures.
 - **How much:** Astra rated it Critical, because it fails the required interrupted-run recovery: Behaviour 6 and the "Done when" item "an interrupted run can be continued". Astra's assessment: the implementation note saying an absent or ambiguous result "only checks again" records this limitation. It doesn't satisfy or replace the original requirement, and the owner's answers didn't remove creation-failure recovery.
 - **Where:** `src/client/importList.ts:112-134`; storage behaviour at `src/storage/lists.ts:66-67`; locked form at `src/components/import/ImportFromText.tsx:33`.
@@ -31,7 +33,7 @@ Astra's verdict is **FAIL**, with 1 critical finding. Opus raised 1 warning and 
   - Test both failures through the real route and storage functions: before the index write, and between the index and list writes.
 - **Extra (Opus's note, an alternative angle):** One server-side option fits Astra's recommendation. Make `POST /api/lists` accept a client-generated id, or a repair flag, so that re-posting the same id is idempotent. The server would complete an index-only orphan and leave a fully written list untouched. Continue could then safely re-send the same request.
 
-### 2. Name-taken and rejected creates also lock the form  [Warning] · raised by Opus
+### 2. Name-taken and rejected creates also lock the form [Warning] · raised by Opus
 
 - **What it is:** Once the run stops, the name field, textarea, Upload and Import are all disabled. **Continue import** is the only button left. Two more failures can't be fixed by Continue:
   - **The name is taken by the time of creation.** The fresh index check throws `A list named "…" already exists. Open the existing list from Home.` Every Continue repeats the same check and fails the same way. The user can't rename, because the field is locked, so they have to reload and lose the match results.
@@ -41,20 +43,20 @@ Astra's verdict is **FAIL**, with 1 critical finding. Opus raised 1 warning and 
 - **Where:** `src/client/importList.ts:124-135`, `:154-162`; `src/components/import/ImportFromText.tsx:33`.
 - **Related:** #1: same stuck-after-create area, with different failure cases. The two auditors also suggest different fixes. Opus's fix keeps 5xx responses marked as uncertain, but Astra's reproduction shows that a 5xx from a failed storage write leaves the run permanently stuck. Opus's fix alone therefore wouldn't fix #1.
 - **Suggested fix (Opus):**
-  - In the POST `catch`, set `uncertainCreate` only when the error is *not* an `ApiError` with a 4xx status. That leaves network errors, aborts after sending and 5xx responses as uncertain.
+  - In the POST `catch`, set `uncertainCreate` only when the error is _not_ an `ApiError` with a 4xx status. That leaves network errors, aborts after sending and 5xx responses as uncertain.
   - When the run stops with `!state.list && !uncertainCreate`, unlock the name field and the form. That could be a new `'rejected'` phase, or a `locked` that ignores a list-less stop. The user can then rename and import again with the same matched results, or start over.
 
   Recommendation: do this together with whatever fixes #1. The unlock-and-rename path is useful in both.
 
-### 3. The no-matches message blames the list format when TMDB is the problem  [Suggestion] · raised by Opus
+### 3. The no-matches message blames the list format when TMDB is the problem [Suggestion] · raised by Opus
 
 - **What it is:** Some line failures are transient: a TMDB outage that survives the one retry, or a lookup failure that becomes `ambiguous` with an error reason. If every line fails that way, the run becomes final (`'empty'`) with a message like `TMDB is unavailable. No titles were found. Check the list format and try again.`
-- **Why it matters:** The recorded policy asks for the specific matching error *or* the format hint, not both. Here the format hint sends the user looking for a problem in their list that isn't there.
+- **Why it matters:** The recorded policy asks for the specific matching error _or_ the format hint, not both. Here the format hint sends the user looking for a problem in their list that isn't there.
 - **How much:** Minor wording issue. Import still works as the retry, because the form unlocks in `'empty'`. Raised by Opus.
 - **Where:** `src/client/importList.ts:87-99`.
 - **Suggested fix:** If any review row has `retry` set, or a reason other than `'No match'`, show only that reason plus "Try again shortly". Keep the format hint for genuine no-matches.
 
-### 4. A `client/` module depends on component code  [Suggestion] · raised by Opus
+### 4. A `client/` module depends on component code [Suggestion] · raised by Opus
 
 - **What it is:** The import runner in `src/client/` imports `createDraft` from `components/editor/draft.ts` and `ReviewLine` from `components/titles/TitleControls.tsx`.
 - **Why it matters:** Shared client logic now depends on UI component modules, the wrong way round. Sprint 13 will reuse this runner, so the tangle would spread.
@@ -62,7 +64,7 @@ Astra's verdict is **FAIL**, with 1 critical finding. Opus raised 1 warning and 
 - **Where:** `src/client/importList.ts:6-7`.
 - **Suggested fix:** Move `ReviewLine` (and optionally `AddStatus`) to `src/client/` or `src/domain/`, and import it from there into `TitleControls.tsx`. Inline `createDraft`, which is just `{ ...list, newIds: new Set() }`, or move `Draft`/`createDraft` to `src/domain/`.
 
-### 5. Error alerts show on an empty page  [Suggestion] · raised by Opus
+### 5. Error alerts show on an empty page [Suggestion] · raised by Opus
 
 - **What it is:** When the page opens with an empty name and empty text, it already shows "Enter a list name of 100 characters or fewer." and "Paste at least one title." as `role="alert"` errors.
 - **Why it matters:** The user sees errors before doing anything, and screen readers announce them straight away. The spec asks for validation "as the user types, pastes or uploads", not before.
@@ -70,7 +72,7 @@ Astra's verdict is **FAIL**, with 1 critical finding. Opus raised 1 warning and 
 - **Where:** `src/components/import/ImportFromText.tsx:99-116`, `:153-157`.
 - **Suggested fix:** Track whether each field has been touched, by an edit, an upload or an Import attempt. Show those two messages only after that. Import's disabled state stays the same.
 
-### 6. The existing list is looked up twice in the name-error link  [Suggestion] · raised by Opus
+### 6. The existing list is looked up twice in the name-error link [Suggestion] · raised by Opus
 
 - **What it is:** The "Open existing list" link runs `initialLists.some(...)` and then `initialLists.find(...)!` with the same trimmed, case-insensitive comparison inside the JSX.
 - **Why it matters:** Repeated logic that is harder to read, and the `!` assertion depends on the two checks staying in sync.

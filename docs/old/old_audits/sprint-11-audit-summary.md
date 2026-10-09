@@ -6,7 +6,7 @@ Astra's verdict is **PASS** with no findings: 0 critical, 0 warnings, 0 suggesti
 
 ## Issues
 
-### 1. The "choices scoped to their owner" test passes even when choices are shared  [Warning] · raised by Opus
+### 1. The "choices scoped to their owner" test passes even when choices are shared [Warning] · raised by Opus
 
 - **What it is:** Sprint 11 requires that a review choice made in one list's editor never resolves a line in another list. The test meant to prove this renders a second editor whose Draft is empty. The editor reuses a remembered choice only when that Title is already in the current Draft (active or Removed), so an empty Draft can never resolve the line, whether choices are shared or not.
 - **Why it matters:** The test can't catch the regression it exists to prevent. Opus checked this directly: with the per-editor memory temporarily replaced by one shared by every editor, all 7 tests in the file still passed. The production code is correct, because `resolutions` is per instance. Only the test coverage is missing.
@@ -14,10 +14,10 @@ Astra's verdict is **PASS** with no findings: 0 critical, 0 warnings, 0 suggesti
 - **Where:** `test/title-controls.test.tsx:309-314`; behaviour in `src/components/editor/TitleDiscovery.tsx:45`, `:52-66`.
 - **Suggested fix:** Let the test's `DiscoveryOwner` accept initial titles. Start the second owner with `title(22001)` already in its list (in `titles` or `removed`). Then assert `0 added · 0 already in list · 1 need a look`. A shared memory would produce `0 added · 1 already in list · 0 need a look`, so the test would fail as it should.
 
-### 2. The editor's main Search is now locked while an addition is pending  [Warning] · raised by Opus
+### 2. The editor's main Search is now locked while an addition is pending [Warning] · raised by Opus
 
-- **What it is:** Before, a candidate grid blocked a second click only on the *same* candidate. Now it allows one addition at a time per grid. The search box is also disabled while any addition from its grid is in progress. That applies to the editor's main Search panel too, not only the review rows' searches.
-- **Why it matters:** The sprint brief says the editor keeps its current search behaviour. The implementation notes describe locking "edits to *its review search*", which doesn't cover the main panel. The effect is small in practice, because lookups are usually cached and fast. Still, the behaviour differs from the brief and was never written down as a decision.
+- **What it is:** Before, a candidate grid blocked a second click only on the _same_ candidate. Now it allows one addition at a time per grid. The search box is also disabled while any addition from its grid is in progress. That applies to the editor's main Search panel too, not only the review rows' searches.
+- **Why it matters:** The sprint brief says the editor keeps its current search behaviour. The implementation notes describe locking "edits to _its review search_", which doesn't cover the main panel. The effect is small in practice, because lookups are usually cached and fast. Still, the behaviour differs from the brief and was never written down as a decision.
 - **How much:** A minor change in how the editor feels, not a bug. Opus rated it a Warning so the owner can confirm. Astra's coverage table marks "prevent repeated clicks" and "search behaves as before" as Satisfied (see Conflicts).
 - **Where:** `src/components/titles/TitleControls.tsx:77` (input disabled), `:157` (one-at-a-time guard), `:226` (buttons disabled).
 - **Suggested fix:** A judgement call with two options:
@@ -26,7 +26,7 @@ Astra's verdict is **PASS** with no findings: 0 critical, 0 warnings, 0 suggesti
 
   Recommendation: (a), unless the owner notices the lock in normal use. It is simpler, and it guards Sprint 12's async saves.
 
-### 3. Two explanatory comments were dropped from the match loop  [Suggestion] · raised by Opus
+### 3. Two explanatory comments were dropped from the match loop [Suggestion] · raised by Opus
 
 - **Correction (Opus, after the audit):** The original Opus finding listed six lost comments. Four of them were never lost: in `api.ts:26`, `TitleControls.tsx:121`, `:129-130` and `:149`, and `TitleDiscovery.tsx:44`. The file view Opus audited from had `//` comments stripped by a token-saving shell filter (RTK). That also shifted some Opus line numbers in `TitleControls.tsx` and `TitleDiscovery.tsx`, which are corrected throughout this summary to match commit `e2db8d6`. Only the two `matchLines.ts` comments below were actually dropped.
 - **What it is:** The old editor match loop explained two decisions that the new `matchLines` module lost: that lines with a transient TMDB error get one more try at the end, and that a transiently failed lookup keeps its candidate for review.
@@ -35,7 +35,7 @@ Astra's verdict is **PASS** with no findings: 0 critical, 0 warnings, 0 suggesti
 - **Where:** `src/client/matchLines.ts:57-74` (lookup failure handling and the retry condition).
 - **Suggested fix:** Restore both comments above the lookup `catch` and the retry condition.
 
-### 4. `src/components/editor/api.ts` is now a redundant re-export  [Suggestion] · raised by Opus
+### 4. `src/components/editor/api.ts` is now a redundant re-export [Suggestion] · raised by Opus
 
 - **What it is:** The file now only re-exports `api` and `ApiError` from `src/client/api.ts`. Its only remaining importer is `Editor.tsx:22`.
 - **Why it matters:** The same helper now has two import paths. A later edit could import from either, and the extra file adds a little indirection.
@@ -43,15 +43,15 @@ Astra's verdict is **PASS** with no findings: 0 critical, 0 warnings, 0 suggesti
 - **Where:** `src/components/editor/api.ts:1`, `src/components/editor/Editor.tsx:22`.
 - **Suggested fix:** Change `Editor.tsx` to import from `../../client/api.ts` and delete `src/components/editor/api.ts`.
 
-### 5. The match loop counts a line as completed before its result callback succeeds  [Suggestion] · raised by Opus
+### 5. The match loop counts a line as completed before its result callback succeeds [Suggestion] · raised by Opus
 
 - **What it is:** `matchLines` records a line as completed, then awaits the caller's `onResult` callback. The callback can be async, which invites Sprint 12 to save each Title inside it. If that save fails, the `MatchStopped` error still lists the line as completed, even though the caller never committed it.
 - **Why it matters:** A future import page could tell the user a line was handled when it wasn't. The editor is not affected, because its callback is synchronous and can't fail.
 - **How much:** No current impact. This is a trap for the next sprint. Raised by Opus.
 - **Where:** `src/client/matchLines.ts:78-79`.
-- **Suggested fix:** Record the line as completed only after `onResult` resolves. Alternatively, state in the doc comment that "completed" means *matched*, not *committed*. Recommendation: move the push. It's a one-line change, and the meaning then holds for every caller.
+- **Suggested fix:** Record the line as completed only after `onResult` resolves. Alternatively, state in the doc comment that "completed" means _matched_, not _committed_. Recommendation: move the push. It's a one-line change, and the meaning then holds for every caller.
 
-### 6. `MatchStopped` declares its own `cause` and hides the built-in one  [Suggestion] · raised by Opus
+### 6. `MatchStopped` declares its own `cause` and hides the built-in one [Suggestion] · raised by Opus
 
 - **What it is:** The error class declares its own `readonly cause` field instead of passing the cause to the standard `Error` constructor.
 - **Why it matters:** Standard error chaining is the built-in way an error records "this was caused by that". Devtools and loggers display it automatically, and a hand-rolled field partly bypasses that.
@@ -59,7 +59,7 @@ Astra's verdict is **PASS** with no findings: 0 critical, 0 warnings, 0 suggesti
 - **Where:** `src/client/matchLines.ts:13-19`.
 - **Suggested fix:** Use `super(message, { cause })` and drop the `readonly cause` parameter property.
 
-### 7. Things for Sprint 12 to know about the shared review controls  [Suggestion] · raised by Opus
+### 7. Things for Sprint 12 to know about the shared review controls [Suggestion] · raised by Opus
 
 - **What it is:** Two limits that are safe in the editor but could bite an async caller like the import page:
   - **Rows are identified by position.** Need a look reports which row was resolved by its position in the list, and the callback is captured when the user clicks. If an async save is still running and the caller replaces or reorders its rows, the wrong row gets resolved.
@@ -69,7 +69,7 @@ Astra's verdict is **PASS** with no findings: 0 critical, 0 warnings, 0 suggesti
 - **Where:** `src/components/titles/TitleControls.tsx:244-270`.
 - **Suggested fix:** Give each row a stable id from the owner (e.g. line key plus position) instead of relying on position alone. Optionally share one "currently adding" set, keyed by candidate, across all rows of a Need a look. At minimum, note both limits in the Sprint 12 brief.
 
-### 8. The shared identity cache has no reset for tests  [Suggestion] · raised by Opus
+### 8. The shared identity cache has no reset for tests [Suggestion] · raised by Opus
 
 - **What it is:** The cache that maps each TMDB result to its IMDb ID is module-wide and has no way to clear it. Tests avoid leaking state into each other only because each one uses unique IDs (21001…, 22001…).
 - **Why it matters:** A future test that reuses an ID would quietly get a cached answer from an earlier test. That can produce confusing passes or failures that depend on test order.
@@ -83,7 +83,7 @@ Astra's verdict is **PASS** with no findings: 0 critical, 0 warnings, 0 suggesti
 **Overlaps to judge:** none noted. Astra raised no findings.
 **Conflicts to resolve:**
 
-- **The owner-isolation test (#1):** Astra's coverage table says `test/title-controls.test.tsx:277` "verifies a second owner does not inherit the first owner's choice". Opus showed by mutation that the test passes even with the memory shared across editors. Opus agrees the *code* is correctly scoped. The disagreement is only about whether the *test* proves it.
+- **The owner-isolation test (#1):** Astra's coverage table says `test/title-controls.test.tsx:277` "verifies a second owner does not inherit the first owner's choice". Opus showed by mutation that the test passes even with the memory shared across editors. Opus agrees the _code_ is correctly scoped. The disagreement is only about whether the _test_ proves it.
 - **Search behaviour (#2):** Astra marks "Preserve Search … labels" and "prevent repeated clicks" as Satisfied and raises nothing about the main Search panel. Opus flags the new one-at-a-time lock and the disabled main search box as a change from the brief that the owner should confirm. Astra's table covers labels and repeated-click prevention. It doesn't address whether the stricter lock counts as a change in behaviour, so this may be a coverage gap rather than a direct contradiction.
 
 ## Auditor notes

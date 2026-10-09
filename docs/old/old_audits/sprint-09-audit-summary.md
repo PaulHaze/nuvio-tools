@@ -8,7 +8,8 @@ Astra gave a **PASS** verdict with no findings: 0 critical, 0 warnings, 0 sugges
 
 ## Issues
 
-### 1. Mobile IMDb links (`m.imdb.com`) are rejected  [Warning] · raised by Opus
+### 1. Mobile IMDb links (`m.imdb.com`) are rejected [Warning] · raised by Opus
+
 - **What it is:** The URL detector accepts only `imdb.com` and `www.imdb.com` as IMDb hosts. A list link from IMDb's mobile site or share sheet looks like `https://m.imdb.com/list/ls…/`, and pasting one shows "Unsupported source URL".
 - **Why it matters:** It is the same list with the same ID, and the code already rewrites the URL to the `www.imdb.com` form. A user pasting from a phone gets an error for no real reason. The sprint task says "recognise `imdb.com/list/ls…`", and a mobile share link is a reasonable reading of that.
 - **How much it matters:** Moderate. It is a usability gap for mobile-sourced links, not a data or security problem.
@@ -16,7 +17,8 @@ Astra gave a **PASS** verdict with no findings: 0 critical, 0 warnings, 0 sugges
 - **Coverage note:** Astra's task-coverage table says detection "accepts the IMDb host… and rejects unrelated URLs". It did not mention `m.imdb.com` either way. This is a difference in what each auditor looked at, not a direct contradiction.
 - **Suggested fix:** Change the check to `hostIs(parsed.hostname, 'imdb.com', 'm.imdb.com')`. Add `https://m.imdb.com/list/ls004285275/` to the "recognizes and canonicalizes" test cases at `test/imdb.test.ts:26`.
 
-### 2. IMDb failures leave no trace in the logs  [Suggestion] · raised by Opus
+### 2. IMDb failures leave no trace in the logs [Suggestion] · raised by Opus
+
 - **What it is:** When an IMDb import fails, the route turns every cause into the same friendly "upload a CSV instead" response and discards the actual error. Causes include a bad HTTP status, GraphQL errors, a changed response shape and a timeout.
 - **Why it matters:** IMDb's GraphQL endpoint is unofficial. It depends on browser-style client headers (`imdb-web-next`) and a raw query, so it is the Source most likely to break without warning. When it breaks, Cloudflare Workers logs will show nothing, and diagnosing the problem means reproducing it by hand.
 - **How much it matters:** Low today, but it makes a likely future breakage harder to diagnose.
@@ -24,7 +26,8 @@ Astra gave a **PASS** verdict with no findings: 0 critical, 0 warnings, 0 sugges
 - **Related:** #3 involves the same `if (imdb)` error branch, but a different concern (the response contract rather than logging). Kept separate for the owner to judge.
 - **Suggested fix:** In the `if (imdb)` branch, before returning, add `console.warn('IMDb import failed', error instanceof Error ? error.message : error)`. This is safe because the errors thrown in `src/sources/imdb.ts` never include upstream response bodies.
 
-### 3. The server's `fallback: 'imdb-csv'` signal is never read  [Suggestion] · raised by Opus
+### 3. The server's `fallback: 'imdb-csv'` signal is never read [Suggestion] · raised by Opus
+
 - **What it is:** The route sends `fallback: 'imdb-csv'` in its error response, but the editor ignores it. The editor shows the CSV upload whenever an IMDb row fails (`site === 'imdb'`), whatever the reason. That includes being offline, a Worker 500, or an expired Basic Auth session.
 - **Why it matters:** The response field is an unused contract. It suggests the server controls when the fallback appears, but it does not. In practice the effect is mild: CSV parsing runs in the browser, so offering the upload even when offline still works.
 - **How much it matters:** Low. This is tidiness and contract clarity, not a user-facing bug.
@@ -32,8 +35,9 @@ Astra gave a **PASS** verdict with no findings: 0 critical, 0 warnings, 0 sugges
 - **Related:** #2 involves the same route error branch with a different concern. Kept separate.
 - **Suggested fix:** There are two options. (a) Remove `fallback` from the response and keep the client's site-based rule. (b) Make `api()` expose the parsed error body on `ApiError` and set `csvFallback` from it. Opus recommends (a) as the simpler option.
 
-### 4. An empty IMDb list counts as a successful import, which may hide a non-title list  [Suggestion] · raised by Opus
-- **What it is:** If IMDb's first page is empty and says there are no more pages, the import succeeds with 0 Titles. This is deliberate and tested. However, IMDb *people* lists and *image* lists also use `ls…` IDs. If IMDb returns an empty title list for those, rather than an error, the user sees "0 Titles" and is not offered the CSV upload.
+### 4. An empty IMDb list counts as a successful import, which may hide a non-title list [Suggestion] · raised by Opus
+
+- **What it is:** If IMDb's first page is empty and says there are no more pages, the import succeeds with 0 Titles. This is deliberate and tested. However, IMDb _people_ lists and _image_ lists also use `ls…` IDs. If IMDb returns an empty title list for those, rather than an error, the user sees "0 Titles" and is not offered the CSV upload.
 - **Why it matters:** Someone who pastes a non-title list gets a quiet empty result instead of a clear fallback. The "0 Titles" message is at least accurate.
 - **How much it matters:** Low, and **unverified**. Opus did not check how IMDb actually responds for a people list.
 - **Where:** `src/sources/imdb.ts:146` (terminal-page return), tested at `test/imdb.test.ts:126`.
@@ -41,6 +45,7 @@ Astra gave a **PASS** verdict with no findings: 0 critical, 0 warnings, 0 sugges
 - **Suggested fix:** First, run a quick live check against a public IMDb people list. If it returns empty edges, treat "0 Titles and 0 skips on page 1" as a failure, so the CSV fallback appears. If it returns an error, no change is needed. Leaving it as is is also a valid choice, given the honest message.
 
 ---
+
 **Tally:** 4 issues total (4 from Opus, 0 from Astra): 1 warning, 3 suggestions.
 **Overlaps to judge:** #2 ↔ #3 (same route error branch, different concerns: logging vs. response contract).
 **Conflicts to resolve:** No direct factual disagreements. The two overall verdicts differ: Astra says "no material defects or improvement recommendations", while Opus raises 1 warning and 3 suggestions. Both agree there are no critical defects and that the sprint's tasks and acceptance criteria are met.
@@ -48,6 +53,7 @@ Astra gave a **PASS** verdict with no findings: 0 critical, 0 warnings, 0 sugges
 ## Auditor notes
 
 ### Astra
+
 - **Verdict:** PASS. Sprint 09 meets its implementation and acceptance requirements with reasonable confidence, and no implementation follow-up is required.
 - **Scope reviewed:** The full 13-file diff (`b3cd92d..b379942`), including every fixture and all 1,764 lines of `test/fixtures/imdb-live.json`. The working tree had unrelated uncommitted changes only in `docs/movie_lists/midnight_movies.md` and `docs/sprints/11_Import_Multiple_Lists_From_Text.md`.
 - **Task coverage (all marked Satisfied):**
@@ -77,6 +83,7 @@ Astra gave a **PASS** verdict with no findings: 0 critical, 0 warnings, 0 sugges
   - A cross-tab "changed elsewhere" alert appeared after a successful save. That logic is unchanged by this commit, so it is not a Sprint 09 defect.
 
 ### Opus
+
 - **Scope reviewed:** `src/sources/imdb.ts`, `src/sources/detect.ts`, `src/pages/api/sources/fetch.ts`, `src/components/editor/Editor.tsx` and `test/imdb.test.ts`. Fixtures and `imdb-README.md` were read as context. Opus reviewed the source only and did not run tests or call IMDb live. Astra did both.
 - **Positive observations:**
   - No partial imports. Every failure path throws, and the second-page 403 test confirms the upstream body does not leak (`test/imdb.test.ts:214`).

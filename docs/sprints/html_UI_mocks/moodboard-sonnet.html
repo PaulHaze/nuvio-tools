@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nuvio Tools — Design Mood Board (Sonnet)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Inter:wght@400..700&family=Sora:wght@400..700&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&family=Outfit:wght@400..700&family=Manrope:wght@400..700&family=Syne:wght@600..800&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   1. TOKENS  (edit values here)
+   ========================================================= */
+:root {
+  color-scheme: dark;
+
+  /* Brand (Home) — never changes */
+  --brand-from: #4f46e5;
+  --brand-to: #8b5cf6;
+  --brand-text-from: #818cf8;   /* lighter pair, for gradient text on dark */
+  --brand-text-to: #c084fc;
+  --brand-gradient: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+  --brand-text-gradient: linear-gradient(90deg, var(--brand-text-from), var(--brand-text-to));
+
+  /* Neutrals: default = tinted navy */
+  --bg: #070a1c;
+  --surface-1: #0d1230;
+  --surface-2: #151b42;
+  --border: #252c5a;
+  --border-strong: #3a4380;
+  --text: #eceefb;
+  --text-muted: #9ba3cc;
+
+  /* Default accent = brand (outside any data-tool) */
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-tint: rgba(99,102,241,.14);
+  --accent-vivid: #8b5cf6;       /* neon colour for glows / aurora */
+  --accent-text: #a5b4fc;        /* accent used as text/link on dark */
+  --on-accent: #ffffff;
+
+  /* Shape + fonts */
+  --radius: 10px;
+  --radius-sm: calc(var(--radius) * .6);
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-text: "Inter", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  /* Effect switches (set by control panel) */
+  --glow-pct: 22%;               /* off 0 / subtle 22 / strong 48 */
+  --glass-blur: 14px;
+  --card-bg-mix: 52%;            /* glass: surface % over transparent. solid = 100% */
+  --border-accent-pct: 0%;       /* hairline 0 / accent-tinted 45 */
+  --aurora-opacity: 1;
+  --pattern: none;
+  --pattern-size: auto;
+}
+/* Derived tokens: re-evaluated inside every data-tool scope */
+:root, [data-tool] {
+  --accent-glow: color-mix(in srgb, var(--accent-vivid) var(--glow-pct), transparent);
+  --accent-glow-hard: color-mix(in srgb, var(--accent-vivid) calc(var(--glow-pct) * 1.8), transparent);
+  --card-border: color-mix(in srgb, var(--accent-vivid) var(--border-accent-pct), var(--border));
+  --card-bg: color-mix(in srgb, var(--surface-1) var(--card-bg-mix), transparent);
+  --shadow-glow: 0 0 0 1px var(--accent-glow), 0 0 28px -4px var(--accent-glow);
+}
+/* Tool accents — swap via data-tool */
+[data-tool="listio"] {
+  --accent: #14b8a6; --accent-hover: #2dd4bf; --accent-tint: rgba(20,184,166,.13);
+  --accent-vivid: #22d3ee; --accent-text: #5eead4; --on-accent: #031a1a;
+}
+[data-tool="artnuvio"] {
+  --accent: #2563eb; --accent-hover: #1d4ed8; --accent-tint: rgba(59,130,246,.15);
+  --accent-vivid: #3b82f6; --accent-text: #93c5fd; --on-accent: #ffffff;
+}
+[data-tool="collectio"] {
+  --accent: #c026d3; --accent-hover: #a21caf; --accent-tint: rgba(217,70,239,.15);
+  --accent-vivid: #e879f9; --accent-text: #f0abfc; --on-accent: #ffffff;
+}
+
+/* Control-panel driven switches */
+[data-bg="neutral"] {
+  --bg: #0a0a0f; --surface-1: #111118; --surface-2: #1a1a24;
+  --border: #2a2a38; --border-strong: #3a3a50; --text: #e8e8f0; --text-muted: #9494b0;
+}
+[data-font="1"] { --font-display: "Space Grotesk", sans-serif; --font-text: "Inter", sans-serif; --font-mono: "Geist Mono", monospace; }
+[data-font="2"] { --font-display: "Sora", sans-serif;          --font-text: "Inter", sans-serif; --font-mono: "Geist Mono", monospace; }
+[data-font="3"] { --font-display: "Geist", sans-serif;         --font-text: "Geist", sans-serif; --font-mono: "Geist Mono", monospace; }
+[data-font="4"] { --font-display: "Outfit", sans-serif;        --font-text: "Manrope", sans-serif; --font-mono: "Geist Mono", monospace; }
+[data-font="5"] { --font-display: "Syne", sans-serif;          --font-text: "Inter", sans-serif; --font-mono: "Geist Mono", monospace; }
+[data-radius="sharp"]  { --radius: 4px; }
+[data-radius="medium"] { --radius: 10px; }
+[data-radius="soft"]   { --radius: 16px; }
+[data-glass="off"] { --glass-blur: 0px; --card-bg-mix: 100%; }
+[data-glow="off"]    { --glow-pct: 0%; }
+[data-glow="subtle"] { --glow-pct: 22%; }
+[data-glow="strong"] { --glow-pct: 48%; }
+[data-border="accent"] { --border-accent-pct: 45%; }
+[data-aurora="off"] { --aurora-opacity: 0; }
+[data-pattern="grid"]  { --pattern: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); --pattern-size: 44px 44px; }
+[data-pattern="dots"]  { --pattern: radial-gradient(rgba(255,255,255,.12) 1px, transparent 1.2px); --pattern-size: 22px 22px; }
+[data-pattern="noise"] { --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"); --pattern-size: 160px 160px; }
+
+/* =========================================================
+   2. BASE
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: var(--font-text); font-size: 16px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+body::before {   /* background pattern */
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: var(--pattern); background-size: var(--pattern-size);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 20%, #000 20%, rgba(0,0,0,.35) 100%);
+          mask-image: radial-gradient(ellipse at 50% 20%, #000 20%, rgba(0,0,0,.35) 100%);
+  opacity: .9;
+}
+[data-pattern="noise"] body::before { opacity: .09; -webkit-mask-image: none; mask-image: none; }
+.page { position: relative; z-index: 1; }
+h1,h2,h3,h4,p { margin: 0; }
+h1,h2,h3,h4,.display { font-family: var(--font-display); letter-spacing: -.02em; }
+.mono { font-family: var(--font-mono); }
+a { color: var(--accent-text); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; border-radius: var(--radius-sm); }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+.gradient-text { background: var(--brand-text-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.eyebrow { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); }
+
+/* Aurora: blurred colour pools behind a section */
+.aurora-host { position: relative; isolation: isolate; }
+.aurora-host::before, .aurora-host::after {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  width: 60%; aspect-ratio: 1; border-radius: 50%; filter: blur(70px);
+  opacity: calc(var(--aurora-opacity) * .30);
+  transition: opacity .4s;
+}
+.aurora-host::before { left: -8%; top: -30%; background: radial-gradient(circle, var(--accent-vivid), transparent 65%); }
+.aurora-host::after  { right: -10%; bottom: -35%; background: radial-gradient(circle, var(--accent), transparent 65%); opacity: calc(var(--aurora-opacity) * .22); }
+.aurora-host.brand { --accent: var(--brand-from); --accent-vivid: var(--brand-to); }
+
+/* =========================================================
+   3. COMPONENTS
+   ========================================================= */
+.card {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: calc(var(--radius) + 4px);
+  -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 0 22px -8px var(--accent-glow);
+  transition: border-color .2s, box-shadow .25s, transform .25s;
+}
+.btn {
+  font: 600 14px/1 var(--font-text); padding: 12px 18px; border-radius: var(--radius);
+  border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+  transition: background .15s, box-shadow .2s, transform .1s, border-color .15s;
+}
+.btn-primary { background: var(--accent); color: var(--on-accent); box-shadow: 0 6px 22px -6px var(--accent-glow-hard), inset 0 1px 0 rgba(255,255,255,.22); }
+.btn-primary:hover { background: var(--accent-hover); box-shadow: 0 8px 30px -4px var(--accent-glow-hard), inset 0 1px 0 rgba(255,255,255,.22); }
+.btn-primary:active { transform: translateY(1px) scale(.985); box-shadow: 0 2px 10px -4px var(--accent-glow-hard); filter: brightness(.92); }
+.btn-ghost { background: transparent; color: var(--accent-text); border-color: color-mix(in srgb, var(--accent-vivid) 40%, var(--border)); }
+.btn-ghost:hover { background: var(--accent-tint); border-color: var(--accent-vivid); box-shadow: var(--shadow-glow); }
+.btn-ghost:active { transform: translateY(1px); background: color-mix(in srgb, var(--accent-vivid) 24%, transparent); }
+.btn-brand { background: var(--brand-gradient); color: #fff; box-shadow: 0 8px 28px -8px rgba(139,92,246,.7), inset 0 1px 0 rgba(255,255,255,.25); }
+.btn-brand:hover { filter: brightness(1.12); }
+.btn-brand:active { transform: translateY(1px); filter: brightness(.95); }
+.badge { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1 var(--font-text); padding: 5px 10px; border-radius: 999px; background: var(--accent-tint); color: var(--accent-text); border: 1px solid color-mix(in srgb, var(--accent-vivid) 30%, transparent); }
+.badge.dim { background: rgba(255,255,255,.05); color: var(--text-muted); border-color: var(--border); }
+.badge i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-vivid); box-shadow: 0 0 8px var(--accent-vivid); }
+.field { display: grid; gap: 6px; }
+.field > label, .label { font: 600 12px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); display: flex; justify-content: space-between; }
+.input, .select {
+  width: 100%; font: 400 14px var(--font-text); color: var(--text); background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: var(--radius); padding: 11px 12px; transition: border-color .15s, box-shadow .15s;
+}
+.input::placeholder { color: #7f87b0; }
+.input:hover, .select:hover { border-color: var(--border-strong); }
+.input:focus-visible, .select:focus-visible { outline: none; border-color: var(--accent-vivid); box-shadow: 0 0 0 3px var(--accent-glow-hard); }
+.select { appearance: none; padding-right: 34px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%239ba3cc' stroke-width='2'%3E%3Cpath d='m1 1 5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+.select option { background: var(--surface-2); }
+/* Range slider: fill driven by --val (0-100) set from JS */
+.range { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 99px; outline-offset: 6px; --val: 50;
+  background: linear-gradient(90deg, var(--accent) calc(var(--val) * 1%), var(--surface-2) calc(var(--val) * 1%)); box-shadow: inset 0 0 0 1px var(--border); cursor: pointer; }
+.range::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 3px solid var(--accent); box-shadow: 0 0 12px var(--accent-glow-hard); transition: transform .15s; }
+.range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid var(--accent); box-shadow: 0 0 12px var(--accent-glow-hard); }
+.range:hover::-webkit-slider-thumb { transform: scale(1.15); }
+.range:active::-webkit-slider-thumb { transform: scale(.95); }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 14px; }
+.toggle { appearance: none; -webkit-appearance: none; width: 42px; height: 24px; border-radius: 99px; background: var(--surface-2); border: 1px solid var(--border-strong); position: relative; cursor: pointer; transition: background .2s, box-shadow .2s; flex: none; }
+.toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #c9cdea; transition: transform .2s, background .2s; }
+.toggle:checked { background: var(--accent); border-color: var(--accent-vivid); box-shadow: 0 0 14px var(--accent-glow-hard); }
+.toggle:checked::after { transform: translateX(18px); background: var(--on-accent); }
+.icon { width: 46px; height: 46px; border-radius: calc(var(--radius) + 2px); display: grid; place-items: center; color: var(--accent-text);
+  background: linear-gradient(145deg, var(--accent-tint), rgba(255,255,255,.02)); border: 1px solid color-mix(in srgb, var(--accent-vivid) 35%, transparent); box-shadow: 0 0 20px -4px var(--accent-glow); }
+.icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* =========================================================
+   4. PAGE SECTIONS
+   ========================================================= */
+.site-header { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid transparent;
+  background: linear-gradient(90deg, rgba(79,70,229,.22), rgba(139,92,246,.14)), color-mix(in srgb, var(--bg) 78%, transparent);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+.site-header::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--brand-gradient); box-shadow: 0 0 16px rgba(139,92,246,.7); }
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.logo { display: flex; align-items: center; gap: 11px; font: 700 20px var(--font-display); letter-spacing: -.02em; color: var(--text); }
+.logo:hover { text-decoration: none; }
+.logo-mark { width: 30px; height: 30px; border-radius: calc(var(--radius) * .8); background: var(--brand-gradient); display: grid; place-items: center; box-shadow: 0 0 20px rgba(139,92,246,.55), inset 0 1px 0 rgba(255,255,255,.35); }
+.logo-mark svg { width: 15px; height: 15px; fill: #fff; margin-left: 2px; }
+nav { display: flex; gap: 6px; }
+nav a { color: var(--text-muted); font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: var(--radius-sm); }
+nav a:hover { color: var(--text); background: rgba(255,255,255,.05); text-decoration: none; }
+nav a[aria-current] { color: #c4b5fd; }
+
+.hero { padding: 96px 0 72px; text-align: center; }
+.hero h1 { font-size: clamp(36px, 6vw, 68px); line-height: 1.04; font-weight: 700; max-width: 880px; margin: 18px auto 0; }
+.hero p.tag { font-size: 18px; color: var(--text-muted); max-width: 560px; margin: 20px auto 32px; }
+.hero .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.hero .btn { padding: 15px 26px; font-size: 15px; }
+
+.tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; padding-bottom: 88px; }
+.tool-card { padding: 26px; display: grid; gap: 14px; align-content: start; position: relative; color: var(--text); }
+.tool-card:hover { text-decoration: none; border-color: var(--accent-vivid); transform: translateY(-3px); box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 0 0 1px var(--accent-glow), 0 12px 44px -8px var(--accent-glow-hard); }
+.tool-card h3 { font-size: 24px; font-weight: 650; }
+.tool-card p { color: var(--text-muted); font-size: 15px; }
+.tool-card .more { font: 600 14px var(--font-text); color: var(--accent-text); margin-top: 6px; }
+.tool-card .step { position: absolute; top: 22px; right: 24px; font: 500 13px var(--font-mono); color: var(--text-muted); }
+
+section.block { padding: 56px 0; }
+.block-head { margin-bottom: 30px; }
+.block-head h2 { font-size: 32px; font-weight: 650; margin-top: 8px; }
+.block-head p { color: var(--text-muted); margin-top: 8px; max-width: 620px; }
+
+.scale { padding: 8px 28px; }
+.scale-row { display: grid; grid-template-columns: 1fr 170px; align-items: baseline; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+.scale-row:last-child { border-bottom: 0; }
+.scale-row .meta { font: 500 12px var(--font-mono); color: var(--text-muted); text-align: right; }
+.scale-row > :first-child { overflow: hidden; text-overflow: ellipsis; }
+
+.specimens { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: start; }
+.specimen { padding: 22px; display: grid; gap: 18px; }
+.specimen .tool-name { display: flex; align-items: center; gap: 10px; }
+.specimen h3 { font-size: 22px; font-weight: 650; }
+.specimen .body { font-size: 15px; color: var(--text); opacity: .86; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.divider { height: 1px; background: var(--border); border: 0; margin: 0; }
+.mini-card { background: var(--surface-2); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 16px; display: grid; gap: 10px; transition: box-shadow .2s, border-color .2s; }
+.mini-card:hover { border-color: var(--accent-vivid); box-shadow: var(--shadow-glow); }
+.mini-card .top { display: flex; justify-content: space-between; align-items: center; }
+.big { font: 700 44px/1 var(--font-display); letter-spacing: -.03em; color: var(--text); }
+.big small { font-size: 14px; font-weight: 500; color: var(--text-muted); letter-spacing: 0; margin-left: 4px; }
+.mini-card .name { font-weight: 600; font-size: 15px; }
+.mini-card .sub { font-size: 13px; color: var(--text-muted); }
+.poster { aspect-ratio: 2/3; width: 52px; border-radius: 6px; background: linear-gradient(160deg, var(--accent), var(--accent-vivid) 70%, #0b0f2a); box-shadow: 0 0 18px var(--accent-glow-hard); flex: none; }
+footer { padding: 56px 0 120px; text-align: center; color: var(--text-muted); font-size: 13px; }
+
+/* =========================================================
+   5. CONTROL PANEL
+   ========================================================= */
+#panel { position: fixed; right: 18px; bottom: 18px; z-index: 50; width: 330px; max-height: calc(100vh - 36px); display: flex; flex-direction: column;
+  background: color-mix(in srgb, #05060f 86%, transparent); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  border: 1px solid #343b78; border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 40px -10px rgba(139,92,246,.5);
+  font: 13px/1.4 "Inter", system-ui, sans-serif; color: #e8eaf8; }
+#panel * { font-family: inherit; }
+#panel .p-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; user-select: none; border: 0; background: none; color: inherit; width: 100%; font-weight: 600; font-size: 14px; }
+#panel .p-body { overflow-y: auto; padding: 4px 14px 14px; display: grid; gap: 12px; }
+#panel.collapsed .p-body { display: none; }
+#panel .grp { display: grid; gap: 6px; }
+#panel .grp > span { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #8b93c4; font-weight: 600; }
+#panel .seg { display: flex; flex-wrap: wrap; gap: 4px; }
+#panel .seg button { flex: 1 1 auto; font-size: 12px; padding: 7px 9px; border-radius: 7px; border: 1px solid #2b3270; background: #0d1130; color: #b9bfe6; cursor: pointer; transition: all .15s; }
+#panel .seg button:hover { border-color: #6d63d9; color: #fff; }
+#panel .seg button[aria-pressed="true"] { background: linear-gradient(135deg,#4f46e5,#8b5cf6); border-color: transparent; color: #fff; box-shadow: 0 0 14px rgba(139,92,246,.5); }
+#panel button:focus-visible { outline: 2px solid #c4b5fd; outline-offset: 2px; }
+#panel .readout { margin: 0; padding: 10px; border-radius: 8px; background: #070918; border: 1px solid #222859; font: 11px/1.6 "Geist Mono", ui-monospace, monospace; color: #aab1dd; display: grid; grid-template-columns: auto 1fr; gap: 0 10px; }
+#panel .readout dt { color: #6f78ae; } #panel .readout dd { margin: 0; color: #e8eaf8; word-break: break-word; }
+#panel .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: baseline; }
+#panel .copy { background: transparent; border: 1px dashed #3a4390; color: #b9bfe6; border-radius: 7px; padding: 8px; cursor: pointer; font-size: 12px; }
+#panel .copy:hover { color: #fff; border-color: #8b5cf6; }
+
+/* =========================================================
+   6. RESPONSIVE + MOTION
+   ========================================================= */
+@media (max-width: 960px) {
+  .tool-grid, .specimens { grid-template-columns: 1fr; }
+  nav a:not([aria-current]) { display: none; }
+  .scale-row { grid-template-columns: 1fr; gap: 4px; } .scale-row .meta { text-align: left; }
+  #panel { width: calc(100vw - 24px); right: 12px; bottom: 12px; max-height: 70vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+  .tool-card:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ================= HOME MOCK ================= -->
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="?" data-go="top"><span class="logo-mark"><svg viewBox="0 0 10 12"><path d="M0 0l10 6-10 6z"/></svg></span><span class="gradient-text">Nuvio Tools</span></a>
+    <nav aria-label="Main">
+      <a href="?" data-go="top" aria-current="page">Home</a><a href="?" data-go="listio">Listio</a><a href="?" data-go="artnuvio">ArtNuvio</a><a href="?" data-go="collectio">Collectio</a><a href="?" data-go="scale">Docs</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero aurora-host brand">
+    <div class="wrap">
+      <span class="badge" style="--accent-tint: rgba(99,102,241,.16); --accent-text:#c4b5fd; --accent-vivid:#8b5cf6;"><i></i>Community tools for Nuvio</span>
+      <h1>Build a better library with <span class="gradient-text">three focused tools</span></h1>
+      <p class="tag">Curate lists, fit artwork to Nuvio's sizes, and keep your collections tidy. Start simple, add power.</p>
+      <div class="cta">
+        <a class="btn btn-brand" href="?" data-go="listio" style="text-decoration:none">Get started &rarr;</a>
+        <a class="btn btn-ghost" href="?" data-go="scale" style="--accent-text:#c4b5fd; --accent-vivid:#8b5cf6; text-decoration:none">View design tokens</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="tool-grid" id="tool-grid"></div>
+  </div>
+
+  <!-- ================= TYPE SCALE ================= -->
+  <section class="block" id="scale">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow">Typography</span>
+        <h2>Type scale</h2>
+        <p>Display font for headings, big numbers and labels. Text font for body, tables and inputs. Mono for IDs and counts.</p>
+      </div>
+      <div class="card scale" id="scale-rows"></div>
+    </div>
+  </section>
+
+  <!-- ================= SPECIMENS ================= -->
+  <section class="block">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow">Components</span>
+        <h2>Tool specimens</h2>
+        <p>Same components, three accents. Tab through the buttons and fields to check hover, active and keyboard focus.</p>
+      </div>
+      <div class="specimens" id="specimens"></div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap">Nuvio Tools mood board &middot; throwaway exploration, not production code</div></footer>
+</div>
+
+<!-- ================= CONTROL PANEL ================= -->
+<aside id="panel" aria-label="Mood board controls">
+  <button class="p-head" id="p-toggle" aria-expanded="true"><span>Mood board controls</span><span id="p-chev">&#9662;</span></button>
+  <div class="p-body" id="p-body"></div>
+</aside>
+
+<script>
+/* =========================================================
+   DATA: tools, presets, controls
+   ========================================================= */
+const ICONS = {
+  listio:    '<svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>',
+  artnuvio:  '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-9 9"/></svg>',
+  collectio: '<svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m12 10.5 1.1 2.2 2.4.35-1.75 1.7.4 2.4L12 16l-2.15 1.15.4-2.4-1.75-1.7 2.4-.35z"/></svg>'
+};
+const TOOLS = [
+  { id: 'listio', name: 'Listio', desc: 'Build curated movie and show lists from Trakt, MDBList and IMDb, then publish them as catalogs.', n: '01' },
+  { id: 'artnuvio', name: 'ArtNuvio', desc: "Fit any image to Nuvio's poster, hero and landscape sizes, with optional text overlays.", n: '02' },
+  { id: 'collectio', name: 'Collectio', desc: 'Drag and drop your Nuvio collections and folders, and give each one its own artwork.', n: '03' }
+];
+
+const CONTROLS = [
+  { key: 'font', label: 'Font pair', opts: [['1','Space Grotesk + Inter'],['2','Sora + Inter'],['3','Geist + Geist'],['4','Outfit + Manrope'],['5','Syne + Inter (too far)']] },
+  { key: 'bg', label: 'Background', opts: [['navy','Tinted navy'],['neutral','Neutral near-black']] },
+  { key: 'pattern', label: 'Pattern', opts: [['none','None'],['grid','Fine grid'],['dots','Dots'],['noise','Noise']] },
+  { key: 'aurora', label: 'Aurora glow', opts: [['on','On'],['off','Off']] },
+  { key: 'radius', label: 'Radius', opts: [['sharp','Sharp 4'],['medium','Medium 10'],['soft','Soft 16']] },
+  { key: 'glass', label: 'Glass', opts: [['on','On'],['off','Off (solid)']] },
+  { key: 'glow', label: 'Glow intensity', opts: [['off','Off'],['subtle','Subtle'],['strong','Strong']] },
+  { key: 'border', label: 'Border style', opts: [['hairline','Hairline neutral'],['accent','Accent-tinted']] }
+];
+const FONT_NAMES = { 1:['Space Grotesk','Inter'], 2:['Sora','Inter'], 3:['Geist','Geist'], 4:['Outfit','Manrope'], 5:['Syne','Inter'] };
+
+const PRESETS = {
+  classic:   { label: 'Nuvio Classic',   font:'1', bg:'navy',    pattern:'grid',  aurora:'on',  radius:'medium', glass:'on',  glow:'subtle', border:'accent'   },
+  sharp:     { label: 'Sharp Dashboard', font:'3', bg:'neutral', pattern:'grid',  aurora:'off', radius:'sharp',  glass:'off', glow:'subtle', border:'hairline' },
+  softglass: { label: 'Soft Glass',      font:'2', bg:'navy',    pattern:'dots',  aurora:'on',  radius:'soft',   glass:'on',  glow:'strong', border:'accent'   },
+  neon:      { label: 'Neon Night',      font:'4', bg:'neutral', pattern:'noise', aurora:'on',  radius:'medium', glass:'off', glow:'strong', border:'hairline' }
+};
+const DEFAULT_PRESET = 'classic';
+
+/* =========================================================
+   RENDER STATIC CONTENT
+   ========================================================= */
+const $ = (s, r = document) => r.querySelector(s);
+
+$('#tool-grid').innerHTML = TOOLS.map(t => `
+  <a class="card tool-card aurora-host" data-tool="${t.id}" href="?" data-go="${t.id}" id="${t.id}">
+    <span class="step">${t.n}</span>
+    <div class="icon">${ICONS[t.id]}</div>
+    <h3>${t.name}</h3>
+    <p>${t.desc}</p>
+    <span class="more">Open ${t.name} &rarr;</span>
+  </a>`).join('');
+
+const SCALE = [
+  ['H1', 'h1', 'Midnight Horror Picks', 48, 700],
+  ['H2', 'h2', 'Weekend Marathon Catalogs', 34, 650],
+  ['H3', 'h3', 'Poster, hero and landscape', 24, 600],
+  ['H4', 'h4', 'Folder artwork and ordering', 18, 600],
+  ['Body', 'p', 'Add titles from Trakt, MDBList or IMDb and publish the list as a Nuvio catalog.', 16, 400],
+  ['Small', 'p', 'Last synced 4 minutes ago from 3 sources.', 14, 400],
+  ['Label', 'p', 'Catalog count', 12, 600],
+  ['Mono', 'p', 'tt0111161  ·  tt0068646  ·  248 titles', 14, 500]
+];
+$('#scale-rows').innerHTML = SCALE.map(([name, tag, sample, size, w]) => {
+  let style = `font-size:${size}px;font-weight:${w};`, cls = '';
+  if (name === 'Label') { style += 'text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);font-family:var(--font-display);'; }
+  else if (name === 'Mono') { style += 'font-family:var(--font-mono);'; }
+  else if (name === 'Small') { style += 'color:var(--text-muted);'; }
+  else if (tag === 'h1') { style += 'line-height:1.1;'; }
+  const el = ['h1','h2','h3','h4'].includes(tag) ? tag : 'p';
+  return `<div class="scale-row"><${el} style="${style}">${sample}</${el}><span class="meta">${name} · ${size}px / ${w}</span></div>`;
+}).join('');
+
+const SPEC = {
+  listio:    { head: 'Midnight Horror Picks', body: 'A curated list of 12 slow-burn horror films, synced from Trakt every night.', label: 'Source: Trakt',
+               card: { name: 'Midnight Horror Picks', sub: '<span class="mono">tt0078748</span> &middot; updated today', badge: '12 Titles', badge2: 'Draft', num: '248', unit: 'titles' },
+               input: 'Search IMDb ID or title', ph: 'e.g. tt0111161', rlabel: 'Max titles', rmin: 10, rmax: 500, rval: 120, rfmt: '120', sel: ['Trakt list','MDBList','IMDb list'], tog: 'Auto-sync nightly' },
+  artnuvio:  { head: 'Poster 2:3', body: "Fit your image to Nuvio's poster size, then add a title overlay.", label: 'Output size',
+               card: { name: 'Poster', sub: '<span class="mono">1000 &times; 1500</span> px &middot; PNG', badge: 'Ready', badge2: '2:3', num: '1500', unit: 'px tall', poster: true },
+               input: 'Overlay text', ph: 'e.g. Dune: Part Two', rlabel: 'Font size', rmin: 12, rmax: 120, rval: 56, rfmt: '56 px', sel: ['Poster 2:3','Hero 16:9','Landscape 3:2'], tog: 'Add text overlay' },
+  collectio: { head: 'Weekend Marathons', body: 'Group catalogs into folders and drag them into the order you want.', label: 'Collection',
+               card: { name: 'Weekend Marathons', sub: '8 folders &middot; <span class="mono">3 artwork sets</span>', badge: '8 Folders', badge2: 'Synced', num: '24', unit: 'catalogs' },
+               input: 'Folder name', ph: 'e.g. Sci-Fi Classics', rlabel: 'Artwork size', rmin: 50, rmax: 200, rval: 100, rfmt: '100%', sel: ['Square','Poster','Landscape'], tog: 'Show on Home screen' }
+};
+$('#specimens').innerHTML = TOOLS.map(t => {
+  const s = SPEC[t.id], c = s.card;
+  return `
+  <article class="card specimen aurora-host" data-tool="${t.id}">
+    <div class="tool-name"><div class="icon" style="width:38px;height:38px">${ICONS[t.id]}</div><span class="eyebrow" style="color:var(--accent-text)">${t.name}</span></div>
+    <div style="display:grid;gap:8px">
+      <span class="label">${s.label}</span>
+      <h3>${s.head}</h3>
+      <p class="body">${s.body}</p>
+    </div>
+    <div class="row">
+      <button class="btn btn-primary">Publish</button>
+      <button class="btn btn-ghost">Preview</button>
+      <a class="btn btn-ghost" href="#" onclick="return false">Link</a>
+    </div>
+    <div class="mini-card" tabindex="0">
+      <div class="top"><span class="badge"><i></i>${c.badge}</span><span class="badge dim">${c.badge2}</span></div>
+      <div style="display:flex;gap:14px;align-items:flex-end;justify-content:space-between">
+        <div style="display:grid;gap:4px"><span class="name">${c.name}</span><span class="sub">${c.sub}</span></div>
+        ${c.poster ? '<div class="poster"></div>' : ''}
+      </div>
+      <div class="big mono-num">${c.num}<small>${c.unit}</small></div>
+    </div>
+    <hr class="divider">
+    <div class="field"><label for="in-${t.id}">${s.input}</label><input id="in-${t.id}" class="input" placeholder="${s.ph}"></div>
+    <div class="field"><label for="rg-${t.id}"><span>${s.rlabel}</span><span class="mono rv" style="letter-spacing:0;text-transform:none;color:var(--accent-text)">${s.rfmt}</span></label>
+      <input id="rg-${t.id}" class="range" type="range" min="${s.rmin}" max="${s.rmax}" value="${s.rval}" data-fmt="${s.rfmt.replace(/[0-9]+/, '#')}"></div>
+    <div class="field"><label for="sl-${t.id}">Type</label><select id="sl-${t.id}" class="select">${s.sel.map(o => `<option>${o}</option>`).join('')}</select></div>
+    <div class="toggle-row"><label for="tg-${t.id}">${s.tog}</label><input id="tg-${t.id}" class="toggle" type="checkbox" role="switch" checked></div>
+  </article>`;
+}).join('');
+
+/* Range sliders: update fill + value label */
+document.querySelectorAll('.range').forEach(r => {
+  const upd = () => {
+    r.style.setProperty('--val', ((r.value - r.min) / (r.max - r.min)) * 100);
+    r.closest('.field').querySelector('.rv').textContent = r.dataset.fmt.replace('#', r.value);
+  };
+  r.addEventListener('input', upd); upd();
+});
+
+/* =========================================================
+   STATE <-> URL HASH <-> DOM
+   ========================================================= */
+let state = {};
+const root = document.documentElement;
+const KEYS = CONTROLS.map(c => c.key);
+
+function readHash() {
+  const p = new URLSearchParams(location.hash.slice(1));
+  const base = { ...PRESETS[p.get('preset')] || PRESETS[DEFAULT_PRESET] };
+  delete base.label;
+  KEYS.forEach(k => { const v = p.get(k), c = CONTROLS.find(c => c.key === k); if (v && c.opts.some(o => o[0] === v)) base[k] = v; });
+  base.preset = PRESETS[p.get('preset')] ? p.get('preset') : DEFAULT_PRESET;
+  return base;
+}
+function writeHash() {
+  const p = new URLSearchParams();
+  p.set('preset', state.preset || 'custom'); KEYS.forEach(k => p.set(k, state[k]));
+  history.replaceState(null, '', '#' + p.toString());
+}
+function matchPreset() {
+  return Object.keys(PRESETS).find(id => KEYS.every(k => PRESETS[id][k] === state[k])) || 'custom';
+}
+function apply() {
+  KEYS.forEach(k => root.setAttribute('data-' + k, state[k]));
+  syncPanel(); readout();
+}
+function setState(patch, fromPreset) {
+  Object.assign(state, patch);
+  state.preset = fromPreset || matchPreset();
+  apply(); writeHash();
+}
+
+/* ---------- panel ---------- */
+const body = $('#p-body');
+body.innerHTML = `
+  <div class="grp"><span>Preset</span><div class="seg" id="seg-preset">${Object.entries(PRESETS).map(([id, p]) => `<button data-preset="${id}" aria-pressed="false">${p.label}</button>`).join('')}</div></div>
+  ${CONTROLS.map(c => `<div class="grp"><span>${c.label}</span><div class="seg" data-key="${c.key}">${c.opts.map(([v, l]) => `<button data-v="${v}" aria-pressed="false">${l}</button>`).join('')}</div></div>`).join('')}
+  <div class="grp"><span>Current choices</span><dl class="readout" id="readout"></dl></div>
+  <button class="copy" id="copy">Copy link to this combination</button>`;
+
+body.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.preset) { const p = { ...PRESETS[b.dataset.preset] }; delete p.label; setState(p, b.dataset.preset); }
+  else if (b.dataset.v) setState({ [b.parentElement.dataset.key]: b.dataset.v });
+  else if (b.id === 'copy') { navigator.clipboard?.writeText(location.href).then(() => { b.textContent = 'Link copied'; setTimeout(() => b.textContent = 'Copy link to this combination', 1400); }, () => { b.textContent = 'Copy the URL from the address bar'; }); }
+});
+function syncPanel() {
+  body.querySelectorAll('[data-preset]').forEach(b => b.setAttribute('aria-pressed', b.dataset.preset === state.preset));
+  body.querySelectorAll('.seg[data-key]').forEach(s => s.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === state[s.dataset.key])));
+}
+function readout() {
+  const cs = id => { const el = id ? document.querySelector(`.specimen[data-tool="${id}"]`) : root; return getComputedStyle(el).getPropertyValue('--accent').trim(); };
+  const sw = c => `<span class="sw" style="background:${c}"></span>${c}`;
+  const f = FONT_NAMES[state.font], cv = n => getComputedStyle(root).getPropertyValue(n).trim();
+  const rows = [
+    ['preset', state.preset === 'custom' ? 'Custom' : PRESETS[state.preset].label],
+    ['display', f[0]], ['text', f[1]], ['mono', 'Geist Mono'],
+    ['bg', sw(cv('--bg'))], ['surface', sw(cv('--surface-1')) + ' / ' + cv('--surface-2')],
+    ['border', cv('--border')],
+    ['brand', sw(cv('--brand-from')) + ' &rarr; ' + cv('--brand-to')],
+    ['listio', sw(cs('listio'))], ['artnuvio', sw(cs('artnuvio'))], ['collectio', sw(cs('collectio'))],
+    ['radius', cv('--radius')], ['glow', state.glow + ' (' + cv('--glow-pct') + ')'],
+    ['glass', state.glass], ['pattern', state.pattern], ['aurora', state.aurora], ['border', state.border]
+  ];
+  $('#readout').innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
+}
+
+/* in-page nav without touching the hash */
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-go]'); if (!a) return;
+  e.preventDefault();
+  const t = document.getElementById(a.dataset.go === 'top' ? 'top' : a.dataset.go === 'scale' ? 'scale' : 'specimens');
+  const spec = document.querySelector(`.specimen[data-tool="${a.dataset.go}"]`);
+  (spec || t).scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: spec ? 'center' : 'start' });
+});
+
+/* collapse */
+$('#p-toggle').addEventListener('click', () => {
+  const p = $('#panel'), c = p.classList.toggle('collapsed');
+  $('#p-toggle').setAttribute('aria-expanded', !c); $('#p-chev').innerHTML = c ? '&#9652;' : '&#9662;';
+});
+
+/* init + hash navigation (copied link pasted into the same tab) */
+state = readHash(); state.preset = location.hash.includes('preset=custom') ? matchPreset() : state.preset; apply(); writeHash();
+window.addEventListener('hashchange', () => {
+  const next = readHash();
+  if (location.hash.includes('preset=') && KEYS.some(k => next[k] !== state[k])) { state = next; apply(); }
+});
+</script>
+</body>
+</html>

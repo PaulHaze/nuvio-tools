@@ -22,11 +22,11 @@ The sprint itself remains incomplete. The committed implementation record explic
 
 ## Findings summary
 
-| Category | Count |
-| --- | ---: |
-| Critical | 1 |
-| Warnings | 0 |
-| Suggestions | 0 |
+| Category    | Count |
+| ----------- | ----: |
+| Critical    |     1 |
+| Warnings    |     0 |
+| Suggestions |     0 |
 
 ## Critical findings
 
@@ -48,15 +48,15 @@ None.
 
 ## Task coverage
 
-| Requirement | Status | Evidence |
-| --- | --- | --- |
-| Free Zero Trust main application on the Worker hostname, Allow only Paul's email | Not satisfied | Setup is documented at `docs/cloudflare-access.md:19-23,45-69`, but explicitly not performed at `docs/sprints/08_Cloudflare_Access.md:27-31`. Free-plan selection also lacks live evidence. |
-| Separate `/addon/*` application with Bypass | Not satisfied | Exact scope and Everyone Bypass are documented at `docs/cloudflare-access.md:50-61`; the application remains unconfigured per `docs/sprints/08_Cloudflare_Access.md:27-31`. |
-| Confirm `/api/*` admin coverage by the main application | Not satisfied | Intended hostname coverage is correctly explained at `docs/cloudflare-access.md:73-77`, but no saved application was inspected or live request checked; the sprint task remains unchecked at `docs/sprints/08_Cloudflare_Access.md:13`. |
-| Document dashboard setup steps in `docs/` | Satisfied | `docs/cloudflare-access.md:17-84` supplies prerequisites and application/policy settings; lines 86–132 supply live checks and evidence-recording instructions; README links the guide. |
-| Private browser: UI and API require login and only Paul's email gets access | Unable to verify | All identity/live checks remain pending (`docs/sprints/08_Cloudflare_Access.md:27-31,42-44`). Missing setup is the confirmed defect; no actual deployed response or identity outcome was observed. |
-| Nuvio still loads the addon | Unable to verify | `docs/cloudflare-access.md:101-110` describes direct and client checks; `docs/sprints/08_Cloudflare_Access.md:40` explicitly leaves real Nuvio loading pending. |
-| Wrong addon secret still returns 404 | Partially satisfied | Committed manifest and catalog handlers reject the secret before reading KV (`src/pages/addon/[secret]/manifest.json.ts:11-13`, `src/pages/addon/[secret]/catalog/[type]/[...rest].ts:14-21`); `src/addon/http.ts:4-14,27-29` rejects empty/missing secrets and emits JSON 404. Existing route tests cover wrong secrets, but behavior through the deployed Access layer remains unverified. |
+| Requirement                                                                      | Status              | Evidence                                                                                                                                                                                                                                                                                                                                                                                     |
+| -------------------------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Free Zero Trust main application on the Worker hostname, Allow only Paul's email | Not satisfied       | Setup is documented at `docs/cloudflare-access.md:19-23,45-69`, but explicitly not performed at `docs/sprints/08_Cloudflare_Access.md:27-31`. Free-plan selection also lacks live evidence.                                                                                                                                                                                                  |
+| Separate `/addon/*` application with Bypass                                      | Not satisfied       | Exact scope and Everyone Bypass are documented at `docs/cloudflare-access.md:50-61`; the application remains unconfigured per `docs/sprints/08_Cloudflare_Access.md:27-31`.                                                                                                                                                                                                                  |
+| Confirm `/api/*` admin coverage by the main application                          | Not satisfied       | Intended hostname coverage is correctly explained at `docs/cloudflare-access.md:73-77`, but no saved application was inspected or live request checked; the sprint task remains unchecked at `docs/sprints/08_Cloudflare_Access.md:13`.                                                                                                                                                      |
+| Document dashboard setup steps in `docs/`                                        | Satisfied           | `docs/cloudflare-access.md:17-84` supplies prerequisites and application/policy settings; lines 86–132 supply live checks and evidence-recording instructions; README links the guide.                                                                                                                                                                                                       |
+| Private browser: UI and API require login and only Paul's email gets access      | Unable to verify    | All identity/live checks remain pending (`docs/sprints/08_Cloudflare_Access.md:27-31,42-44`). Missing setup is the confirmed defect; no actual deployed response or identity outcome was observed.                                                                                                                                                                                           |
+| Nuvio still loads the addon                                                      | Unable to verify    | `docs/cloudflare-access.md:101-110` describes direct and client checks; `docs/sprints/08_Cloudflare_Access.md:40` explicitly leaves real Nuvio loading pending.                                                                                                                                                                                                                              |
+| Wrong addon secret still returns 404                                             | Partially satisfied | Committed manifest and catalog handlers reject the secret before reading KV (`src/pages/addon/[secret]/manifest.json.ts:11-13`, `src/pages/addon/[secret]/catalog/[type]/[...rest].ts:14-21`); `src/addon/http.ts:4-14,27-29` rejects empty/missing secrets and emits JSON 404. Existing route tests cover wrong secrets, but behavior through the deployed Access layer remains unverified. |
 
 ## Validation performed
 

@@ -6,7 +6,7 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
 
 ## Issues
 
-### 1. A section that keeps failing blocks the rest of the queue  [Warning] · raised by Opus
+### 1. A section that keeps failing blocks the rest of the queue [Warning] · raised by Opus
 
 - **What it is:**
   - Once a multiple-list import starts, the page stays locked (`locked` is permanently true while `queue.current` exists). The section checkboxes, the textarea and Upload are all disabled.
@@ -25,25 +25,25 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
 
   Either way, completed runs and their review stay in place.
 
-### 2. A `## ` header containing `//` silently disappears, and its titles join the previous list  [Warning] · raised by Opus
+### 2. A `## ` header containing `//` silently disappears, and its titles join the previous list [Warning] · raised by Opus
 
-- **What it is:** `parseMultiple` skips any line containing `//` (`if (raw.includes('//')) return;`) *before* it checks whether the line is a header. A header like `## Movies // to sort` vanishes with no error:
+- **What it is:** `parseMultiple` skips any line containing `//` (`if (raw.includes('//')) return;`) _before_ it checks whether the line is a header. A header like `## Movies // to sort` vanishes with no error:
   - Its titles are counted as part of the section above it.
   - If it was the first header, its titles become "above the first header" errors. Those errors point at the title lines, not at the real cause.
 - **Why it matters:**
   - In single mode, ignoring a `//` line only loses that one line.
-  - In multiple mode, ignoring a header line moves Titles into a *different* saved list without any warning.
+  - In multiple mode, ignoring a header line moves Titles into a _different_ saved list without any warning.
   - That goes against this sprint's principle that other `#` lines "are errors rather than silently ignored".
 - **How much:** Opus rated it a Warning. None of the headers in the current midnight file contain `//`, so the fixture isn't affected. The risk is to future lists.
 - **Where:** `src/domain/pasteSections.ts:78`.
 - **Coverage note:** Astra marks "the agreed policy ignoring every line containing `//`" as **Satisfied**. That's accurate, because the code follows Sprint 12's recorded policy. Opus agrees it follows the policy. Opus is pointing out that the policy has a bad side effect for headers specifically, which is a different question from whether the code complies.
 - **Suggested fix (Opus):**
-  - Check for a header *before* applying the `//` skip.
+  - Check for a header _before_ applying the `//` skip.
   - Then report `Line N: "## …" contains "//". Remove the comment from the header.` with the section's ID, so unticking that section clears the error.
 
   This needs an owner decision, because it narrows the Sprint 12 `//` policy for header lines only.
 
-### 3. The midnight fixture test hardcodes counts from a list file that is still being edited  [Warning] · raised by Opus
+### 3. The midnight fixture test hardcodes counts from a list file that is still being edited [Warning] · raised by Opus
 
 - **What it is:**
   - `test/import-parser.test.ts` asserts exactly 25 sections and exact per-section title counts, read from `docs/movie_lists/midnight_movies.md`.
@@ -60,7 +60,7 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
   - The alternative is to accept the churn and update the counts with each list edit. That's your call.
   - Either way, make the "creates 25 saved lists" Done-when criterion match whichever file is the acceptance input.
 
-### 4. Need a look is disabled on every finished list while later sections are still importing  [Suggestion] · raised by Opus
+### 4. Need a look is disabled on every finished list while later sections are still importing [Suggestion] · raised by Opus
 
 - **What it is:** The Need a look controls are disabled with `disabled={busy > 0 || active}`, and `active` is a page-wide flag. During a 25-list run, you can't resolve list A's picks until the whole queue finishes or stops.
 - **Why it matters:**
@@ -71,7 +71,7 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
 - **Coverage note:** Astra's coverage table notes "each result owns its busy state" (`ImportFromText.tsx:356-357,416-424`) as part of review isolation. It doesn't comment on the page-wide `active` flag.
 - **Suggested fix (Opus):** Pass `active={['matching','creating','saving'].includes(run.state.phase)}` for each run, rather than the page-wide flag.
 
-### 5. Renaming a rejected section during a queue run has no test  [Suggestion] · raised by Opus
+### 5. Renaming a rejected section during a queue run has no test [Suggestion] · raised by Opus
 
 - **What it is:**
   - If a queue entry is `rejected`, its name input re-enables. That happens when the name was taken on the server after the page loaded, because `initialLists` is out of date.
@@ -86,7 +86,7 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
   - Continue creates the list under the new name;
   - section 1 is not created again.
 
-### 6. The list-name rules are written out three times  [Suggestion] · raised by Opus
+### 6. The list-name rules are written out three times [Suggestion] · raised by Opus
 
 - **What it is:** The 1–100 character check and the "already exists" comparison (trimmed, case-insensitive) appear in three places:
   - `validateImportName`
@@ -97,10 +97,10 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
 - **Where:** `src/domain/pasteSections.ts:52-66, 138-153`; `src/components/import/ImportFromText.tsx:55-57`.
 - **Suggested fix (Opus):** Pull the rules into one shared helper, for example `nameTaken(name, existing)` plus `nameLengthOk`, and use it in all three places.
 
-### 7. Blank names produce confusing error messages  [Suggestion] · raised by Opus
+### 7. Blank names produce confusing error messages [Suggestion] · raised by Opus
 
 - **What it is:**
-  - Two selected blank `##` headers each get "list names must be 1–100 characters". The second one *also* gets `Lines X and Y: two lists are named "".`
+  - Two selected blank `##` headers each get "list names must be 1–100 characters". The second one _also_ gets `Lines X and Y: two lists are named "".`
   - A blank-named section with no titles reads `"## " has no titles.`
 - **Why it matters:** It's noisy and slightly confusing, though not wrong.
 - **How much:** Wording only. Raised by Opus.
@@ -109,7 +109,7 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
   - Skip the duplicate and existing-name checks when the name is empty.
   - In the no-titles message, use the original header text or just `Line N:`.
 
-### 8. The text is parsed twice on every screen update  [Suggestion] · raised by Opus
+### 8. The text is parsed twice on every screen update [Suggestion] · raised by Opus
 
 - **What it is:** `parseImport(text, 'single')` and `parseImport(text, 'multiple')` run on every re-render. During a queue run, the page re-renders for every match result. So a file of about 1,000 lines is re-parsed twice for each Title matched.
 - **Why it matters:** It's wasted work. It's cheap today, but it grows with file size and list count.
@@ -117,7 +117,7 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
 - **Where:** `src/components/import/ImportFromText.tsx:39-40`.
 - **Suggested fix (Opus):** Wrap both parses in `useMemo(() => …, [text])`.
 
-### 9. Result panels are keyed by their position in a list  [Suggestion] · raised by Opus
+### 9. Result panels are keyed by their position in a list [Suggestion] · raised by Opus
 
 - **What it is:** Each result panel is keyed by its array position (`key={index}`). React reuses a component by key, so a panel's local state (`busy`, `copyMessage`) can carry over to a different run if the array changes, for example a single run being replaced by a queue.
 - **Why it matters:** Today this only causes a minor stale-state risk, but it's a trap for future changes.
@@ -125,7 +125,7 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
 - **Where:** `src/components/import/ImportFromText.tsx:327`.
 - **Suggested fix (Opus):** Key by `sectionId` for queue runs, or `'single'` for the single run.
 
-### 10. The queue repeats the same "find the first unfinished section" lookup  [Suggestion] · raised by Opus
+### 10. The queue repeats the same "find the first unfinished section" lookup [Suggestion] · raised by Opus
 
 - **What it is:** The `unfinished` and `progress` getters each run the same search for the first section that isn't completed.
 - **Why it matters:** It's small duplication that could drift.
@@ -133,7 +133,7 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
 - **Where:** `src/client/importQueue.ts:21-31`.
 - **Suggested fix (Opus):** Have `progress` use `this.unfinished` together with `indexOf`.
 
-### 11. Section checkboxes are labelled only by line number  [Suggestion] · raised by Opus
+### 11. Section checkboxes are labelled only by line number [Suggestion] · raised by Opus
 
 - **What it is:** Each checkbox reads `Import section on line N` and doesn't include the list's name.
 - **Why it matters:** A screen-reader user tabbing through 25 checkboxes hears only line numbers.
@@ -141,7 +141,7 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
 - **Where:** `src/components/import/ImportFromText.tsx:248`.
 - **Suggested fix (Opus):** Include the name, for example `Import "A" (line N)`.
 
-### 12. No warning on leaving a stopped queue that has no unresolved lines  [Suggestion] · raised by Opus
+### 12. No warning on leaving a stopped queue that has no unresolved lines [Suggestion] · raised by Opus
 
 - **What it is:** Suppose a queue stops partway and has unstarted sections, but no unresolved review lines and no pending save. Leaving the page then gives no warning.
 - **Why it matters:** Recovering takes re-pasting the file and unticking the finished sections. A warning would prevent that by accident.
@@ -173,6 +173,7 @@ Astra's verdict is **PASS WITH CONCERNS**, with 0 findings. Its concern is that 
   - "`pnpm test`, `pnpm build`, `pnpm lint:check` pass" is **Partially satisfied**. The build wasn't rerun, and lint wasn't run as a full-tree glob.
 
   Exclusions were respected: no collection export, no re-import into existing lists, no durable recovery, no new matching logic and no title-syntax changes.
+
 - **Validation performed:**
   - `pnpm test --no-cache --configLoader runner`: passed, 20 files, 187 tests.
   - `astro check --noSync`: passed. 85 files, 0 errors, 0 warnings, and 2 existing `beforeunload.returnValue` deprecation hints (`Editor.tsx:109`, `ImportFromText.tsx:78`).

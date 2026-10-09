@@ -107,7 +107,9 @@ close one tool without touching the rest. Which tools go public, and when, is **
 
 1. **Restructure** epic (sprints 01–03, branches `restructure-01` to `restructure-03`): folders and routes, home page and renaming, domain switch.
 2. **Listio polish:** tweak functionality and smooth rough edges.
-3. **Unified design system** in `src/lib/ui/`, then restyle Listio and the home page with it.
+3. **UI** epic (branches `ui-{nn}`): settle the design system (dark only, brand gradient plus one
+   accent per tool) and land its tokens in `src/lib/ui/`. Then a **shared components** epic for
+   all three tools, then a **Listio rebuild** with new features.
 4. **ArtNuvio:** small and self-contained. Introduces the proxy, the save endpoint and R2.
 5. **Collectio:** last, once `lib/nuvio/` has settled through Listio and ArtNuvio.
 

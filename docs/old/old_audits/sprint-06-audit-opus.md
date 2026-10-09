@@ -11,7 +11,7 @@ Files audited: `src/components/editor/Editor.tsx`, `src/components/editor/draft.
    - the sprint doc says restore puts the Title back "to its original position" (`docs/sprints/06_GUI_Review_Grid.md:37`);
    - the test is named "keeping order" (`test/editor.test.ts:78`);
    - the test asserts the appended order `['tt2', 'tt1']` (`test/editor.test.ts:89`).
-   Suggested fix: keep `draft.titles` in `addedSeq` order when restoring: `titles: [...draft.titles, ...moved].sort((a, b) => a.addedSeq - b.addedSeq)`. The array is already in `addedSeq` order because merge appends with increasing sequence numbers, so this restores the invariant. Change the assertion to `[['tt1', 1], ['tt2', 2]]`, and add a Newest-sort tie case.
+     Suggested fix: keep `draft.titles` in `addedSeq` order when restoring: `titles: [...draft.titles, ...moved].sort((a, b) => a.addedSeq - b.addedSeq)`. The array is already in `addedSeq` order because merge appends with increasing sequence numbers, so this restores the invariant. Change the assertion to `[['tt1', 1], ['tt2', 2]]`, and add a Newest-sort tie case.
 
 ### Suggestion
 
