@@ -1,0 +1,1302 @@
+<!doctype html>
+<html lang="en"
+  data-font="sg-inter" data-bg="navy" data-pattern="none" data-aurora="on"
+  data-radius="medium" data-glass="on" data-glow="subtle" data-border="accent"
+  data-panel="open">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Nuvio Tools · Mood board (Opus)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap">
+<style>
+/* =====================================================================
+   1. BRAND TOKENS: never change, used by the header strip + logo
+   ===================================================================== */
+:root {
+  --brand-from: #4f46e5;               /* indigo */
+  --brand-to:   #8b5cf6;               /* violet */
+  --brand-gradient: linear-gradient(100deg, #4f46e5 0%, #8b5cf6 100%);
+  /* Button fill: ends on #7c3aed (not #8b5cf6) so white text stays >= 4.5:1 */
+  --brand-fill:       linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --brand-fill-hover: linear-gradient(135deg, #5a50ef 0%, #8445f0 100%);
+  /* Gradient for text on dark (lighter stops so it stays readable) */
+  --brand-text-gradient: linear-gradient(95deg, #818cf8 0%, #a78bfa 55%, #c4b5fd 100%);
+  --brand-rgb: 99 91 240;
+
+  /* Mono is shared by most pairs; Geist pair overrides it */
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* =====================================================================
+   2. ACCENT TOKENS: Home uses brand; each data-tool swaps these
+   --accent        vivid colour for non-text visuals (slider, rings, icons)
+   --accent-hover  lighter vivid variant
+   --accent-fill   primary button background (contrast-checked vs --on-accent)
+   --accent-text   accent used AS text on dark surfaces (links, badges)
+   --on-accent     text colour on --accent-fill
+   --accent-rgb    triplet for alpha mixes (tint, glow, borders)
+   ===================================================================== */
+:root {
+  --accent: #7c6cff;
+  --accent-hover: #998cff;
+  --accent-fill: var(--brand-fill);
+  --accent-fill-hover: var(--brand-fill-hover);
+  --accent-text: #a5b4fc;
+  --on-accent: #ffffff;
+  --accent-rgb: 124 108 255;
+  --accent-icon: linear-gradient(135deg, #818cf8, #7c3aed);
+}
+
+[data-tool="listio"] {                 /* teal / cyan */
+  --accent: #22d3ee;
+  --accent-hover: #67e8f9;
+  --accent-fill: linear-gradient(135deg, #22d3ee 0%, #14b8a6 100%);
+  --accent-fill-hover: linear-gradient(135deg, #67e8f9 0%, #2dd4bf 100%);
+  --accent-text: #5fe2f4;
+  --on-accent: #042f36;
+  --accent-rgb: 34 211 238;
+  --accent-icon: linear-gradient(135deg, #22d3ee, #0d9488);
+}
+
+[data-tool="artnuvio"] {               /* intense royal blue */
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-fill: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  --accent-fill-hover: linear-gradient(135deg, #2b69ee 0%, #2259e4 100%);
+  --accent-text: #7db0ff;
+  --on-accent: #ffffff;
+  --accent-rgb: 59 130 246;
+  --accent-icon: linear-gradient(135deg, #60a5fa, #1d4ed8);
+}
+
+[data-tool="collectio"] {              /* magenta / pink-violet */
+  --accent: #d946ef;
+  --accent-hover: #e879f9;
+  --accent-fill: linear-gradient(135deg, #e879f9 0%, #d946ef 100%);
+  --accent-fill-hover: linear-gradient(135deg, #f0a5fb 0%, #e879f9 100%);
+  --accent-text: #f08cfb;
+  --on-accent: #2e0636;
+  --accent-rgb: 217 70 239;
+  --accent-icon: linear-gradient(135deg, #f472b6, #c026d3);
+}
+
+/* Derived accent tokens. Declared on :root AND every [data-tool] so they
+   re-resolve against that scope's --accent-rgb. */
+:root, [data-tool] {
+  --accent-tint:        rgb(var(--accent-rgb) / .10);
+  --accent-tint-strong: rgb(var(--accent-rgb) / .18);
+  --accent-glow:        rgb(var(--accent-rgb) / .38);
+  --accent-border:      rgb(var(--accent-rgb) / .34);
+  --focus-ring:         var(--accent-text);
+}
+
+/* =====================================================================
+   3. THEME CONTROLS (set as data-* on <html> by the panel)
+   ===================================================================== */
+
+/* Background: tinted navy (like the images) */
+[data-bg="navy"] {
+  --bg: #070918;              --bg-rgb: 7 9 24;
+  --surface-1: #0e1127;       --surface-1-rgb: 14 17 39;
+  --surface-2: #151a37;       --surface-2-rgb: 21 26 55;
+  --surface-3: #1f2549;
+  --border: #232a4d;
+  --border-strong: #353d6c;
+  --text: #e9ebf8;
+  --text-muted: #969cc4;
+  --bg-wash: radial-gradient(120% 70% at 50% -15%, #13164a 0%, transparent 60%);
+}
+/* Background: neutral near-black (account-cloner values; muted text
+   nudged from #7a7a96 to #8b8ba8 so it passes AA on surface-2) */
+[data-bg="neutral"] {
+  --bg: #0a0a0f;              --bg-rgb: 10 10 15;
+  --surface-1: #111118;       --surface-1-rgb: 17 17 24;
+  --surface-2: #1a1a24;       --surface-2-rgb: 26 26 36;
+  --surface-3: #252532;
+  --border: #2a2a38;
+  --border-strong: #3a3a50;
+  --text: #e8e8f0;
+  --text-muted: #8b8ba8;
+  --bg-wash: radial-gradient(120% 70% at 50% -15%, #15151f 0%, transparent 60%);
+}
+
+/* Radius */
+[data-radius="sharp"]  { --radius: 4px;  --radius-sm: 3px; }
+[data-radius="medium"] { --radius: 10px; --radius-sm: 7px; }
+[data-radius="soft"]   { --radius: 16px; --radius-sm: 11px; }
+:root { --radius-pill: 999px; }
+
+/* Glass vs solid surfaces */
+[data-glass="on"] {
+  --card-bg:       rgb(var(--surface-1-rgb) / .58);
+  --card-bg-inner: rgb(var(--surface-2-rgb) / .55);
+  --card-blur: blur(16px) saturate(140%);
+  --card-sheen: linear-gradient(180deg, rgb(255 255 255 / .045) 0%, transparent 38%);
+}
+[data-glass="off"] {
+  --card-bg:       var(--surface-1);
+  --card-bg-inner: var(--surface-2);
+  --card-blur: none;
+  --card-sheen: none;
+}
+
+/* Glow intensity: a multiplier used inside box-shadows */
+[data-glow="off"]    { --glow-k: 0; }
+[data-glow="subtle"] { --glow-k: 1; }
+[data-glow="strong"] { --glow-k: 2.1; }
+
+/* Aurora light pools */
+[data-aurora="on"]  { --aurora-o: 1; }
+[data-aurora="off"] { --aurora-o: 0; }
+
+/* =====================================================================
+   4. FONT PAIRS
+   ===================================================================== */
+[data-font="sg-inter"] {
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-text: "Inter", system-ui, sans-serif;
+  --display-weight: 600; --display-tracking: -0.02em;
+}
+[data-font="sora-inter"] {
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-text: "Inter", system-ui, sans-serif;
+  --display-weight: 600; --display-tracking: -0.025em;
+}
+[data-font="geist"] {
+  --font-display: "Geist", system-ui, sans-serif;
+  --font-text: "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --display-weight: 600; --display-tracking: -0.03em;
+}
+[data-font="outfit-manrope"] {
+  --font-display: "Outfit", system-ui, sans-serif;
+  --font-text: "Manrope", system-ui, sans-serif;
+  --display-weight: 600; --display-tracking: -0.01em;
+}
+[data-font="syne-inter"] {             /* calibration: "too far" */
+  --font-display: "Syne", system-ui, sans-serif;
+  --font-text: "Inter", system-ui, sans-serif;
+  --display-weight: 700; --display-tracking: -0.01em;
+}
+[data-font="jakarta-inter"] {          /* experiment */
+  --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-text: "Inter", system-ui, sans-serif;
+  --display-weight: 700; --display-tracking: -0.025em;
+}
+
+/* =====================================================================
+   5. BASE
+   ===================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--bg); color-scheme: dark; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-wash), var(--bg);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4, .display {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
+  line-height: 1.15;
+  margin: 0;
+}
+p { margin: 0; }
+a { color: var(--accent-text); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--text-muted); }
+.label {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.grad-text {
+  background: var(--brand-text-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Background pattern layer */
+.bg-pattern {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, #000 35%, transparent 100%);
+          mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, #000 35%, transparent 100%);
+}
+[data-pattern="grid"] .bg-pattern {
+  background-image:
+    linear-gradient(rgb(255 255 255 / .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / .035) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+[data-pattern="dots"] .bg-pattern {
+  background-image: radial-gradient(rgb(255 255 255 / .085) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+}
+[data-pattern="noise"] .bg-pattern {
+  -webkit-mask-image: none; mask-image: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .11 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Aurora: soft colour pools behind a section (parent must be position:relative) */
+.aurora {
+  position: absolute; z-index: -1; pointer-events: none;
+  inset: -18% -12%;
+  opacity: var(--aurora-o);
+  transition: opacity .5s ease;
+  animation: aurora-drift 18s ease-in-out infinite alternate;
+}
+@keyframes aurora-drift {
+  from { transform: translate3d(-1.5%, 0, 0) scale(1); }
+  to   { transform: translate3d(1.5%, -2%, 0) scale(1.04); }
+}
+
+/* =====================================================================
+   6. LAYOUT
+   ===================================================================== */
+.page { position: relative; z-index: 1; transition: margin .25s ease; }
+.wrap-outer { transition: margin .25s ease; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+@media (min-width: 1180px) {
+  html[data-panel="open"] .page,
+  html[data-panel="open"] .brand-strip .wrap-outer { margin-right: 340px; }
+}
+@media (max-width: 700px) {
+  .wrap { padding: 0 16px; }
+  .mb-heading { flex-wrap: wrap; }
+  .mb-heading p { margin-left: 0; flex-basis: 100%; }
+  .strip-chip { display: none; }
+}
+.mb-section { position: relative; isolation: isolate; padding: 56px 0 24px; }
+.mb-heading {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 22px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.mb-heading .num { font-family: var(--font-mono); font-size: 12px; color: var(--accent-text); }
+.mb-heading h2 { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); }
+.mb-heading p { margin-left: auto; font-size: 13px; color: var(--text-muted); }
+
+/* =====================================================================
+   7. BRAND STRIP (header): always brand gradient, every page
+   ===================================================================== */
+.brand-strip {
+  position: sticky; top: 0; z-index: 20;
+  background:
+    linear-gradient(90deg, rgb(79 70 229 / .20) 0%, rgb(139 92 246 / .10) 45%, transparent 85%),
+    rgb(var(--bg-rgb) / .78);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+          backdrop-filter: blur(14px) saturate(140%);
+}
+.brand-strip::after {            /* gradient hairline */
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brand-from) 15%, var(--brand-to) 70%, transparent);
+  opacity: .9;
+}
+.brand-strip .wrap { display: flex; align-items: center; gap: 28px; height: 60px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; color: var(--text); }
+.logo:hover { text-decoration: none; }
+.logo-mark {
+  width: 30px; height: 30px; border-radius: calc(var(--radius-sm) + 1px);
+  background: var(--brand-gradient);
+  display: grid; place-items: center;
+  box-shadow: 0 0 calc(18px * var(--glow-k)) rgb(124 108 255 / calc(.45 * var(--glow-k))),
+              inset 0 1px 0 rgb(255 255 255 / .3);
+}
+.logo-word {
+  font-family: var(--font-display); font-weight: 700; font-size: 18px;
+  letter-spacing: var(--display-tracking);
+}
+.nav { display: flex; gap: 4px; }
+.nav a {
+  position: relative; padding: 8px 12px; border-radius: var(--radius-sm);
+  color: var(--text-muted); font-size: 14px; font-weight: 500;
+}
+.nav a:hover { color: var(--text); text-decoration: none; background: rgb(255 255 255 / .04); }
+.nav a[aria-current="page"] { color: var(--text); }
+.nav a[aria-current="page"]::after {
+  content: ""; position: absolute; left: 12px; right: 12px; bottom: -11px; height: 2px;
+  border-radius: 2px; background: var(--brand-gradient);
+  box-shadow: 0 0 calc(10px * var(--glow-k)) rgb(139 92 246 / .8);
+}
+.strip-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.strip-chip {
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);
+  padding: 4px 10px; border: 1px solid var(--border); border-radius: var(--radius-pill);
+}
+@media (max-width: 720px) {
+  .nav { display: none; }
+}
+
+/* =====================================================================
+   8. COMPONENTS
+   ===================================================================== */
+
+/* Card (glass or solid) */
+.card {
+  position: relative;
+  background-color: var(--card-bg);
+  background-image: var(--card-sheen);
+  -webkit-backdrop-filter: var(--card-blur);
+          backdrop-filter: var(--card-blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / .04),
+    0 0 calc(30px * var(--glow-k)) rgb(var(--accent-rgb) / calc(.07 * var(--glow-k)));
+  transition: border-color .2s ease, box-shadow .25s ease, transform .2s ease;
+}
+[data-border="accent"] .card { border-color: var(--accent-border); }
+.card--inner { background-color: var(--card-bg-inner); border-radius: var(--radius-sm); }
+[data-border="accent"] .card--inner { border-color: rgb(var(--accent-rgb) / .22); }
+
+/* Interactive card: glowing accent border on hover */
+.card--link:hover, .card--link:focus-visible {
+  border-color: rgb(var(--accent-rgb) / .7);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / .06),
+    0 0 0 1px rgb(var(--accent-rgb) / calc(.25 * var(--glow-k))),
+    0 12px calc(44px * var(--glow-k)) rgb(var(--accent-rgb) / calc(.22 * var(--glow-k)));
+  text-decoration: none;
+}
+
+/* Buttons */
+.btn {
+  --btn-h: 38px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: var(--btn-h); padding: 0 16px;
+  font-family: var(--font-text); font-size: 14px; font-weight: 600; letter-spacing: .005em;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: background .15s ease, border-color .15s ease, color .15s ease, box-shadow .2s ease, transform .08s ease;
+}
+.btn:hover { text-decoration: none; }
+.btn--lg { --btn-h: 46px; padding: 0 22px; font-size: 15px; }
+.btn--primary {
+  background: var(--accent-fill);
+  color: var(--on-accent);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .22),
+              0 4px calc(18px * var(--glow-k)) rgb(var(--accent-rgb) / calc(.25 * var(--glow-k)));
+}
+.btn--primary:hover {
+  background: var(--accent-fill-hover);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .28),
+              0 6px calc(26px * var(--glow-k)) rgb(var(--accent-rgb) / calc(.38 * var(--glow-k)));
+}
+.btn--primary:active { transform: translateY(1px); filter: brightness(.92); box-shadow: inset 0 2px 4px rgb(0 0 0 / .25); }
+.btn--ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.btn--ghost:hover { background: var(--accent-tint); border-color: var(--accent-border); color: var(--accent-text); }
+.btn--ghost:active { background: var(--accent-tint-strong); transform: translateY(1px); }
+.btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgb(var(--accent-rgb) / .18);
+}
+
+/* Badges / pills */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 22px; padding: 0 9px;
+  font-size: 12px; font-weight: 600; line-height: 1;
+  border-radius: var(--radius-pill);
+  color: var(--accent-text);
+  background: var(--accent-tint);
+  border: 1px solid rgb(var(--accent-rgb) / .28);
+  white-space: nowrap;
+}
+.badge--neutral { color: var(--text-muted); background: rgb(255 255 255 / .04); border-color: var(--border-strong); }
+.badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+
+/* Icon tile */
+.icon-tile {
+  width: 44px; height: 44px; flex: none;
+  display: grid; place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--accent-icon);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .3),
+              0 0 calc(22px * var(--glow-k)) rgb(var(--accent-rgb) / calc(.35 * var(--glow-k)));
+}
+.icon-tile svg { width: 22px; height: 22px; }
+.icon-tile--sm { width: 30px; height: 30px; }
+.icon-tile--sm svg { width: 16px; height: 16px; }
+
+/* Form controls */
+.field { display: grid; gap: 6px; }
+.field-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.field label, .field .field-label { font-size: 12.5px; font-weight: 500; color: var(--text-muted); }
+.field output { font-family: var(--font-mono); font-size: 12px; color: var(--accent-text); }
+.input, .select {
+  width: 100%; height: 38px; padding: 0 12px;
+  font: 500 14px/1 var(--font-text);
+  color: var(--text);
+  background: rgb(var(--bg-rgb) / .55);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.input::placeholder { color: var(--text-muted); }
+.input:hover, .select:hover { border-color: rgb(var(--accent-rgb) / .45); }
+.input:focus, .select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / .22),
+              0 0 calc(16px * var(--glow-k)) rgb(var(--accent-rgb) / calc(.25 * var(--glow-k)));
+}
+.select {
+  appearance: none; -webkit-appearance: none;
+  padding-right: 34px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23a0a6cc' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+}
+.select option { background: var(--surface-2); color: var(--text); }
+
+/* Range slider: --fill is set by JS (0%..100%) */
+.range {
+  --fill: 50%;
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 22px; margin: 0;
+  background: transparent; cursor: pointer;
+}
+.range::-webkit-slider-runnable-track {
+  height: 6px; border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent) 0 var(--fill), var(--surface-3) var(--fill) 100%);
+  box-shadow: 0 0 calc(10px * var(--glow-k)) rgb(var(--accent-rgb) / calc(.18 * var(--glow-k)));
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; margin-top: -6px; border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1px rgb(var(--accent-rgb) / .6),
+              0 0 calc(14px * var(--glow-k)) var(--accent-glow);
+  transition: transform .12s ease;
+}
+.range:hover::-webkit-slider-thumb { transform: scale(1.1); }
+.range:active::-webkit-slider-thumb { transform: scale(1.18); }
+.range::-moz-range-track { height: 6px; border-radius: 999px; background: var(--surface-3); }
+.range::-moz-range-progress { height: 6px; border-radius: 999px; background: var(--accent); }
+.range::-moz-range-thumb {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent); border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1px rgb(var(--accent-rgb) / .6), 0 0 calc(14px * var(--glow-k)) var(--accent-glow);
+}
+.range:focus-visible { outline: none; }
+.range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--focus-ring); }
+.range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--focus-ring); }
+
+/* Toggle switch */
+.switch { white-space: nowrap; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13.5px; color: var(--text); }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch-track {
+  position: relative; width: 36px; height: 20px; flex: none;
+  border-radius: 999px; background: var(--surface-3); border: 1px solid var(--border-strong);
+  transition: background .18s ease, border-color .18s ease, box-shadow .2s ease;
+}
+.switch-track::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--text-muted); transition: transform .18s ease, background .18s ease;
+}
+.switch input:checked + .switch-track {
+  background: var(--accent); border-color: var(--accent);
+  box-shadow: 0 0 calc(12px * var(--glow-k)) var(--accent-glow);
+}
+.switch input:checked + .switch-track::after { transform: translateX(16px); background: var(--on-accent); }
+.switch input:focus-visible + .switch-track { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+
+/* =====================================================================
+   9. HOME MOCK
+   ===================================================================== */
+.hero { position: relative; isolation: isolate; padding: 72px 0 56px; text-align: center; }
+.hero .aurora {
+  background:
+    radial-gradient(38% 48% at 32% 42%, rgb(79 70 229 / .32), transparent 70%),
+    radial-gradient(34% 44% at 68% 36%, rgb(139 92 246 / .26), transparent 70%),
+    radial-gradient(24% 34% at 86% 78%, rgb(34 211 238 / .08), transparent 70%),
+    radial-gradient(24% 34% at 12% 80%, rgb(217 70 239 / .08), transparent 70%);
+}
+.kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px 5px 8px; margin-bottom: 22px;
+  font-size: 12.5px; font-weight: 500; color: var(--text-muted);
+  border: 1px solid rgb(124 108 255 / .35); border-radius: var(--radius-pill);
+  background: rgb(124 108 255 / .08);
+}
+.kicker .badge { height: 20px; font-size: 11px; }
+.hero h1 { font-size: clamp(34px, 5vw, 58px); line-height: 1.06; max-width: 860px; margin: 0 auto; }
+.hero .tagline { margin: 18px auto 30px; max-width: 560px; font-size: 17px; color: var(--text-muted); }
+.hero-meta { margin-top: 18px; font-size: 12.5px; color: var(--text-muted); }
+
+.tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.tool-card { display: flex; flex-direction: column; gap: 14px; padding: 22px; color: var(--text); }
+.tool-card .aurora { inset: -10%; opacity: calc(var(--aurora-o) * .6);
+  background: radial-gradient(55% 45% at 20% 0%, rgb(var(--accent-rgb) / .16), transparent 70%); animation: none; }
+.tool-card { isolation: isolate; overflow: hidden; }
+.tool-card-top { display: flex; align-items: center; justify-content: space-between; }
+.tool-card h3 { font-size: 21px; }
+.tool-card p { color: var(--text-muted); font-size: 14.5px; }
+.tool-card-foot {
+  margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; font-size: 13.5px;
+}
+.tool-card-foot .go { white-space: nowrap; color: var(--accent-text); font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+.tool-card-foot .go svg { transition: transform .2s ease; }
+.tool-card:hover .go svg, .tool-card:focus-visible .go svg { transform: translateX(3px); }
+@media (max-width: 900px) { .tool-grid { grid-template-columns: 1fr; } }
+
+/* =====================================================================
+   10. TYPE SCALE
+   ===================================================================== */
+.type-scale { padding: 8px 24px; }
+.ts-row {
+  display: grid; grid-template-columns: 190px 1fr; gap: 20px; align-items: baseline;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+}
+.ts-row:last-child { border-bottom: 0; }
+.ts-meta { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); line-height: 1.5; }
+.ts-meta b { color: var(--accent-text); font-weight: 500; }
+.t-h1 { font-size: 48px; line-height: 1.08; }
+.t-h2 { font-size: 32px; line-height: 1.15; }
+.t-h3 { font-size: 22px; line-height: 1.25; }
+.t-h4 { font-size: 17px; line-height: 1.3; }
+.t-body { font-size: 15px; line-height: 1.6; max-width: 640px; }
+.t-small { font-size: 13px; color: var(--text-muted); }
+.t-mono { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+@media (max-width: 700px) {
+  .ts-row { grid-template-columns: 1fr; gap: 6px; }
+  .t-h1 { font-size: 36px; }
+}
+
+/* =====================================================================
+   11. TOOL SPECIMENS
+   ===================================================================== */
+.spec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+@media (max-width: 1060px) { .spec-grid { grid-template-columns: 1fr; max-width: 520px; } }
+.spec-cell { position: relative; isolation: isolate; }
+.spec-cell .aurora {
+  inset: -14% -18%;
+  background: radial-gradient(48% 40% at 50% 30%, rgb(var(--accent-rgb) / .20), transparent 72%);
+}
+.specimen { padding: 20px; display: grid; gap: 18px; }
+.spec-head { display: flex; align-items: center; gap: 10px; }
+.spec-head .name { font-family: var(--font-display); font-weight: var(--display-weight); font-size: 15px; letter-spacing: var(--display-tracking); }
+.spec-head .badge { margin-left: auto; }
+.spec-type { display: grid; gap: 6px; }
+.spec-type h3 { font-size: 22px; }
+.spec-type p { font-size: 14px; color: var(--text-muted); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn-row .btn { flex: 1 1 auto; }
+
+.ex-card { padding: 16px; display: grid; gap: 12px; }
+.ex-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.ex-title { font-family: var(--font-display); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); font-size: 15.5px; }
+.ex-sub { font-size: 12.5px; color: var(--text-muted); }
+.ex-badges { display: flex; gap: 6px; flex-wrap: nowrap; }
+.big-num {
+  font-family: var(--font-display); font-weight: var(--display-weight);
+  font-size: 40px; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+}
+.big-num small { font-family: var(--font-text); font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--text-muted); margin-left: 6px; }
+.big-num .unit { color: var(--accent-text); }
+
+.mini-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.mini-table td { padding: 6px 0; border-top: 1px solid var(--border); }
+.mini-table td:last-child { text-align: right; }
+.mini-table .mono { font-size: 12px; color: var(--text-muted); }
+
+.form-stack { display: grid; gap: 14px; }
+
+/* ArtNuvio poster preview */
+.poster-row { display: grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: stretch; }
+.poster {
+  --poster-font: 22px; --poster-zoom: 110%;
+  position: relative; aspect-ratio: 2 / 3; overflow: hidden;
+  border-radius: calc(var(--radius-sm) - 1px);
+  border: 1px solid rgb(var(--accent-rgb) / .35);
+  background:
+    radial-gradient(22% 15% at 64% 38%, #ffd9a0 0%, #f2a052 45%, transparent 75%),
+    linear-gradient(180deg, #0b1a44 0%, #23336f 35%, #b2622e 62%, #6a3415 78%, #1b0d05 100%);
+  background-size: var(--poster-zoom) var(--poster-zoom);
+  background-position: center;
+  box-shadow: 0 0 calc(18px * var(--glow-k)) rgb(var(--accent-rgb) / calc(.25 * var(--glow-k)));
+}
+.poster::after {   /* dunes */
+  content: ""; position: absolute; left: -10%; right: -10%; bottom: 0; height: 34%;
+  background: radial-gradient(70% 90% at 30% 100%, #2a1408 60%, transparent 61%),
+              radial-gradient(60% 80% at 80% 100%, #3a1c0a 60%, transparent 61%);
+}
+.poster-title {
+  position: absolute; z-index: 1; left: 0; right: 0; bottom: 12%;
+  text-align: center; color: #fff;
+  font-family: var(--font-display); font-weight: 700; letter-spacing: .08em;
+  font-size: var(--poster-font); line-height: .95;
+  text-shadow: 0 2px 12px rgb(0 0 0 / .6);
+}
+.poster-meta { display: grid; align-content: space-between; gap: 8px; }
+
+/* Collectio folders */
+.folder-list { display: grid; gap: 6px; }
+.folder-row {
+  display: grid; grid-template-columns: 14px 30px 1fr auto; gap: 10px; align-items: center;
+  padding: 7px 8px; border-radius: var(--radius-sm);
+  border: 1px solid transparent; font-size: 13px;
+}
+.folder-row:hover { background: rgb(255 255 255 / .03); border-color: var(--border); }
+.folder-row.is-dragging {
+  background: var(--accent-tint); border-color: var(--accent-border);
+  box-shadow: 0 8px 22px rgb(0 0 0 / .35), 0 0 calc(16px * var(--glow-k)) rgb(var(--accent-rgb) / calc(.25 * var(--glow-k)));
+}
+.grip { color: var(--text-muted); }
+.folder-art { width: 30px; height: 30px; border-radius: calc(var(--radius-sm) - 2px); }
+.folder-row .mono { font-size: 12px; color: var(--text-muted); }
+
+/* =====================================================================
+   12. CONTROL PANEL (uses brand accent, never a tool accent)
+   ===================================================================== */
+.panel {
+  position: fixed; z-index: 50; right: 16px; top: 76px;
+  width: 320px; max-height: calc(100vh - 92px);
+  display: flex; flex-direction: column;
+  background: rgb(var(--surface-1-rgb) / .92);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+          backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  box-shadow: 0 24px 60px rgb(0 0 0 / .55), 0 0 0 1px rgb(124 108 255 / .12);
+  font-family: "Inter", system-ui, sans-serif;  /* fixed so the panel stays readable */
+  font-size: 13px;
+}
+.panel-head {
+  display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.panel-head strong { font-size: 13px; font-weight: 600; }
+.panel-head .current { font-size: 12px; color: var(--accent-text); }
+.panel-toggle {
+  margin-left: auto; height: 28px; padding: 0 10px; border-radius: 6px;
+  background: transparent; color: var(--text-muted); border: 1px solid var(--border-strong);
+  font: 500 12px/1 "Inter", sans-serif; cursor: pointer;
+}
+.panel-toggle:hover { color: var(--text); border-color: var(--accent-border); }
+.panel-body { overflow: auto; padding: 12px 14px 14px; display: grid; gap: 14px; }
+html[data-panel="closed"] .panel-body { display: none; }
+html[data-panel="closed"] .panel-head { border-bottom: 0; }
+html[data-panel="closed"] .panel { width: auto; }
+
+.panel fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.panel legend, .panel .p-label {
+  padding: 0; margin-bottom: 6px;
+  font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted);
+}
+.presets { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.preset-btn {
+  text-align: left; padding: 8px 10px; border-radius: 7px; cursor: pointer;
+  background: rgb(255 255 255 / .02); color: var(--text);
+  border: 1px solid var(--border-strong);
+  font: 600 12.5px/1.25 "Inter", sans-serif;
+}
+.preset-btn span { display: block; margin-top: 3px; font-weight: 400; font-size: 11px; color: var(--text-muted); }
+.preset-btn:hover { border-color: var(--accent-border); background: var(--accent-tint); }
+.preset-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-tint-strong); box-shadow: 0 0 14px rgb(124 108 255 / .25); }
+
+.seg { display: flex; flex-wrap: wrap; gap: 4px; padding: 3px; border-radius: 8px; background: rgb(var(--bg-rgb) / .6); border: 1px solid var(--border); }
+.seg label { flex: 1 1 auto; position: relative; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg span {
+  display: block; text-align: center; padding: 5px 8px; border-radius: 6px;
+  color: var(--text-muted); font-size: 12px; font-weight: 500; white-space: nowrap;
+}
+.seg label:hover span { color: var(--text); }
+.seg input:checked + span { background: var(--brand-fill); color: #fff; box-shadow: inset 0 1px 0 rgb(255 255 255 / .2); }
+.seg input:focus-visible + span { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+
+.font-list { display: grid; gap: 3px; }
+.font-list label { position: relative; display: block; }
+.font-list input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.font-list span {
+  display: flex; align-items: baseline; gap: 10px; padding: 6px 10px; border-radius: 7px;
+  border: 1px solid transparent; color: var(--text-muted); font-size: 12.5px;
+}
+.font-list span i { font-style: normal; font-size: 16px; color: var(--text); width: 26px; }
+.font-list span em { margin-left: auto; font-style: normal; font-size: 10.5px; color: var(--text-muted); }
+.font-list label:hover span { background: rgb(255 255 255 / .03); color: var(--text); }
+.font-list input:checked + span { border-color: var(--accent); background: var(--accent-tint-strong); color: var(--text); }
+.font-list input:focus-visible + span { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+.panel-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.readout {
+  margin: 0; padding: 10px; border-radius: 8px;
+  background: rgb(var(--bg-rgb) / .7); border: 1px solid var(--border);
+  font: 400 11px/1.6 "JetBrains Mono", ui-monospace, monospace; color: var(--text-muted);
+  white-space: pre-wrap; word-break: break-word;
+}
+.readout b { color: var(--text); font-weight: 500; }
+.swatch { display: inline-block; width: 9px; height: 9px; border-radius: 2px; vertical-align: -1px; margin-right: 4px; border: 1px solid rgb(255 255 255 / .2); }
+.panel-actions { display: flex; gap: 6px; }
+.panel-actions button {
+  flex: 1; height: 30px; border-radius: 7px; cursor: pointer;
+  background: rgb(255 255 255 / .03); color: var(--text); border: 1px solid var(--border-strong);
+  font: 500 12px/1 "Inter", sans-serif;
+}
+.panel-actions button:hover { border-color: var(--accent-border); background: var(--accent-tint); }
+.copy-status { font-size: 11.5px; color: var(--accent-text); min-height: 1em; }
+
+@media (max-width: 700px) {
+  .panel { left: 8px; right: 8px; top: auto; bottom: 8px; width: auto; max-height: 70vh; }
+}
+
+/* =====================================================================
+   13. REDUCED MOTION
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .card--link:hover, .card--link:focus-visible,
+  .btn:active, .range:hover::-webkit-slider-thumb, .range:active::-webkit-slider-thumb { transform: none; }
+}
+
+footer.mb-foot { padding: 40px 0 80px; font-size: 12.5px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="bg-pattern" aria-hidden="true"></div>
+
+<!-- SVG icon sprites -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 6h12M8 12h12M8 18h8"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>
+  </symbol>
+  <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5.5-5.5L5 20"/>
+  </symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2.2h7.5A2.5 2.5 0 0 1 21 9.7v7.8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><path d="M12 11.5l1 2 2.2.3-1.6 1.5.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.5 2.2-.3z"/>
+  </symbol>
+  <symbol id="i-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 8h10M9 4l4 4-4 4"/>
+  </symbol>
+  <symbol id="i-grip" viewBox="0 0 14 14" fill="currentColor">
+    <circle cx="4.5" cy="3" r="1.2"/><circle cx="9.5" cy="3" r="1.2"/><circle cx="4.5" cy="7" r="1.2"/><circle cx="9.5" cy="7" r="1.2"/><circle cx="4.5" cy="11" r="1.2"/><circle cx="9.5" cy="11" r="1.2"/>
+  </symbol>
+</svg>
+
+  <!-- ============ BRAND STRIP (always brand gradient) ============ -->
+  <header class="brand-strip">
+    <div class="wrap-outer"><div class="wrap">
+      <a class="logo" href="#home" aria-label="Nuvio Tools home">
+        <span class="logo-mark" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 1.8v10.4L12 7z" fill="#fff"/></svg>
+        </span>
+        <span class="logo-word grad-text">Nuvio Tools</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="#home" aria-current="page">Home</a>
+        <a href="#spec-listio">Listio</a>
+        <a href="#spec-artnuvio">ArtNuvio</a>
+        <a href="#spec-collectio">Collectio</a>
+      </nav>
+      <div class="strip-right">
+        <span class="strip-chip">mood board · opus</span>
+      </div>
+    </div></div>
+  </header>
+
+<div class="page">
+
+
+  <main class="wrap">
+
+    <!-- ============ 01 HOME MOCK ============ -->
+    <section class="mb-section" id="home" aria-labelledby="h-home">
+      <div class="mb-heading"><span class="num">01</span><h2 id="h-home">Home mock</h2><p>Brand strip + hero use the brand gradient. Each card carries its tool accent.</p></div>
+
+      <div class="hero">
+        <div class="aurora" aria-hidden="true"></div>
+        <div class="kicker"><span class="badge">New</span> Collectio folder artwork is live</div>
+        <h1>Tools for a <span class="grad-text">sharper Nuvio setup</span></h1>
+        <p class="tagline">Curate lists, fit artwork and organise collections. Three small tools made for the Nuvio community, all in one place.</p>
+        <a class="btn btn--primary btn--lg" href="#tools">Explore the tools
+          <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <p class="hero-meta mono">Free · No account needed · Works with Trakt, MDBList and IMDb</p>
+      </div>
+
+      <div class="tool-grid" id="tools">
+        <a class="card card--link tool-card" data-tool="listio" href="#spec-listio">
+          <div class="aurora" aria-hidden="true"></div>
+          <div class="tool-card-top">
+            <span class="icon-tile"><svg aria-hidden="true"><use href="#i-list"/></svg></span>
+            <span class="badge"><span class="dot"></span>Lists</span>
+          </div>
+          <div>
+            <h3>Listio</h3>
+            <p>Merge Trakt, MDBList and IMDb lists into clean catalogs and publish them to Nuvio.</p>
+          </div>
+          <div class="tool-card-foot"><span class="mono muted">12 catalogs · 3 sources</span><span class="go">Open Listio <svg width="14" height="14" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
+        </a>
+
+        <a class="card card--link tool-card" data-tool="artnuvio" href="#spec-artnuvio">
+          <div class="aurora" aria-hidden="true"></div>
+          <div class="tool-card-top">
+            <span class="icon-tile"><svg aria-hidden="true"><use href="#i-image"/></svg></span>
+            <span class="badge"><span class="dot"></span>Artwork</span>
+          </div>
+          <div>
+            <h3>ArtNuvio</h3>
+            <p>Fit any image to Nuvio's poster, hero and landscape sizes, with optional title text.</p>
+          </div>
+          <div class="tool-card-foot"><span class="mono muted">3 formats · PNG / JPG</span><span class="go">Open ArtNuvio <svg width="14" height="14" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
+        </a>
+
+        <a class="card card--link tool-card" data-tool="collectio" href="#spec-collectio">
+          <div class="aurora" aria-hidden="true"></div>
+          <div class="tool-card-top">
+            <span class="icon-tile"><svg aria-hidden="true"><use href="#i-folder"/></svg></span>
+            <span class="badge"><span class="dot"></span>Collections</span>
+          </div>
+          <div>
+            <h3>Collectio</h3>
+            <p>Drag and drop your Nuvio collections into folders and give each folder its own artwork.</p>
+          </div>
+          <div class="tool-card-foot"><span class="mono muted">21 folders</span><span class="go">Open Collectio <svg width="14" height="14" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ 02 TYPE SCALE ============ -->
+    <section class="mb-section" id="type" aria-labelledby="h-type">
+      <div class="mb-heading"><span class="num">02</span><h2 id="h-type">Type scale</h2><p><span data-fontname="display">…</span> + <span data-fontname="text">…</span> + <span data-fontname="mono">…</span></p></div>
+      <div class="card type-scale">
+        <div class="ts-row"><div class="ts-meta"><b>H1</b> · 48 / 1.08<br>display · <span data-weight>600</span></div><h1 class="t-h1">Curated lists, ready to publish</h1></div>
+        <div class="ts-row"><div class="ts-meta"><b>H2</b> · 32 / 1.15<br>display · <span data-weight>600</span></div><h2 class="t-h2">Modern Horror Essentials</h2></div>
+        <div class="ts-row"><div class="ts-meta"><b>H3</b> · 22 / 1.25<br>display · <span data-weight>600</span></div><h3 class="t-h3">Folder artwork</h3></div>
+        <div class="ts-row"><div class="ts-meta"><b>H4</b> · 17 / 1.3<br>display · <span data-weight>600</span></div><h4 class="t-h4">Catalog settings</h4></div>
+        <div class="ts-row"><div class="ts-meta"><b>Body</b> · 15 / 1.6<br>text · 400</div><p class="t-body">Listio merges your Trakt, MDBList and IMDb lists, removes duplicates and publishes a single catalog that Nuvio can read. Changes sync every few hours.</p></div>
+        <div class="ts-row"><div class="ts-meta"><b>Small</b> · 13 / 1.5<br>text · 400 · muted</div><p class="t-small">Last synced 4 minutes ago · 1,284 titles across 12 catalogs</p></div>
+        <div class="ts-row"><div class="ts-meta"><b>Label</b> · 11.5 · +0.1em<br>display · 600 · caps</div><p class="label">Poster · 2:3 · 1000 × 1500</p></div>
+        <div class="ts-row"><div class="ts-meta"><b>Mono</b> · 13<br>mono · 500</div><p class="t-mono">tt7784604 · tt8772262 · 1,284 titles · 3840×2160</p></div>
+      </div>
+    </section>
+
+    <!-- ============ 03 TOOL SPECIMENS ============ -->
+    <section class="mb-section" id="specimens" aria-labelledby="h-spec">
+      <div class="mb-heading"><span class="num">03</span><h2 id="h-spec">Tool specimens</h2><p>Each square is wrapped in <span class="mono">data-tool</span>. Tab through to check focus.</p></div>
+
+      <div class="spec-grid">
+
+        <!-- ---------- LISTIO ---------- -->
+        <div class="spec-cell" data-tool="listio" id="spec-listio">
+          <div class="aurora" aria-hidden="true"></div>
+          <article class="card specimen" aria-label="Listio specimen">
+            <div class="spec-head">
+              <span class="icon-tile icon-tile--sm"><svg aria-hidden="true"><use href="#i-list"/></svg></span>
+              <span class="name">Listio</span>
+              <span class="badge"><span class="dot"></span>Synced</span>
+            </div>
+            <div class="spec-type">
+              <h3>Build a catalog</h3>
+              <p>Combine Trakt, MDBList and IMDb lists, drop the duplicates and publish.</p>
+              <p class="label">Catalog · last sync 4 min ago</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn--primary" type="button">Publish catalog</button>
+              <button class="btn btn--ghost" type="button">Preview</button>
+            </div>
+            <div class="card card--inner ex-card">
+              <div class="ex-top">
+                <div><div class="ex-title">Modern Horror Essentials</div><div class="ex-sub">Trakt + MDBList · <a href="#spec-listio">edit sources</a></div></div>
+                <div class="ex-badges"><span class="badge">48 Titles</span></div>
+              </div>
+              <div class="big-num">48<small>titles · 6 duplicates removed</small></div>
+              <table class="mini-table">
+                <tr><td>Hereditary <span class="muted">2018</span></td><td class="mono">tt7784604</td></tr>
+                <tr><td>Midsommar <span class="muted">2019</span></td><td class="mono">tt8772262</td></tr>
+                <tr><td>The Witch <span class="muted">2015</span></td><td class="mono">tt4263482</td></tr>
+              </table>
+            </div>
+            <div class="form-stack">
+              <div class="field">
+                <label for="l-url">Trakt list URL</label>
+                <input class="input" id="l-url" type="text" placeholder="trakt.tv/users/…/lists/…" value="trakt.tv/users/nuvio/lists/modern-horror">
+              </div>
+              <div class="field">
+                <div class="field-row"><label for="l-rating">Minimum IMDb rating</label><output for="l-rating" data-out="l-rating" data-fmt="1">6.5</output></div>
+                <input class="range" id="l-rating" type="range" min="0" max="10" step="0.1" value="6.5">
+              </div>
+              <div class="field-row">
+                <select class="select" aria-label="Sort titles by" style="max-width: 170px">
+                  <option>Sort: Popularity</option><option>Sort: Release date</option><option>Sort: IMDb rating</option><option>Sort: Recently added</option>
+                </select>
+                <label class="switch"><input type="checkbox" role="switch" checked><span class="switch-track"></span>Hide watched</label>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- ---------- ARTNUVIO ---------- -->
+        <div class="spec-cell" data-tool="artnuvio" id="spec-artnuvio">
+          <div class="aurora" aria-hidden="true"></div>
+          <article class="card specimen" aria-label="ArtNuvio specimen">
+            <div class="spec-head">
+              <span class="icon-tile icon-tile--sm"><svg aria-hidden="true"><use href="#i-image"/></svg></span>
+              <span class="name">ArtNuvio</span>
+              <span class="badge badge--neutral">Draft</span>
+            </div>
+            <div class="spec-type">
+              <h3>Fit your artwork</h3>
+              <p>Crop and scale an image to Nuvio's poster, hero or landscape size.</p>
+              <p class="label">Output · poster 2:3</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn--primary" type="button">Export PNG</button>
+              <button class="btn btn--ghost" type="button">Reset</button>
+            </div>
+            <div class="card card--inner ex-card">
+              <div class="poster-row">
+                <div class="poster" id="poster" role="img" aria-label="Poster preview: Dune Part Two"><span class="poster-title" id="poster-title">DUNE<br>PART TWO</span></div>
+                <div class="poster-meta">
+                  <div>
+                    <div class="ex-title">Dune: Part Two</div>
+                    <div class="ex-sub">dune2-key-art.jpg · 2.4 MB</div>
+                  </div>
+                  <div class="ex-badges"><span class="badge">Poster</span><span class="badge badge--neutral">2:3</span></div>
+                  <div class="big-num mono" style="font-size: 24px;">1000<span class="unit">×</span>1500</div>
+                </div>
+              </div>
+            </div>
+            <div class="form-stack">
+              <div class="field">
+                <label for="a-text">Title text</label>
+                <input class="input" id="a-text" type="text" value="DUNE / PART TWO" placeholder="Add a title…">
+              </div>
+              <div class="field">
+                <div class="field-row"><label for="a-font">Font size</label><output data-out="a-font" data-suffix="px">22px</output></div>
+                <input class="range" id="a-font" type="range" min="12" max="34" value="22">
+              </div>
+              <div class="field">
+                <div class="field-row"><label for="a-zoom">Image size</label><output data-out="a-zoom" data-suffix="%">110%</output></div>
+                <input class="range" id="a-zoom" type="range" min="100" max="180" value="110">
+              </div>
+              <div class="field">
+                <label for="a-format">Format</label>
+                <select class="select" id="a-format">
+                  <option>Poster · 2:3 · 1000 × 1500</option>
+                  <option>Hero · 16:9 · 3840 × 2160</option>
+                  <option>Landscape · 16:9 · 1280 × 720</option>
+                </select>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- ---------- COLLECTIO ---------- -->
+        <div class="spec-cell" data-tool="collectio" id="spec-collectio">
+          <div class="aurora" aria-hidden="true"></div>
+          <article class="card specimen" aria-label="Collectio specimen">
+            <div class="spec-head">
+              <span class="icon-tile icon-tile--sm"><svg aria-hidden="true"><use href="#i-folder"/></svg></span>
+              <span class="name">Collectio</span>
+              <span class="badge"><span class="dot"></span>3 folders</span>
+            </div>
+            <div class="spec-type">
+              <h3>Organise collections</h3>
+              <p>Drag collections into folders and set artwork for each folder.</p>
+              <p class="label">Collection · Directors</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn--primary" type="button">New folder</button>
+              <button class="btn btn--ghost" type="button">Rename</button>
+            </div>
+            <div class="card card--inner ex-card">
+              <div class="ex-top">
+                <div><div class="ex-title">Directors</div><div class="ex-sub">3 folders · edited today</div></div>
+                <div class="ex-badges"><span class="badge">69 Titles</span><span class="badge badge--neutral">Draft</span></div>
+              </div>
+              <div class="big-num">69<small>titles in 3 folders</small></div>
+              <div class="folder-list">
+                <div class="folder-row"><svg class="grip" width="14" height="14" aria-hidden="true"><use href="#i-grip"/></svg><span class="folder-art" style="background: linear-gradient(135deg,#1e3a8a,#0f172a 60%,#f59e0b);"></span><span>Christopher Nolan</span><span class="mono">12</span></div>
+                <div class="folder-row is-dragging"><svg class="grip" width="14" height="14" aria-hidden="true"><use href="#i-grip"/></svg><span class="folder-art" style="background: linear-gradient(135deg,#065f46,#a7f3d0 70%,#fef3c7);"></span><span>Studio Ghibli</span><span class="mono">23</span></div>
+                <div class="folder-row"><svg class="grip" width="14" height="14" aria-hidden="true"><use href="#i-grip"/></svg><span class="folder-art" style="background: linear-gradient(135deg,#7f1d1d,#111 55%,#dc2626);"></span><span>Denis Villeneuve</span><span class="mono">34</span></div>
+              </div>
+            </div>
+            <div class="form-stack">
+              <div class="field">
+                <label for="c-name">Folder name</label>
+                <input class="input" id="c-name" type="text" placeholder="e.g. A24 Favourites" value="">
+              </div>
+              <div class="field">
+                <div class="field-row"><label for="c-tile">Tile size</label><output data-out="c-tile" data-suffix="px">160px</output></div>
+                <input class="range" id="c-tile" type="range" min="96" max="240" step="8" value="160">
+              </div>
+              <div class="field-row">
+                <select class="select" aria-label="Folder layout" style="max-width: 150px">
+                  <option>Layout: Grid</option><option>Layout: Row</option><option>Layout: List</option>
+                </select>
+                <label class="switch"><input type="checkbox" role="switch" checked><span class="switch-track"></span>Folder artwork</label>
+              </div>
+            </div>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <footer class="mb-foot">Mood board only. Tokens and typography are the keepers; everything else is throwaway.</footer>
+  </main>
+</div>
+
+<!-- ============ CONTROL PANEL ============ -->
+<aside class="panel" aria-label="Theme controls">
+  <div class="panel-head">
+    <strong>Theme</strong>
+    <span class="current" id="preset-name">Nuvio Classic</span>
+    <button class="panel-toggle" id="panel-toggle" type="button" aria-expanded="true" aria-controls="panel-body">Hide</button>
+  </div>
+  <div class="panel-body" id="panel-body">
+    <div>
+      <div class="p-label">Preset</div>
+      <div class="presets" id="presets"></div>
+    </div>
+    <div id="controls"></div>
+    <div>
+      <div class="p-label">Current choices</div>
+      <div class="readout" id="readout"></div>
+    </div>
+    <div class="panel-actions">
+      <button type="button" id="copy-link">Copy link</button>
+      <button type="button" id="copy-readout">Copy readout</button>
+    </div>
+    <div class="copy-status" id="copy-status" role="status" aria-live="polite"></div>
+  </div>
+</aside>
+
+<script>
+(() => {
+  const root = document.documentElement;
+
+  /* ---- Controls: key -> data-* attribute on <html> ---- */
+  const CONTROLS = [
+    { key: 'font', label: 'Font pair', type: 'fonts', options: [
+      ['sg-inter',       'Space Grotesk + Inter',  'Space Grotesk'],
+      ['sora-inter',     'Sora + Inter',           'Sora'],
+      ['geist',          'Geist + Geist Mono',     'Geist'],
+      ['outfit-manrope', 'Outfit + Manrope',       'Outfit'],
+      ['syne-inter',     'Syne + Inter',           'Syne', 'too far'],
+      ['jakarta-inter',  'Plus Jakarta + Inter',   'Plus Jakarta Sans', 'extra'],
+    ]},
+    { key: 'bg',      label: 'Background', options: [['navy', 'Tinted navy'], ['neutral', 'Near-black']] },
+    { key: 'pattern', label: 'Pattern',    options: [['none', 'None'], ['grid', 'Grid'], ['dots', 'Dots'], ['noise', 'Noise']] },
+    { key: 'aurora',  label: 'Aurora glow', options: [['on', 'On'], ['off', 'Off']], half: true },
+    { key: 'glass',   label: 'Glass',      options: [['on', 'On'], ['off', 'Off']], half: true },
+    { key: 'radius',  label: 'Radius',     options: [['sharp', 'Sharp 4'], ['medium', 'Medium 10'], ['soft', 'Soft 16']] },
+    { key: 'glow',    label: 'Glow intensity', options: [['off', 'Off'], ['subtle', 'Subtle'], ['strong', 'Strong']] },
+    { key: 'border',  label: 'Border style', options: [['hairline', 'Hairline neutral'], ['accent', 'Accent-tinted']] },
+  ];
+
+  /* ---- Presets ---- */
+  const PRESETS = [
+    { id: 'nuvio-classic', name: 'Nuvio Classic', note: 'Navy, glass, soft glow',
+      state: { font: 'sg-inter', bg: 'navy', pattern: 'none', aurora: 'on', glass: 'on', radius: 'medium', glow: 'subtle', border: 'accent' } },
+    { id: 'sharp-dashboard', name: 'Sharp Dashboard', note: 'Geist, solid, grid',
+      state: { font: 'geist', bg: 'neutral', pattern: 'grid', aurora: 'off', glass: 'off', radius: 'sharp', glow: 'subtle', border: 'hairline' } },
+    { id: 'soft-glass', name: 'Soft Glass', note: 'Rounded, strong glow',
+      state: { font: 'outfit-manrope', bg: 'navy', pattern: 'noise', aurora: 'on', glass: 'on', radius: 'soft', glow: 'strong', border: 'accent' } },
+    { id: 'midnight-console', name: 'Midnight Console', note: 'Sora, crisp, dotted',
+      state: { font: 'sora-inter', bg: 'navy', pattern: 'dots', aurora: 'on', glass: 'on', radius: 'sharp', glow: 'subtle', border: 'hairline' } },
+  ];
+
+  const state = { ...PRESETS[0].state };
+
+  /* ---- Build panel ---- */
+  const presetsEl = document.getElementById('presets');
+  PRESETS.forEach(p => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'preset-btn';
+    b.dataset.preset = p.id;
+    b.innerHTML = `${p.name}<span>${p.note}</span>`;
+    b.addEventListener('click', () => { Object.assign(state, p.state); apply(); });
+    presetsEl.appendChild(b);
+  });
+
+  const controlsEl = document.getElementById('controls');
+  controlsEl.style.display = 'grid';
+  controlsEl.style.gap = '14px';
+  let pairRow = null;
+  CONTROLS.forEach(c => {
+    const fs = document.createElement('fieldset');
+    const lg = document.createElement('legend');
+    lg.textContent = c.label;
+    fs.appendChild(lg);
+    const box = document.createElement('div');
+    box.className = c.type === 'fonts' ? 'font-list' : 'seg';
+    c.options.forEach(([value, text, family, note]) => {
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = c.key;
+      input.value = value;
+      input.addEventListener('change', () => { state[c.key] = value; apply(); });
+      const span = document.createElement('span');
+      if (c.type === 'fonts') {
+        span.innerHTML = `<i style="font-family:'${family}'">Aa</i>${text}${note ? `<em>${note}</em>` : ''}`;
+      } else {
+        span.textContent = text;
+      }
+      label.append(input, span);
+      box.appendChild(label);
+    });
+    fs.appendChild(box);
+    if (c.half) {
+      if (!pairRow) { pairRow = document.createElement('div'); pairRow.className = 'panel-grid2'; controlsEl.appendChild(pairRow); }
+      pairRow.appendChild(fs);
+    } else {
+      pairRow = null;
+      controlsEl.appendChild(fs);
+    }
+  });
+
+  /* ---- Apply state ---- */
+  function matchingPreset() {
+    return PRESETS.find(p => CONTROLS.every(c => p.state[c.key] === state[c.key]));
+  }
+
+  function apply(writeHash = true) {
+    CONTROLS.forEach(c => { root.dataset[c.key] = state[c.key]; });
+    // sync radios
+    CONTROLS.forEach(c => {
+      const r = controlsEl.querySelector(`input[name="${c.key}"][value="${state[c.key]}"]`);
+      if (r) r.checked = true;
+    });
+    const p = matchingPreset();
+    presetsEl.querySelectorAll('.preset-btn').forEach(b => b.setAttribute('aria-pressed', String(!!p && b.dataset.preset === p.id)));
+    document.getElementById('preset-name').textContent = p ? p.name : 'Custom';
+    if (writeHash) {
+      const hash = '#' + CONTROLS.map(c => `${c.key}=${state[c.key]}`).join('&');
+      history.replaceState(null, '', hash);
+    }
+    requestAnimationFrame(updateReadout);
+  }
+
+  function readHash() {
+    const params = new URLSearchParams(location.hash.slice(1));
+    CONTROLS.forEach(c => {
+      const v = params.get(c.key);
+      if (v && c.options.some(o => o[0] === v)) state[c.key] = v;
+    });
+  }
+
+  /* ---- Readout ---- */
+  const css = (el, name) => getComputedStyle(el).getPropertyValue(name).trim();
+  const family = name => css(root, name).split(',')[0].replace(/["']/g, '').trim();
+  const sw = hex => `<span class="swatch" style="background:${hex}"></span>${hex}`;
+
+  function updateReadout() {
+    const fonts = { display: family('--font-display'), text: family('--font-text'), mono: family('--font-mono') };
+    document.querySelectorAll('[data-fontname]').forEach(el => { el.textContent = fonts[el.dataset.fontname]; });
+    document.querySelectorAll('[data-weight]').forEach(el => { el.textContent = css(root, '--display-weight'); });
+
+    const tools = ['listio', 'artnuvio', 'collectio'].map(t => {
+      const el = document.querySelector(`.spec-cell[data-tool="${t}"]`);
+      return { t, accent: css(el, '--accent'), hover: css(el, '--accent-hover'), text: css(el, '--accent-text'), on: css(el, '--on-accent') };
+    });
+    const p = matchingPreset();
+    const lines = [
+      `<b>preset</b>   ${p ? p.name : 'Custom'}`,
+      `<b>display</b>  ${fonts.display}`,
+      `<b>text</b>     ${fonts.text}  <b>mono</b> ${fonts.mono}`,
+      `<b>bg</b>       ${sw(css(root, '--bg'))}`,
+      `<b>surface</b>  ${sw(css(root, '--surface-1'))} ${sw(css(root, '--surface-2'))}`,
+      `<b>border</b>   ${sw(css(root, '--border'))} ${sw(css(root, '--border-strong'))}`,
+      `<b>text</b>     ${sw(css(root, '--text'))} muted ${sw(css(root, '--text-muted'))}`,
+      `<b>brand</b>    ${sw(css(root, '--brand-from'))} → ${sw(css(root, '--brand-to'))}`,
+      ...tools.map(x => `<b>${x.t.padEnd(9)}</b>${sw(x.accent)} hover ${x.hover}\n         text ${x.text} on ${x.on}`),
+      `<b>shape</b>    radius ${css(root, '--radius')} · border ${state.border}`,
+      `<b>effects</b>  glass ${state.glass} · glow ${state.glow}`,
+      `<b>         </b>aurora ${state.aurora} · pattern ${state.pattern}`,
+    ];
+    document.getElementById('readout').innerHTML = lines.join('\n');
+  }
+
+  /* ---- Copy helpers ---- */
+  const status = document.getElementById('copy-status');
+  async function copy(text, msg) {
+    try { await navigator.clipboard.writeText(text); status.textContent = msg; }
+    catch { window.prompt('Copy this:', text); }
+    setTimeout(() => { status.textContent = ''; }, 1800);
+  }
+  document.getElementById('copy-link').addEventListener('click', () => copy(location.href, 'Link copied'));
+  document.getElementById('copy-readout').addEventListener('click', () => copy(document.getElementById('readout').innerText, 'Readout copied'));
+
+  /* ---- Panel collapse ---- */
+  const toggle = document.getElementById('panel-toggle');
+  toggle.addEventListener('click', () => {
+    const open = root.dataset.panel !== 'open';
+    root.dataset.panel = open ? 'open' : 'closed';
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? 'Hide' : 'Show';
+  });
+  if (window.matchMedia('(max-width: 700px)').matches) toggle.click();
+
+  /* ---- Range sliders: fill + live outputs ---- */
+  const poster = document.getElementById('poster');
+  const posterTitle = document.getElementById('poster-title');
+  function syncRange(r) {
+    const pct = ((r.value - r.min) / (r.max - r.min)) * 100;
+    r.style.setProperty('--fill', pct + '%');
+    const out = document.querySelector(`[data-out="${r.id}"]`);
+    if (out) out.textContent = (out.dataset.fmt ? Number(r.value).toFixed(out.dataset.fmt) : r.value) + (out.dataset.suffix || '');
+    if (r.id === 'a-font') poster.style.setProperty('--poster-font', r.value + 'px');
+    if (r.id === 'a-zoom') poster.style.setProperty('--poster-zoom', r.value + '%');
+  }
+  document.querySelectorAll('.range').forEach(r => { syncRange(r); r.addEventListener('input', () => syncRange(r)); });
+  document.getElementById('a-text').addEventListener('input', e => {
+    posterTitle.innerHTML = '';
+    e.target.value.split('/').forEach((part, i) => {
+      if (i) posterTitle.appendChild(document.createElement('br'));
+      posterTitle.appendChild(document.createTextNode(part.trim()));
+    });
+  });
+
+  /* ---- Init ---- */
+  readHash();
+  apply();
+  window.addEventListener('hashchange', () => { readHash(); apply(false); });
+  if (document.fonts) document.fonts.ready.then(updateReadout);
+})();
+</script>
+</body>
+</html>

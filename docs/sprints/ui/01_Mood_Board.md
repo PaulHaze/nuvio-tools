@@ -188,4 +188,33 @@ which one you would pick and why.
 
 ## Chosen direction
 
-_To be filled in once the mood board iteration is done._
+### Settled decisions:
+
+OVERALL: I think Astra was pretty good and has got the closest across the board. (docs/sprints/html_UI_mocks/moodboard-Astra.html)
+
+FONT PAIRING:
+
+- Headlines/Headers: Outfit
+- Body: Inter
+- Mono font: Geist Mono
+
+COLOUR SCHEMES: Afterglow from ASTRA
+
+THEME (including glow, borders etc):
+
+BG: Tinted (navy/green/magenta depending on which tool we are in). Not QUITE as tinted as the html, but more than the dark black option
+
+Corners: Sharp
+
+Glow: Subtle
+
+This combinations but with slightly less 'Aurora Glow'
+
+file:///Users/paulhayes/code/AI/nuvio_projects/nuvio-tools/docs/sprints/html_UI_mocks/moodboard-Astra.html#font=sora&background=navy&pattern=dots&radius=medium&glow=strong&border=accent&aurora=on&glass=on
+
+INDIVIDUAL ELEMENTS:
+
+- Background: Dots of Astra
+- Sliders: Astra
+
+In fact all of Astra's elements are fine and will make a good baseline to build from.
