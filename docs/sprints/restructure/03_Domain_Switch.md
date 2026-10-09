@@ -45,7 +45,7 @@ or `docs/old/`.
 5. Reinstall the addon in Nuvio from `https://nuvio-tools.com/listio/addon/<secret>/manifest.json`
    (the old `workers.dev/addon/...` URL no longer works).
 6. Only then set `"workers_dev": false` in `wrangler.jsonc` and redeploy.
-7. Rename the GitHub repo and local folder to `nuvio-tools`, and update the git remote.
+7. ~~Move to the `PaulHaze/nuvio-tools` repo~~ (done 2026-10-09). Rename the local folder to `nuvio-tools` if not done yet.
 
 ## Tests
 

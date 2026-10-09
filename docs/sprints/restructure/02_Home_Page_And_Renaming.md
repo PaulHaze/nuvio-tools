@@ -39,7 +39,7 @@ Do the code changes in the sprint. The owner does the manual steps (see sprint 0
 
 | What                      | Change                                                                                                                              | Who   |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| GitHub repo, local folder | `nuvio-tools` (owner, in sprint 03; docs here may already use the new name)                                                         | owner |
+| GitHub repo, local folder | `PaulHaze/nuvio-tools` (repo done 2026-10-09; local folder is the owner's call)                                                     | owner |
 | `package.json` `name`     | `nuvio-tools`                                                                                                                       | code  |
 | Basic Auth realm          | `Nuvio Tools`                                                                                                                       | code  |
 | `LISTIO_NODE_DEV`         | `NODE_DEV`: `package.json` scripts (`dev`, `start`), `astro.config.mjs`, ADR 0004 text, `.dev.vars.example` and README if mentioned | code  |
