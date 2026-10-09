@@ -1,4 +1,13 @@
-# Listio
+# Nuvio Tools
+
+A personal site of tools for [Nuvio](https://nuvio.tv), hosted as one app on one domain
+([roadmap](./docs/roadmap.md)). Three tools are planned, one is live:
+
+- **Listio** (`/listio`): lists. Exists today; described below.
+- **ArtNuvio** (`/artnuvio`): artwork. Planned.
+- **Collectio** (`/collectio`): collection management. Planned.
+
+## Listio
 
 Build curated, themed movie and TV lists (e.g. "Spy Thrillers") from public lists on other sites, strip out everything you don't want, and publish the result as a catalog in [Nuvio](https://nuvio.tv).
 
@@ -24,9 +33,9 @@ Paste replacement titles (or add Sources again), review them, then **Save** to p
 Reload before saving to discard the clear. Saving an empty list leaves its existing
 collection sources empty until you add and save replacement titles.
 
-## Deploy your own Listio
+## Deploy your own Nuvio Tools
 
-Listio is a single-user, self-hosted app: each person deploys a separate copy with their
+Nuvio Tools is a single-user, self-hosted app: each person deploys a separate copy with their
 own storage, API keys and login ([ADR 0003](./docs/adr/0003-open-source-self-hosted-byok.md)).
 There is no shared hosted service. Listio provides **catalogs**, not video streams;
 keep your usual metadata and playback addons installed in Nuvio.
@@ -48,8 +57,8 @@ Commands below assume a macOS/Linux terminal (or WSL on Windows). `cd` into the
 repository before running pnpm commands.
 
 ```sh
-git clone https://github.com/PaulHaze/listio.git
-cd listio
+git clone https://github.com/PaulHaze/nuvio-tools.git
+cd nuvio-tools
 pnpm install --frozen-lockfile
 ```
 
@@ -285,8 +294,9 @@ Neither writes production KV. Keep `.dev.vars.example` empty of actual credentia
 
 ## Documentation
 
-- [Product spec](./list-combiner-spec.md): what Listio does and its core rules
-- [Implementation plan](./docs/implementation-plan.md): architecture, data model, addon endpoints
+- [Roadmap](./docs/roadmap.md): where the site is going and where code lives
+- [Listio product spec](./list-combiner-spec.md): what Listio does and its core rules
+- [Listio implementation plan](./docs/old/listio/implementation-plan.md): architecture, data model, addon endpoints
 - [Glossary](./CONTEXT.md): Source, Combined List, Title, Removed Title, Draft, Catalog, Collection
 - [ADRs](./docs/adr/): key decisions
 - [Sprints](./docs/sprints/README.md): work plan and progress
@@ -294,7 +304,7 @@ Neither writes production KV. Keep `.dev.vars.example` empty of actual credentia
 
 ## Licence and data credits
 
-Listio's source is [MIT licensed](./LICENSE). The bundled approved TMDB logo
+Nuvio Tools' source is [MIT licensed](./LICENSE). The bundled approved TMDB logo
 (`public/tmdb-logo.svg`) comes from [TMDB's logos and attribution page](https://www.themoviedb.org/about/logos-attribution)
 and remains TMDB's trademark; the MIT licence does not grant rights to third-party
 logos, movie artwork or provider data. Follow each provider's terms when using your keys.

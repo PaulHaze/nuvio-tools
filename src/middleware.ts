@@ -43,7 +43,9 @@ function parseBasic(header: string | null): [string, string] | null {
 const challenge = () =>
 	new Response('Authentication required', {
 		status: 401,
-		headers: { 'WWW-Authenticate': 'Basic realm="Listio", charset="UTF-8"' },
+		headers: {
+			'WWW-Authenticate': 'Basic realm="Nuvio Tools", charset="UTF-8"',
+		},
 	});
 
 export const onRequest: MiddlewareHandler = async (context, next) => {

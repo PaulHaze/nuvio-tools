@@ -1,5 +1,9 @@
 # Listio — Product Spec (Personal Tool)
 
+> Listio is now one tool of Nuvio Tools. Its routes live under `/listio` (for example
+> `/listio/addon/<secret>/manifest.json`). See [`README.md`](./README.md) and the
+> [roadmap](./docs/roadmap.md).
+
 Vocabulary (Source, Combined List, Title, Removed Title, Draft, Catalog) is defined in
 [`CONTEXT.md`](./CONTEXT.md). Key decisions are recorded in [`docs/adr/`](./docs/adr/).
 

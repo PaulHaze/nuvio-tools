@@ -1,6 +1,6 @@
 # Sprint 02 — Home page and renaming
 
-**Status:** not started
+**Status:** implemented, manual check pending
 
 **Depends on:** [sprint 01](./01_Restructure_Folders_Routes.md) (folders and `/listio` routes).
 
@@ -77,13 +77,13 @@ Optionally add a smoke test that `/` renders three links to `/listio`, `/artnuvi
 
 ## Tasks
 
-- [ ] Add the home page with three cards; add `/artnuvio` and `/collectio` holding pages
-- [ ] Repoint and relabel the `Layout.astro` logo link to the site home
-- [ ] Change the Basic Auth realm to `Nuvio Tools`; add and update the middleware tests
-- [ ] Rename `package.json` `name`; `LISTIO_NODE_DEV` to `NODE_DEV` everywhere
-- [ ] Update `README.md`, `CLAUDE.md`, `AGENTS.md`, `docs/agents/`, spec note, ADR 0004
-- [ ] Check `CONTEXT.md` and spec references still read correctly
-- [ ] Update `.dev.vars.example` for `NODE_DEV` if mentioned
+- [x] Add the home page with three cards; add `/artnuvio` and `/collectio` holding pages
+- [x] Repoint and relabel the `Layout.astro` logo link to the site home
+- [x] Change the Basic Auth realm to `Nuvio Tools`; add and update the middleware tests
+- [x] Rename `package.json` `name`; `LISTIO_NODE_DEV` to `NODE_DEV` everywhere
+- [x] Update `README.md`, `CLAUDE.md`, `AGENTS.md`, `docs/agents/`, spec note, ADR 0004
+- [x] Check `CONTEXT.md` and spec references still read correctly
+- [x] Update `.dev.vars.example` for `NODE_DEV` if mentioned
 - [ ] Manual check: `/` shows the cards, each links through; Listio still works under `/listio`
 
 ## Done when

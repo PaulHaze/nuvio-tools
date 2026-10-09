@@ -7,7 +7,7 @@ import icon from 'astro-icon';
 import { fileURLToPath } from 'node:url';
 
 // Temporary Node dev server for macOS < 13.5, where workerd can't run (ADR 0004).
-const nodeDev = process.env.LISTIO_NODE_DEV === '1';
+const nodeDev = process.env.NODE_DEV === '1';
 
 // https://astro.build/config
 export default defineConfig({

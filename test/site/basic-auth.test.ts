@@ -35,6 +35,8 @@ describe('basic auth middleware', () => {
 			'/listio/import',
 			'/listio/lists/abc',
 			'/listio/api/lists',
+			'/artnuvio',
+			'/collectio',
 		]) {
 			const res = await call(path);
 			expect(res.status).toBe(401);
@@ -42,10 +44,21 @@ describe('basic auth middleware', () => {
 		}
 	});
 
+	it('uses the Nuvio Tools realm', async () => {
+		const res = await call('/');
+		expect(res.headers.get('WWW-Authenticate')).toBe(
+			'Basic realm="Nuvio Tools", charset="UTF-8"'
+		);
+	});
+
 	it('lets the right credentials through', async () => {
 		expect(
 			await call('/listio/api/lists', basic('paul', 'correct horse'))
 		).toBe(passed);
+		expect(await call('/', basic('paul', 'correct horse'))).toBe(passed);
+		expect(await call('/artnuvio', basic('paul', 'correct horse'))).toBe(
+			passed
+		);
 	});
 
 	it('rejects a wrong password or user, and malformed headers', async () => {

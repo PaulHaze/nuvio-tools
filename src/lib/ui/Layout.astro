@@ -13,7 +13,7 @@ interface Props {
 
 const {
 	title,
-	description = 'Curated movie and TV Combined Lists for Nuvio.',
+	description = 'Tools for Nuvio: lists, artwork and collections.',
 	image,
 } = Astro.props;
 
@@ -72,8 +72,8 @@ const imageURL = image ? new URL(image, Astro.url.origin) : undefined;
 			<ThemeToggle />
 		</div>
 		<header class="site-header">
-			<a href="/listio" aria-label="Listio home">
-				Listio
+			<a href="/" aria-label="Nuvio Tools home">
+				Nuvio Tools
 			</a>
 		</header>
 		<slot />

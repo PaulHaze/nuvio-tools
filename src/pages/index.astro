@@ -1,5 +1,41 @@
 ---
-// Temporary root page. Sprint 02 replaces this with the three-card home page.
+import Layout from '@/lib/ui/Layout.astro';
+
+// Site home: one card per tool. Each tool owns its path prefix (ADR 0008).
 export const prerender = false;
-return Astro.redirect('/listio', 302);
+
+const tools = [
+	{
+		name: 'Listio',
+		href: '/listio',
+		description: 'Build curated movie and TV lists and publish them to Nuvio.',
+	},
+	{
+		name: 'ArtNuvio',
+		href: '/artnuvio',
+		description: "Fit artwork to Nuvio's hero, poster and landscape sizes.",
+	},
+	{
+		name: 'Collectio',
+		href: '/collectio',
+		description: 'Manage Nuvio collections, their folders and folder artwork.',
+	},
+];
 ---
+
+<Layout
+	title="Nuvio Tools"
+	description="Tools for Nuvio: lists, artwork and collections."
+>
+	<main class="mx-auto grid max-w-5xl gap-6 px-6 py-16 md:grid-cols-3">
+		{tools.map((tool) => (
+			<a
+				href={tool.href}
+				class="panel flex aspect-square flex-col items-center justify-center gap-3 text-center no-underline"
+			>
+				<h2>{tool.name}</h2>
+				<p>{tool.description}</p>
+			</a>
+		))}
+	</main>
+</Layout>

@@ -1,5 +1,5 @@
 {
-	"name": "listio",
+	"name": "nuvio-tools",
 	"type": "module",
 	"version": "0.0.1",
 	"license": "MIT",
@@ -8,9 +8,9 @@
 	},
 	"scripts": {
 		"prepare": "simple-git-hooks",
-		"dev": "LISTIO_NODE_DEV=1 astro dev",
+		"dev": "NODE_DEV=1 astro dev",
 		"dev:workerd": "astro dev",
-		"start": "LISTIO_NODE_DEV=1 astro dev",
+		"start": "NODE_DEV=1 astro dev",
 		"check": "astro check",
 		"typecheck": "astro check",
 		"watch": "astro check --watch",
