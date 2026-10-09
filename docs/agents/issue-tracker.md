@@ -1,7 +1,7 @@
 # Work tracking: sprint files (no GitHub Issues)
 
 This repo does **not** use GitHub Issues. Work is planned and tracked as numbered sprint
-files in [`docs/sprints/`](../sprints/README.md), e.g. `01_Scaffolding_Astro_Vitest_Cloudflare.md`.
+files in [`docs/sprints/{epic}/`](../sprints/README.md), e.g. `restructure/01_Restructure_Folders_Routes.md`.
 
 ## Conventions
 

@@ -1,8 +1,32 @@
-# Listio
+# Nuvio Tools
 
-A personal tool for building curated movie/TV lists, by merging public lists and by adding Titles by hand, published as catalogs for Nuvio.
+A personal site of three tools for Nuvio: Listio (lists), ArtNuvio (artwork) and Collectio (collections).
 
 ## Language
+
+### Nuvio Tools
+
+**Nuvio Tools**:
+The site that hosts all three tools under one domain.
+_Avoid_: Listio (when meaning the whole site)
+
+**Tool**:
+One of Listio, ArtNuvio or Collectio. Each owns its own path prefix and its own code.
+_Avoid_: app, module, product
+
+**Listio**:
+The tool for creating lists: it builds Combined Lists and publishes them as Catalogs for Nuvio.
+_Avoid_: list combiner
+
+**ArtNuvio**:
+The tool for creating artwork: it fits an image to Nuvio's hero, poster or landscape size and hosts the result. Not built yet.
+_Avoid_: thumbnail maker
+
+**Collectio**:
+The tool for managing Nuvio collections, their folders and folder artwork. Not built yet.
+_Avoid_: collection builder
+
+### Listio
 
 **Source**:
 A public list of movies/shows on another site (Trakt, MDBList or IMDb), identified by its URL. A Source is read once, when it is added to a Combined List; it is never re-fetched.
