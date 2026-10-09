@@ -32,18 +32,24 @@ Launch one Agent with `model: "haiku"` and `effort: "medium"` (this overrides th
 - The repo root, branch name and sprint file path, plus the full sprint doc pasted into the prompt as the brief.
 - Instructions to read `AGENTS.md`, `CLAUDE.md` and any docs the sprint points to, then implement **every** task and acceptance criterion in the sprint.
 - Instructions to run any checks the sprint or repo calls for (build, typecheck, tests, lint) and fix failures before committing.
-- **Exactly one commit at the end** covering all its work. Stage only the files it created or changed, by explicit path, and never use `git add -A` or `git add .`. Leave other uncommitted changes in the working tree untouched. Commit message: `{branch}: <short sprint title>`. No `Co-Authored-By` trailer.
+- **The one-commit rule.** Paste this block into Haiku's prompt word for word, near the top and again as the last thing in the prompt:
+
+  > **COMMIT RULE: make exactly ONE commit, and only at the very end.**
+  >
+  > - Do not commit while you work. No progress commits, no "wip" commits, no fix-up commits.
+  > - Do not amend, squash, rebase or reset. Do not touch any existing commit.
+  > - When all the work is finished and all checks pass, make one single commit containing everything you did. Then stop. Make no further commits after it, even to fix something you notice later. Report it instead.
+  > - If you could not finish, still make that one commit with what you have, and say in your report what is incomplete.
+  > - The audit that runs after you reviews only the latest commit. Zero commits or two commits means the audit reviews the wrong thing.
+
+- Staging for that commit: add only the files it created or changed, by explicit path. Never use `git add -A` or `git add .`. Leave other uncommitted changes in the working tree untouched. Commit message: `{branch}: <short sprint title>`. No `Co-Authored-By` trailer.
 - No branch operations, no pushing, no amending earlier commits.
 - Any owner-only step it cannot do (external dashboards, credentials, deploys, attaching images) is skipped and listed in its final report instead.
 - Final report: the commit SHA, the files changed, checks run with their results, and anything skipped or uncertain.
 
-## 3. Verify the commit
+## 3. Guard before auditing
 
-When Haiku finishes:
-
-1. `git log --oneline {start-sha}..HEAD` must show exactly one new commit, and its SHA must match the one Haiku reported.
-2. `git show --stat HEAD`: the files should fit the sprint scope, with none of the user's unrelated working-tree changes swept in.
-3. Stop and report to the user if Haiku failed, made no commit, made more than one, or left an unclear state. Do not run the audit on a bad commit.
+`audit-commit` only looks at `HEAD`, so run `git log --oneline {start-sha}..HEAD` and confirm it shows exactly one new commit. If it shows none or more than one, stop and report instead of auditing. Checking scope is the audit's job, not this step's.
 
 ## 4. Audit with Opus
 
