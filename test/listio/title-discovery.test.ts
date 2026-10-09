@@ -1,17 +1,28 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { APIContext, APIRoute } from 'astro';
 import { readFileSync } from 'node:fs';
-import { normalizeResults, searchTitles } from '../src/tmdb/search.ts';
-import { lookupTitle } from '../src/tmdb/lookup.ts';
-import { matchTitle, normalizedName } from '../src/tmdb/match.ts';
-import { pasteLines } from '../src/domain/pasteLines.ts';
-import { addTitle, mergeTitles } from '../src/domain/merge.ts';
-import { createDraft, countChanges } from '../src/components/editor/draft.ts';
-import type { CombinedList } from '../src/domain/types.ts';
+import {
+	normalizeResults,
+	searchTitles,
+} from '../../src/tools/listio/tmdb/search.ts';
+import { lookupTitle } from '../../src/tools/listio/tmdb/lookup.ts';
+import {
+	matchTitle,
+	normalizedName,
+} from '../../src/tools/listio/tmdb/match.ts';
+import { pasteLines } from '../../src/tools/listio/domain/pasteLines.ts';
+import { addTitle, mergeTitles } from '../../src/tools/listio/domain/merge.ts';
+import {
+	createDraft,
+	countChanges,
+} from '../../src/tools/listio/components/editor/draft.ts';
+import type { CombinedList } from '../../src/tools/listio/domain/types.ts';
 vi.mock('cloudflare:workers', () => ({ env: { TMDB_API_KEY: 'private-key' } }));
-const { GET: search } = await import('../src/pages/api/search.ts');
-const { POST: lookup } = await import('../src/pages/api/titles/lookup.ts');
-const { POST: match } = await import('../src/pages/api/titles/match.ts');
+const { GET: search } = await import('../../src/pages/listio/api/search.ts');
+const { POST: lookup } =
+	await import('../../src/pages/listio/api/titles/lookup.ts');
+const { POST: match } =
+	await import('../../src/pages/listio/api/titles/match.ts');
 const fixture = (name: string) =>
 	JSON.parse(
 		readFileSync(
@@ -22,8 +33,8 @@ const fixture = (name: string) =>
 const response = (body: unknown) => new Response(JSON.stringify(body));
 const call = (route: APIRoute, body?: unknown, q = '') =>
 	route({
-		url: new URL(`https://listio.test/api?q=${q}`),
-		request: new Request('https://listio.test/api', {
+		url: new URL(`https://listio.test/listio/api?q=${q}`),
+		request: new Request('https://listio.test/listio/api', {
 			method: body === undefined ? 'GET' : 'POST',
 			...(body === undefined ? {} : { body: JSON.stringify(body) }),
 		}),

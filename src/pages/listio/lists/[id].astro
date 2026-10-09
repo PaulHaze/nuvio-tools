@@ -1,8 +1,8 @@
 ---
 import { env } from 'cloudflare:workers';
-import Layout from '@/layouts/Layout.astro';
-import { getList } from '@/storage/lists';
-import Editor from '@/components/editor/Editor';
+import Layout from '@/lib/ui/Layout.astro';
+import { getList } from '@/tools/listio/storage/lists';
+import Editor from '@/tools/listio/components/editor/Editor';
 
 export const prerender = false;
 const id = Astro.params.id!;
@@ -13,7 +13,7 @@ const created = Astro.url.searchParams.get('created') === '1';
 
 <Layout title={`${list?.name ?? 'Combined List not found'} · Listio`}>
 	<main class="listio-main">
-		<a href="/">← Combined Lists</a>
+		<a href="/listio">← Combined Lists</a>
 		{list ? (
 			<>
 				<header class="page-heading">

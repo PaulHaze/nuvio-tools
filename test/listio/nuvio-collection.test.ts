@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import reference from '../docs/nuvio/collection-reference.json';
-import { resolveAddonId } from '../src/domain/addonId.ts';
+import reference from '../../docs/nuvio/collection-reference.json';
+import { resolveAddonId } from '../../src/tools/listio/domain/addonId.ts';
 import {
 	buildNuvioCollection,
 	collectionExportUrl,
 	collectionFilename,
-} from '../src/domain/nuvioCollection.ts';
+} from '../../src/tools/listio/domain/nuvioCollection.ts';
 
 describe('Nuvio collection JSON', () => {
 	it('includes movie-only, series-only and mixed Catalogs in the chosen folder order', () => {
@@ -125,7 +125,7 @@ it('encodes a collection title and preserves folder order and unnamed URLs', () 
 	expect(url.searchParams.get('name')).toBe(name);
 	expect(url.searchParams.getAll('list')).toEqual(['second', 'first']);
 	expect(collectionExportUrl(['second', 'first'])).toBe(
-		'/export?list=second&list=first'
+		'/listio/export?list=second&list=first'
 	);
-	expect(collectionExportUrl([], '')).toBe('/export?name=');
+	expect(collectionExportUrl([], '')).toBe('/listio/export?name=');
 });

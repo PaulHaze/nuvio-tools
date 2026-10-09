@@ -5,7 +5,7 @@ const fakeEnv: Record<string, string | undefined> = {};
 
 vi.mock('cloudflare:workers', () => ({ env: fakeEnv }));
 
-const { onRequest } = await import('../src/middleware.ts');
+const { onRequest } = await import('../../src/middleware.ts');
 
 const passed = new Response('ok');
 
@@ -29,7 +29,13 @@ beforeEach(() => {
 
 describe('basic auth middleware', () => {
 	it('challenges the UI and API without credentials', async () => {
-		for (const path of ['/', '/import', '/lists/abc', '/api/lists']) {
+		for (const path of [
+			'/',
+			'/listio',
+			'/listio/import',
+			'/listio/lists/abc',
+			'/listio/api/lists',
+		]) {
 			const res = await call(path);
 			expect(res.status).toBe(401);
 			expect(res.headers.get('WWW-Authenticate')).toMatch(/^Basic /);
@@ -37,27 +43,42 @@ describe('basic auth middleware', () => {
 	});
 
 	it('lets the right credentials through', async () => {
-		expect(await call('/api/lists', basic('paul', 'correct horse'))).toBe(
-			passed
-		);
+		expect(
+			await call('/listio/api/lists', basic('paul', 'correct horse'))
+		).toBe(passed);
 	});
 
 	it('rejects a wrong password or user, and malformed headers', async () => {
-		expect((await call('/', basic('paul', 'wrong'))).status).toBe(401);
-		expect((await call('/', basic('someone', 'correct horse'))).status).toBe(
-			401
-		);
-		expect((await call('/', 'Basic !!!not-base64')).status).toBe(401);
-		expect((await call('/', 'Bearer token')).status).toBe(401);
+		expect((await call('/listio', basic('paul', 'wrong'))).status).toBe(401);
+		expect(
+			(await call('/listio', basic('someone', 'correct horse'))).status
+		).toBe(401);
+		expect((await call('/listio', 'Basic !!!not-base64')).status).toBe(401);
+		expect((await call('/listio', 'Bearer token')).status).toBe(401);
 	});
 
 	it('leaves the addon and robots.txt open', async () => {
-		expect(await call('/addon/secret/manifest.json')).toBe(passed);
+		expect(await call('/listio/addon/secret/manifest.json')).toBe(passed);
+		expect(await call('/listio/addon/secret/catalog/movie/list.json')).toBe(
+			passed
+		);
 		expect(await call('/robots.txt')).toBe(passed);
+	});
+
+	it('protects the old root paths now that Listio lives under /listio', async () => {
+		expect((await call('/addon/secret/manifest.json')).status).toBe(401);
+		expect((await call('/api/lists')).status).toBe(401);
+	});
+
+	it('does not let look-alike paths through the public rules', async () => {
+		expect((await call('/listio/addonx')).status).toBe(401);
+		expect((await call('/listio/addon')).status).toBe(401);
+		expect((await call('/robots.txt.bak')).status).toBe(401);
 	});
 
 	it('fails closed when credentials are not configured', async () => {
 		fakeEnv.ADMIN_PASSWORD = '';
-		expect((await call('/', basic('paul', ''))).status).toBe(503);
+		expect((await call('/listio', basic('paul', ''))).status).toBe(503);
+		expect((await call('/listio/api/lists')).status).toBe(503);
 	});
 });

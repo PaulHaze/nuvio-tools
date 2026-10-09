@@ -189,7 +189,7 @@ export default function Editor({
 				};
 			} else
 				result = await api<typeof result>(
-					'/api/sources/fetch',
+					'/listio/api/sources/fetch',
 					controller.current.signal,
 					{ url }
 				);
@@ -213,7 +213,7 @@ export default function Editor({
 			await schedule(merged.newTitles, async (chunk) => {
 				try {
 					const enriched = await api<{ titles: Title[] }>(
-						'/api/titles/enrich',
+						'/listio/api/titles/enrich',
 						controller.current.signal,
 						{ titles: chunk }
 					);
@@ -255,7 +255,7 @@ export default function Editor({
 		try {
 			const current = draftRef.current;
 			const list = await api<CombinedList>(
-				`/api/lists/${encodeURIComponent(saved.id)}`,
+				`/listio/api/lists/${encodeURIComponent(saved.id)}`,
 				controller.current.signal,
 				{
 					version: saved.version,

@@ -3,13 +3,13 @@ import { env } from 'cloudflare:workers';
 import {
 	buildCatalog,
 	parseCatalogPath,
-} from '../../../../../addon/catalog.ts';
+} from '@/tools/listio/addon/catalog.ts';
 import {
 	addonNotFound,
 	addonResponse,
 	validSecret,
-} from '../../../../../addon/http.ts';
-import { getList } from '../../../../../storage/lists.ts';
+} from '@/tools/listio/addon/http.ts';
+import { getList } from '@/tools/listio/storage/lists.ts';
 
 export const GET: APIRoute = async ({ params }) => {
 	if (!validSecret(params.secret, env.ADDON_SECRET)) return addonNotFound();

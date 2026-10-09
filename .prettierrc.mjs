@@ -8,7 +8,7 @@ export default {
 	useTabs: true,
 	plugins: ['prettier-plugin-astro', 'prettier-plugin-tailwindcss'],
 	// Tailwind v4 has no JS config, so point the class sorter at the CSS entry.
-	tailwindStylesheet: './src/styles/main.css',
+	tailwindStylesheet: './src/lib/ui/main.css',
 	tailwindFunctions: ['cn', 'clsx'],
 	overrides: [
 		{

@@ -1,8 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { mergeIntoList, mergeTitles } from '../src/domain/merge.ts';
-import { slugify, uniqueSlug } from '../src/domain/slug.ts';
-import { sortTitles } from '../src/domain/sort.ts';
-import type { CombinedList, Title } from '../src/domain/types.ts';
+import {
+	mergeIntoList,
+	mergeTitles,
+} from '../../src/tools/listio/domain/merge.ts';
+import { slugify, uniqueSlug } from '../../src/tools/listio/domain/slug.ts';
+import { sortTitles } from '../../src/tools/listio/domain/sort.ts';
+import type {
+	CombinedList,
+	Title,
+} from '../../src/tools/listio/domain/types.ts';
 
 const title = (overrides: Partial<Title> = {}): Title => ({
 	imdbId: 'tt0000001',

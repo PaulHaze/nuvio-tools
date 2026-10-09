@@ -1,14 +1,17 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { matchLines, MatchStopped } from '../src/client/matchLines.ts';
+import {
+	matchLines,
+	MatchStopped,
+} from '../../src/tools/listio/client/matchLines.ts';
 import {
 	lookupCandidate,
 	titleFor,
 	hasIdentity,
 	clearIdentities,
-} from '../src/client/titleIdentity.ts';
-import { ApiError } from '../src/client/api.ts';
-import type { Title } from '../src/domain/types.ts';
-import type { Candidate } from '../src/tmdb/search.ts';
+} from '../../src/tools/listio/client/titleIdentity.ts';
+import { ApiError } from '../../src/tools/listio/client/api.ts';
+import type { Title } from '../../src/tools/listio/domain/types.ts';
+import type { Candidate } from '../../src/tools/listio/tmdb/search.ts';
 const lines = (count: number) =>
 	Array.from({ length: count }, (_, i) => ({
 		line: `Line ${i}`,
@@ -94,8 +97,8 @@ describe('shared match loop', () => {
 		]);
 		expect(onResult.mock.calls[0][0]).toBe(input[0]);
 		expect(fetcher.mock.calls.map(([url]) => url)).toEqual([
-			'/api/titles/match',
-			'/api/titles/lookup',
+			'/listio/api/titles/match',
+			'/listio/api/titles/lookup',
 		]);
 	});
 	it('retries transient lines once at the end with original line identity', async () => {

@@ -1,18 +1,24 @@
 import { describe, expect, it } from 'vitest';
-import type { CombinedList, Title } from '../src/domain/types.ts';
+import type {
+	CombinedList,
+	Title,
+} from '../../src/tools/listio/domain/types.ts';
 import {
 	getIndex,
 	putList,
 	VersionConflictError,
 	type ListStore,
-} from '../src/storage/lists.ts';
-import { buildManifest } from '../src/addon/manifest.ts';
-import { buildCatalog, parseCatalogPath } from '../src/addon/catalog.ts';
+} from '../../src/tools/listio/storage/lists.ts';
+import { buildManifest } from '../../src/tools/listio/addon/manifest.ts';
+import {
+	buildCatalog,
+	parseCatalogPath,
+} from '../../src/tools/listio/addon/catalog.ts';
 import {
 	addonNotFound,
 	addonResponse,
 	validSecret,
-} from '../src/addon/http.ts';
+} from '../../src/tools/listio/addon/http.ts';
 
 function memoryStore() {
 	const values = new Map<string, string>();

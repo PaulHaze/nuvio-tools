@@ -1,8 +1,8 @@
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
-import { json } from '../../../api/http.ts';
-import { isRecord } from '../../../api/validate.ts';
-import { lookupTitle } from '../../../tmdb/lookup.ts';
+import { json } from '@/tools/listio/api/http.ts';
+import { isRecord } from '@/tools/listio/api/validate.ts';
+import { lookupTitle } from '@/tools/listio/tmdb/lookup.ts';
 export const POST: APIRoute = async ({ request }) => {
 	const body: unknown = await request.json().catch(() => null);
 	if (

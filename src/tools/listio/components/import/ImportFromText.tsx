@@ -404,7 +404,9 @@ export default function ImportFromText({
 								{existing && (
 									<>
 										{' '}
-										<a href={`/lists/${encodeURIComponent(existing.id)}`}>
+										<a
+											href={`/listio/lists/${encodeURIComponent(existing.id)}`}
+										>
 											Open existing list
 										</a>
 									</>
@@ -634,7 +636,7 @@ export default function ImportFromText({
 				exportIds.length > 0 && (
 					<p className="notice" role="status">
 						Your imported lists are saved on the home page.{' '}
-						<a href="/">View all lists</a>
+						<a href="/listio">View all lists</a>
 					</p>
 				)}
 			{collectionReady && (
@@ -719,7 +721,7 @@ function ImportResult({
 		<section className="panel" aria-label={`Result: ${run.name}`}>
 			<h2>
 				{state.list ? (
-					<a href={`/lists/${encodeURIComponent(state.list.id)}`}>
+					<a href={`/listio/lists/${encodeURIComponent(state.list.id)}`}>
 						{state.list.name}
 					</a>
 				) : (

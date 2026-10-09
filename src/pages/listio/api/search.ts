@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
-import { json } from '../../api/http.ts';
-import { searchTitles } from '../../tmdb/search.ts';
+import { json } from '@/tools/listio/api/http.ts';
+import { searchTitles } from '@/tools/listio/tmdb/search.ts';
 export const GET: APIRoute = async ({ url }) => {
 	const q = url.searchParams.get('q')?.trim() ?? '';
 	if (q.length < 2) return json([]);

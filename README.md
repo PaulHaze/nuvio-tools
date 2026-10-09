@@ -184,7 +184,7 @@ HTTPS. Browsers remember Basic Auth credentials and there is no in-app logout.
 Construct your private manifest URL by replacing both placeholders:
 
 ```text
-https://YOUR-WORKER-HOST/addon/YOUR-ADDON-SECRET/manifest.json
+https://YOUR-WORKER-HOST/listio/addon/YOUR-ADDON-SECRET/manifest.json
 ```
 
 Use the Worker hostname from step 4 and the exact `ADDON_SECRET` saved in your password
@@ -200,7 +200,7 @@ Catalogs. Open one and confirm its saved Titles appear. Menu labels vary by plat
 
 Anyone with this URL can read your catalogs. Keep it private; it contains neither your
 Basic Auth password nor your provider API keys. Do not put an interactive Cloudflare
-Access challenge in front of `/addon/*`, because Nuvio cannot log in. Refresh/reinstall
+Access challenge in front of `/listio/addon/*`, because Nuvio cannot log in. Refresh/reinstall
 the addon when creating, renaming or deleting Combined Lists so Nuvio reloads the
 manifest. Saved Title changes may take a minute to appear because addon responses
 are cached and KV updates propagate across Cloudflare locations.
@@ -277,7 +277,7 @@ Neither writes production KV. Keep `.dev.vars.example` empty of actual credentia
 
 ### Notes
 
-- Dark mode is driven by the `data-theme` attribute on `<html>`. Theme colours live in `src/styles/main.css` as CSS variables and are exposed as Tailwind colours (`background`, `foreground`, `primary`, `secondary`, `accent`, `caution`, `alert`, `success`, plus muted variants).
+- Dark mode is driven by the `data-theme` attribute on `<html>`. Theme colours live in `src/lib/ui/main.css` as CSS variables and are exposed as Tailwind colours (`background`, `foreground`, `primary`, `secondary`, `accent`, `caution`, `alert`, `success`, plus muted variants).
 - Fonts are configured under `fonts` in `astro.config.mjs`, downloaded from Fontsource at build time and self-hosted.
 - pnpm only runs install scripts for packages listed under `allowBuilds` in `pnpm-workspace.yaml`. Add new entries there if `pnpm install` reports ignored builds.
 - `pmOnFail: ignore` in `pnpm-workspace.yaml` keeps `pnpm-lock.yaml` as a single YAML document, because GitHub's dependency graph can't yet read pnpm 12's two-document format ([dependabot-core#15904](https://github.com/dependabot/dependabot-core/issues/15904)).

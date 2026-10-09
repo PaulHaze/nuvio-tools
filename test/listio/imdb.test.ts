@@ -1,13 +1,20 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import type { APIContext } from 'astro';
-import { detectSource } from '../src/sources/detect.ts';
-import { fetchImdb, imdbTitleType, parseImdbCsv } from '../src/sources/imdb.ts';
-import { SourceRequestBudgetError } from '../src/sources/errors.ts';
-import { addSource, createDraft } from '../src/components/editor/draft.ts';
-import type { CombinedList } from '../src/domain/types.ts';
+import { detectSource } from '../../src/tools/listio/sources/detect.ts';
+import {
+	fetchImdb,
+	imdbTitleType,
+	parseImdbCsv,
+} from '../../src/tools/listio/sources/imdb.ts';
+import { SourceRequestBudgetError } from '../../src/tools/listio/sources/errors.ts';
+import {
+	addSource,
+	createDraft,
+} from '../../src/tools/listio/components/editor/draft.ts';
+import type { CombinedList } from '../../src/tools/listio/domain/types.ts';
 vi.mock('cloudflare:workers', () => ({ env: {} }));
-const { POST } = await import('../src/pages/api/sources/fetch.ts');
+const { POST } = await import('../../src/pages/listio/api/sources/fetch.ts');
 const fixture = (name: string) =>
 	readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8');
 const page1 = JSON.parse(fixture('imdb-page-1.json'));
@@ -15,7 +22,7 @@ const page2 = JSON.parse(fixture('imdb-page-2.json'));
 const url = 'https://www.imdb.com/list/ls004285275/';
 const call = () =>
 	POST({
-		request: new Request('https://listio.test/api/sources/fetch', {
+		request: new Request('https://listio.test/listio/api/sources/fetch', {
 			method: 'POST',
 			body: JSON.stringify({ url }),
 		}),

@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import type { SourceTitle, Title } from '../src/domain/types.ts';
-import { enrichTitles } from '../src/tmdb/enrich.ts';
+import type { SourceTitle, Title } from '../src/tools/listio/domain/types.ts';
+import { enrichTitles } from '../src/tools/listio/tmdb/enrich.ts';
 
 export function readDevVars(): Record<string, string> {
 	const values: Record<string, string> = {};

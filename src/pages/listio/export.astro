@@ -1,16 +1,16 @@
 ---
 import { env } from 'cloudflare:workers';
-import Layout from '@/layouts/Layout.astro';
-import { getIndex } from '@/storage/lists';
-import { resolveAddonId } from '@/domain/addonId';
-import ExportCollection from '@/components/export/ExportCollection';
+import Layout from '@/lib/ui/Layout.astro';
+import { getIndex } from '@/tools/listio/storage/lists';
+import { resolveAddonId } from '@/tools/listio/domain/addonId';
+import ExportCollection from '@/tools/listio/components/export/ExportCollection';
 export const prerender = false;
 const lists = await getIndex(env.LISTIO);
 ---
 
 <Layout title="Export collection · Listio">
 	<main class="listio-main">
-		<a href="/">← Combined Lists</a>
+		<a href="/listio">← Combined Lists</a>
 		<header class="page-heading">
 			<h1>Export collection</h1>
 			<p>

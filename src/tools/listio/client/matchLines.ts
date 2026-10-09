@@ -38,7 +38,7 @@ export async function matchLines(
 			callbacks.onProgress?.({ phase, completed: offset, total: input.length });
 			const batch = input.slice(offset, offset + 20);
 			const results = await api<BatchMatchResult[]>(
-				'/api/titles/match',
+				'/listio/api/titles/match',
 				signal,
 				{
 					lines: batch.map(({ name, year }) => ({ name, year })),

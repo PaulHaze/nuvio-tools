@@ -6,13 +6,19 @@ import {
 	Candidates,
 	NeedALook,
 	type ReviewLine,
-} from '../src/components/titles/TitleControls.tsx';
-import TitleDiscovery from '../src/components/editor/TitleDiscovery.tsx';
-import { createDraft, removeTitles } from '../src/components/editor/draft.ts';
-import { addTitle } from '../src/domain/merge.ts';
-import { clearIdentities } from '../src/client/titleIdentity.ts';
-import type { CombinedList, Title } from '../src/domain/types.ts';
-import type { Candidate } from '../src/tmdb/search.ts';
+} from '../../src/tools/listio/components/titles/TitleControls.tsx';
+import TitleDiscovery from '../../src/tools/listio/components/editor/TitleDiscovery.tsx';
+import {
+	createDraft,
+	removeTitles,
+} from '../../src/tools/listio/components/editor/draft.ts';
+import { addTitle } from '../../src/tools/listio/domain/merge.ts';
+import { clearIdentities } from '../../src/tools/listio/client/titleIdentity.ts';
+import type {
+	CombinedList,
+	Title,
+} from '../../src/tools/listio/domain/types.ts';
+import type { Candidate } from '../../src/tools/listio/tmdb/search.ts';
 const candidate = (id: number): Candidate => ({
 	tmdbId: id,
 	type: 'movie',
@@ -163,7 +169,7 @@ describe('shared title review controls', () => {
 		vi.useFakeTimers();
 		const c = candidate(21003);
 		const fetcher = vi.fn(async (url: string) =>
-			response(url.startsWith('/api/search') ? [c] : title(c.tmdbId))
+			response(url.startsWith('/listio/api/search') ? [c] : title(c.tmdbId))
 		);
 		vi.stubGlobal('fetch', fetcher);
 		const add = vi.fn(() => 'added' as const),
@@ -187,7 +193,9 @@ describe('shared title review controls', () => {
 		);
 		expect(host.querySelector('input')?.value).toBe('Missing name');
 		await act(async () => vi.advanceTimersByTimeAsync(350));
-		expect(fetcher.mock.calls[0][0]).toBe('/api/search?q=Missing%20name');
+		expect(fetcher.mock.calls[0][0]).toBe(
+			'/listio/api/search?q=Missing%20name'
+		);
 		await click('Add');
 		expect(onResolved).toHaveBeenCalledWith(rows[0], 'added', title(21003));
 	});
@@ -320,7 +328,7 @@ describe('editor reconciliation through shared controls', () => {
 			response(
 				url.endsWith('/match')
 					? [{ status: 'none', reason: 'No match' }]
-					: url.startsWith('/api/search')
+					: url.startsWith('/listio/api/search')
 						? [c]
 						: title(c.tmdbId)
 			)

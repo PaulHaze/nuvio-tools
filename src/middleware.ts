@@ -4,7 +4,14 @@ import { env } from 'cloudflare:workers';
 // HTTP Basic Auth in front of everything except the addon (Nuvio can't log in;
 // it's guarded by ADDON_SECRET instead) and robots.txt. Fails closed when the
 // credentials aren't configured.
-const PUBLIC_PREFIXES = ['/addon/', '/robots.txt'];
+// Public without login: the Nuvio addon (the secret in the URL is the protection)
+// and robots.txt. Matched on path boundaries so look-alikes stay protected.
+const PUBLIC_PATHS = new Set(['/robots.txt']);
+const PUBLIC_DIRS = ['/listio/addon/'];
+
+const isPublic = (pathname: string): boolean =>
+	PUBLIC_PATHS.has(pathname) ||
+	PUBLIC_DIRS.some((dir) => pathname.startsWith(dir));
 
 const encoder = new TextEncoder();
 
@@ -41,7 +48,7 @@ const challenge = () =>
 
 export const onRequest: MiddlewareHandler = async (context, next) => {
 	const { pathname } = context.url;
-	if (PUBLIC_PREFIXES.some((p) => pathname.startsWith(p))) return next();
+	if (isPublic(pathname)) return next();
 
 	const user = env.ADMIN_USER;
 	const password = env.ADMIN_PASSWORD;

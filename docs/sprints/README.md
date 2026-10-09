@@ -24,11 +24,11 @@ The 15 sprints that built Listio are archived in
 
 Branches `restructure-01` to `restructure-03`.
 
-| #   | Sprint                                                                            | Status      |
-| --- | --------------------------------------------------------------------------------- | ----------- |
-| 01  | [Restructure: folders and routes](./restructure/01_Restructure_Folders_Routes.md) | not started |
-| 02  | [Home page and renaming](./restructure/02_Home_Page_And_Renaming.md)              | not started |
-| 03  | [Domain switch](./restructure/03_Domain_Switch.md)                                | not started |
+| #   | Sprint                                                                            | Status                            |
+| --- | --------------------------------------------------------------------------------- | --------------------------------- |
+| 01  | [Restructure: folders and routes](./restructure/01_Restructure_Folders_Routes.md) | implemented, manual check pending |
+| 02  | [Home page and renaming](./restructure/02_Home_Page_And_Renaming.md)              | not started                       |
+| 03  | [Domain switch](./restructure/03_Domain_Switch.md)                                | not started                       |
 
 ## Roadmap
 

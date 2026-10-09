@@ -39,7 +39,10 @@ or `docs/old/`.
 
 1. Buy `nuvio-tools.com` in Cloudflare Registrar and attach it to the Worker as a Custom Domain in
    the dashboard (done before the sprint; the `routes` entry makes it part of the config).
-2. Rename the Worker in the dashboard (Settings → General) to `nuvio-tools`.
+2. Rename the Worker in the dashboard (Settings → General) to `nuvio-tools`. This also renames its
+   `workers.dev` address, so the old addon URL stops working here, not at step 6. Back up Nuvio
+   collections first, and do steps 2–5 in one sitting. After the rename, check the custom domain is
+   still attached under Domains & Routes.
 3. Merge this sprint and deploy (`pnpm deploy`) with `routes` and the matching `"name"` in place.
 4. Check that login works at `https://nuvio-tools.com`, and that `/listio` lists and saves work.
 5. Reinstall the addon in Nuvio from `https://nuvio-tools.com/listio/addon/<secret>/manifest.json`

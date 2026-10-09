@@ -1,13 +1,13 @@
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
-import { buildManifest } from '../../../addon/manifest.ts';
+import { buildManifest } from '@/tools/listio/addon/manifest.ts';
 import {
 	addonNotFound,
 	addonResponse,
 	validSecret,
-} from '../../../addon/http.ts';
-import { resolveAddonId } from '../../../domain/addonId.ts';
-import { getIndex } from '../../../storage/lists.ts';
+} from '@/tools/listio/addon/http.ts';
+import { resolveAddonId } from '@/tools/listio/domain/addonId.ts';
+import { getIndex } from '@/tools/listio/storage/lists.ts';
 
 export const GET: APIRoute = async ({ params }) => {
 	if (!validSecret(params.secret, env.ADDON_SECRET)) return addonNotFound();

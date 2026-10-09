@@ -1,9 +1,12 @@
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
-import { json } from '../../../api/http.ts';
-import { isRecord } from '../../../api/validate.ts';
-import { TmdbRequestError } from '../../../tmdb/enrich.ts';
-import { matchTitle, type BatchMatchResult } from '../../../tmdb/match.ts';
+import { json } from '@/tools/listio/api/http.ts';
+import { isRecord } from '@/tools/listio/api/validate.ts';
+import { TmdbRequestError } from '@/tools/listio/tmdb/enrich.ts';
+import {
+	matchTitle,
+	type BatchMatchResult,
+} from '@/tools/listio/tmdb/match.ts';
 export const POST: APIRoute = async ({ request }) => {
 	const body: unknown = await request.json().catch(() => null);
 	if (

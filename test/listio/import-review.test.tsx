@@ -2,9 +2,12 @@
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import ImportFromText from '../src/components/import/ImportFromText.tsx';
-import { clearIdentities } from '../src/client/titleIdentity.ts';
-import type { CombinedList, Title } from '../src/domain/types.ts';
+import ImportFromText from '../../src/tools/listio/components/import/ImportFromText.tsx';
+import { clearIdentities } from '../../src/tools/listio/client/titleIdentity.ts';
+import type {
+	CombinedList,
+	Title,
+} from '../../src/tools/listio/domain/types.ts';
 const title = (id: number): Title => ({
 	imdbId: `tt${id}`,
 	tmdbId: id,
@@ -92,7 +95,9 @@ it('live structural and name errors block import; uploads replace text without c
 	expect(button('Import').disabled).toBe(true);
 	expect(host.textContent).toContain('already exists');
 	expect(host.textContent).toContain('Line 1');
-	expect(host.querySelector('a')?.getAttribute('href')).toBe('/lists/old');
+	expect(host.querySelector('a')?.getAttribute('href')).toBe(
+		'/listio/lists/old'
+	);
 	await fill('#import-name', 'Test');
 	const upload = async (file: {
 		name: string;
@@ -145,7 +150,8 @@ it('saves picks before resolving, retries failed saves, preserves successive add
 			]);
 		if (url.endsWith('/lookup'))
 			return response(title(JSON.parse(init.body as string).tmdbId));
-		if (url === '/api/lists' && init.method === 'GET') return response([]);
+		if (url === '/listio/api/lists' && init.method === 'GET')
+			return response([]);
 		if (init.method === 'POST') return response(saved);
 		if (init.method === 'GET') return response(saved);
 		if (fail) {
@@ -213,7 +219,9 @@ it('zero confident matches create nothing and allow input correction', async () 
 		'No titles were found. Check the list format'
 	);
 	expect(host.textContent).not.toContain('Export these as a Nuvio collection');
-	expect(fetcher.mock.calls.map(([url]) => url)).toEqual(['/api/titles/match']);
+	expect(fetcher.mock.calls.map(([url]) => url)).toEqual([
+		'/listio/api/titles/match',
+	]);
 	expect(host.querySelector<HTMLInputElement>('#import-name')!.disabled).toBe(
 		false
 	);
@@ -226,7 +234,8 @@ it('offers the collection shortcut only after a pending initial save completes',
 	vi.stubGlobal('fetch', async (url: string, init: RequestInit) => {
 		if (url.endsWith('/match'))
 			return response([{ status: 'matched', title: title(1) }]);
-		if (url === '/api/lists' && init.method === 'GET') return response([]);
+		if (url === '/listio/api/lists' && init.method === 'GET')
+			return response([]);
 		if (init.method === 'POST' || init.method === 'GET') return response(empty);
 		if (fail) throw new Error('Save unavailable');
 		return response({
@@ -360,7 +369,7 @@ it('multiple completed review survives interruption, warns on leaving and saves 
 			]);
 		}
 		if (url.endsWith('/lookup')) return response(title(2));
-		if (url === '/api/lists' && init.method === 'GET')
+		if (url === '/listio/api/lists' && init.method === 'GET')
 			return response([...lists.values()]);
 		if (init.method === 'POST') {
 			const name = JSON.parse(init.body as string).name;
@@ -444,7 +453,7 @@ function multipleServer(second: 'collision' | 'empty' | 'delayed' | 'offline') {
 			]);
 		}
 		if (url.endsWith('/lookup')) return response(title(2));
-		if (url === '/api/lists' && init.method === 'GET')
+		if (url === '/listio/api/lists' && init.method === 'GET')
 			return response([
 				...lists.values(),
 				...(second === 'collision' ? [{ name: 'B' }] : []),
@@ -672,9 +681,9 @@ it.each([
 					{ status: 'matched', title: title(3) },
 					{ status: 'matched', title: title(3) },
 				]);
-			if (url === '/api/lists/old' && init.method === 'GET')
+			if (url === '/listio/api/lists/old' && init.method === 'GET')
 				return response(saved);
-			if (url === '/api/lists/old' && init.method === 'PUT') {
+			if (url === '/listio/api/lists/old' && init.method === 'PUT') {
 				saved = {
 					...saved,
 					...JSON.parse(init.body as string),
@@ -712,9 +721,9 @@ it.each([
 		expect(
 			fetcher.mock.calls.map(([url, init]) => `${init.method} ${url}`)
 		).toEqual([
-			'POST /api/titles/match',
-			'GET /api/lists/old',
-			'PUT /api/lists/old',
+			'POST /listio/api/titles/match',
+			'GET /listio/api/lists/old',
+			'PUT /listio/api/lists/old',
 		]);
 	}
 );
@@ -738,7 +747,7 @@ it('downloads completed collection runs in file order after the queue finishes, 
 			);
 		}
 		if (url.endsWith('/lookup')) return response(series);
-		if (url === '/api/lists' && init.method === 'GET')
+		if (url === '/listio/api/lists' && init.method === 'GET')
 			return response([...lists.values()]);
 		if (init.method === 'POST') {
 			const name = JSON.parse(init.body as string).name;

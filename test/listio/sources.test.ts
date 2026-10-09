@@ -1,9 +1,18 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { detectSource, SourceDetectionError } from '../src/sources/detect.ts';
-import { fetchMdbList, normalizeMdbListItems } from '../src/sources/mdblist.ts';
-import { fetchTrakt, normalizeTraktItems } from '../src/sources/trakt.ts';
+import {
+	detectSource,
+	SourceDetectionError,
+} from '../../src/tools/listio/sources/detect.ts';
+import {
+	fetchMdbList,
+	normalizeMdbListItems,
+} from '../../src/tools/listio/sources/mdblist.ts';
+import {
+	fetchTrakt,
+	normalizeTraktItems,
+} from '../../src/tools/listio/sources/trakt.ts';
 
 function fixture(name: string): unknown {
 	const path = fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url));

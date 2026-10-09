@@ -1,7 +1,10 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { ImportQueue } from '../src/client/importQueue.ts';
-import { parseImport } from '../src/domain/pasteSections.ts';
-import type { CombinedList, Title } from '../src/domain/types.ts';
+import { ImportQueue } from '../../src/tools/listio/client/importQueue.ts';
+import { parseImport } from '../../src/tools/listio/domain/pasteSections.ts';
+import type {
+	CombinedList,
+	Title,
+} from '../../src/tools/listio/domain/types.ts';
 const title = (id: number): Title => ({
 	imdbId: `tt${id}`,
 	tmdbId: id,
@@ -43,7 +46,7 @@ function setup(failure: 'match' | 'save' | 'empty' | null = null) {
 				{ status: 'ambiguous', candidates: [title(2)] },
 			]);
 		}
-		if (url === '/api/lists' && init.method === 'GET')
+		if (url === '/listio/api/lists' && init.method === 'GET')
 			return response([...saved.values()]);
 		if (init.method === 'POST') {
 			const name = JSON.parse(init.body as string).name;

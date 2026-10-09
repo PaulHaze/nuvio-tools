@@ -155,14 +155,17 @@ export class ImportListRun {
 				this.update({ phase: 'creating', progress: 'Loading saved list…' });
 				this.update({
 					list: await api<CombinedList>(
-						`/api/lists/${encodeURIComponent(this.existingId)}`,
+						`/listio/api/lists/${encodeURIComponent(this.existingId)}`,
 						signal
 					),
 				});
 			} else if (!this.state.list) {
 				this.update({ phase: 'creating', progress: 'Checking saved lists…' });
 				if (!this.uncertainCreate) {
-					const index = await api<ListIndexEntry[]>('/api/lists', signal);
+					const index = await api<ListIndexEntry[]>(
+						'/listio/api/lists',
+						signal
+					);
 					const error = validateImportName(this.name, index);
 					if (error) {
 						this.update({ phase: 'rejected' });
@@ -173,7 +176,7 @@ export class ImportListRun {
 				const previouslyUncertain = this.uncertainCreate;
 				this.uncertainCreate = true;
 				try {
-					const list = await api<CombinedList>('/api/lists', signal, {
+					const list = await api<CombinedList>('/listio/api/lists', signal, {
 						name: this.name,
 						creationId: this.creationId,
 					});
@@ -194,7 +197,7 @@ export class ImportListRun {
 			} else {
 				// Reconcile a save whose response was lost; use the latest version and preserve Titles.
 				const current = await api<CombinedList>(
-					`/api/lists/${encodeURIComponent(this.state.list.id)}`,
+					`/listio/api/lists/${encodeURIComponent(this.state.list.id)}`,
 					signal
 				);
 				this.update({
@@ -227,7 +230,7 @@ export class ImportListRun {
 	private save(list: CombinedList, signal: AbortSignal) {
 		const { version, sort, titles, removed, sources } = list;
 		return api<CombinedList>(
-			`/api/lists/${encodeURIComponent(list.id)}`,
+			`/listio/api/lists/${encodeURIComponent(list.id)}`,
 			signal,
 			{ version, sort, titles, removed, sources },
 			'PUT'
@@ -239,7 +242,7 @@ export class ImportListRun {
 		this.adding = true;
 		try {
 			const current = await api<CombinedList>(
-				`/api/lists/${encodeURIComponent(this.state.list.id)}`,
+				`/listio/api/lists/${encodeURIComponent(this.state.list.id)}`,
 				signal
 			);
 			const latest =

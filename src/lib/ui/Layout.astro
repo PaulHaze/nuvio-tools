@@ -1,8 +1,8 @@
 ---
 import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
-import '@/styles/main.css';
-import ThemeToggle from '@/components/ui/ThemeToggle.astro';
+import '@/lib/ui/main.css';
+import ThemeToggle from '@/lib/ui/ThemeToggle.astro';
 
 interface Props {
 	title: string;
@@ -72,7 +72,7 @@ const imageURL = image ? new URL(image, Astro.url.origin) : undefined;
 			<ThemeToggle />
 		</div>
 		<header class="site-header">
-			<a href="/" aria-label="Listio home">
+			<a href="/listio" aria-label="Listio home">
 				Listio
 			</a>
 		</header>

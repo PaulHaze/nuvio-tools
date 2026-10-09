@@ -1,5 +1,5 @@
-import { detectSource } from '../src/sources/detect.ts';
-import { fetchTrakt } from '../src/sources/trakt.ts';
+import { detectSource } from '../src/tools/listio/sources/detect.ts';
+import { fetchTrakt } from '../src/tools/listio/sources/trakt.ts';
 import {
 	enrichSourceTitles,
 	printProbeResult,

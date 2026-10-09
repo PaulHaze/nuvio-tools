@@ -2,7 +2,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
-import ExportCollection from '../src/components/export/ExportCollection.tsx';
+import ExportCollection from '../../src/tools/listio/components/export/ExportCollection.tsx';
 
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {

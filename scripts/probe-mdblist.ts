@@ -1,5 +1,5 @@
-import { detectSource } from '../src/sources/detect.ts';
-import { fetchMdbList } from '../src/sources/mdblist.ts';
+import { detectSource } from '../src/tools/listio/sources/detect.ts';
+import { fetchMdbList } from '../src/tools/listio/sources/mdblist.ts';
 import {
 	enrichSourceTitles,
 	printProbeResult,

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { APIContext, APIRoute } from 'astro';
-import type { CombinedList } from '../src/domain/types.ts';
+import type { CombinedList } from '../../src/tools/listio/domain/types.ts';
 
 const values = new Map<string, string>();
 const kv = {
@@ -22,16 +22,16 @@ const kv = {
 vi.mock('cloudflare:workers', () => ({
 	env: { LISTIO: kv, ADDON_SECRET: 'right' },
 }));
-const { POST } = await import('../src/pages/api/lists/index.ts');
+const { POST } = await import('../../src/pages/listio/api/lists/index.ts');
 const { GET, PATCH, PUT, DELETE } =
-	await import('../src/pages/api/lists/[id].ts');
+	await import('../../src/pages/listio/api/lists/[id].ts');
 const { GET: manifest } =
-	await import('../src/pages/addon/[secret]/manifest.json.ts');
+	await import('../../src/pages/listio/addon/[secret]/manifest.json.ts');
 
 function call(route: APIRoute, method: string, id?: string, body?: unknown) {
 	return route({
 		params: { id, secret: 'right' },
-		request: new Request('https://listio.test/api/lists', {
+		request: new Request('https://listio.test/listio/api/lists', {
 			method,
 			...(body !== undefined ? { body: JSON.stringify(body) } : {}),
 		}),
@@ -246,7 +246,7 @@ describe('Combined List API', () => {
 			expect((await call(PATCH, 'PATCH', 'missing', body)).status).toBe(400);
 		}
 		const response = await POST({
-			request: new Request('https://listio.test/api/lists', {
+			request: new Request('https://listio.test/listio/api/lists', {
 				method: 'POST',
 				body: '{bad',
 			}),

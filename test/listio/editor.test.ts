@@ -7,14 +7,18 @@ import {
 	createDraft,
 	removeTitles,
 	restoreTitles,
-} from '../src/components/editor/draft.ts';
+} from '../../src/tools/listio/components/editor/draft.ts';
 import {
 	enrichmentChunks,
 	enrichmentCost,
 	enrichmentQueue,
-} from '../src/components/editor/enrichment.ts';
-import type { CombinedList, SourceRecord, Title } from '../src/domain/types.ts';
-import { sortTitles } from '../src/domain/sort.ts';
+} from '../../src/tools/listio/components/editor/enrichment.ts';
+import type {
+	CombinedList,
+	SourceRecord,
+	Title,
+} from '../../src/tools/listio/domain/types.ts';
+import { sortTitles } from '../../src/tools/listio/domain/sort.ts';
 const title = (i: number, tmdbId: number | null = null): Title => ({
 	imdbId: `tt${i}`,
 	type: 'movie',

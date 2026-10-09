@@ -2,14 +2,14 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import type { CombinedList } from '../src/domain/types.ts';
-import { mergeTitles } from '../src/domain/merge.ts';
-import { slugify } from '../src/domain/slug.ts';
-import { detectSource } from '../src/sources/detect.ts';
-import { fetchTrakt } from '../src/sources/trakt.ts';
-import { fetchMdbList } from '../src/sources/mdblist.ts';
-import { putList, type ListStore } from '../src/storage/lists.ts';
-import { enrichTitles } from '../src/tmdb/enrich.ts';
+import type { CombinedList } from '../src/tools/listio/domain/types.ts';
+import { mergeTitles } from '../src/tools/listio/domain/merge.ts';
+import { slugify } from '../src/tools/listio/domain/slug.ts';
+import { detectSource } from '../src/tools/listio/sources/detect.ts';
+import { fetchTrakt } from '../src/tools/listio/sources/trakt.ts';
+import { fetchMdbList } from '../src/tools/listio/sources/mdblist.ts';
+import { putList, type ListStore } from '../src/tools/listio/storage/lists.ts';
+import { enrichTitles } from '../src/tools/listio/tmdb/enrich.ts';
 import { readDevVars, requiredValue } from './probe-utils.ts';
 
 // Wrangler's CLI uses existing login/config. Never put API secrets in arguments.

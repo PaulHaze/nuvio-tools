@@ -1,13 +1,13 @@
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
-import { json } from '../../../api/http.ts';
-import { isRecord, isTitle } from '../../../api/validate.ts';
+import { json } from '@/tools/listio/api/http.ts';
+import { isRecord, isTitle } from '@/tools/listio/api/validate.ts';
 import {
 	enrichmentCost,
 	MAX_ENRICH_REQUESTS,
 	MAX_ENRICH_TITLES,
-} from '../../../tmdb/budget.ts';
-import { enrichTitles } from '../../../tmdb/enrich.ts';
+} from '@/tools/listio/tmdb/budget.ts';
+import { enrichTitles } from '@/tools/listio/tmdb/enrich.ts';
 
 export const POST: APIRoute = async ({ request }) => {
 	const body: unknown = await request.json().catch(() => null);

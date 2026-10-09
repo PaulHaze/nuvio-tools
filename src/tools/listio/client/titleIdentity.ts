@@ -33,7 +33,11 @@ export async function lookupCandidate(
 	if (cached) return cached;
 	if (cached === null) throw new ApiError("No IMDb ID, can't add", 422);
 	try {
-		const title = await api<Title>('/api/titles/lookup', signal, candidate);
+		const title = await api<Title>(
+			'/listio/api/titles/lookup',
+			signal,
+			candidate
+		);
 		signal.throwIfAborted();
 		identities.set(key, title);
 		return title;

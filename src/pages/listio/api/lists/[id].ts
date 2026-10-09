@@ -1,18 +1,18 @@
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
-import { savedDraft } from '../../../api/validate.ts';
+import { savedDraft } from '@/tools/listio/api/validate.ts';
 import {
 	apiError,
 	json,
 	PATCH_ERROR,
 	readListPatch,
-} from '../../../api/http.ts';
+} from '@/tools/listio/api/http.ts';
 import {
 	deleteList,
 	getIndex,
 	getList,
 	putList,
-} from '../../../storage/lists.ts';
+} from '@/tools/listio/storage/lists.ts';
 
 export const GET: APIRoute = async ({ params }) => {
 	const list = params.id ? await getList(env.LISTIO, params.id) : null;

@@ -4,7 +4,7 @@ import {
 	parseImport,
 	validateImportName,
 	validateImportSections,
-} from '../src/domain/pasteSections.ts';
+} from '../../src/tools/listio/domain/pasteSections.ts';
 
 const SINGLE_FIXTURE = 'docs/movie_lists/test_movie_list.md';
 const MULTI_FIXTURE = 'docs/movie_lists/test_multi_list.md';

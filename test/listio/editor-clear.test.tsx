@@ -2,10 +2,13 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import Editor from '../src/components/editor/Editor.tsx';
-import { savedDraft } from '../src/api/validate.ts';
-import { buildCatalog } from '../src/addon/catalog.ts';
-import type { CombinedList, Title } from '../src/domain/types.ts';
+import Editor from '../../src/tools/listio/components/editor/Editor.tsx';
+import { savedDraft } from '../../src/tools/listio/api/validate.ts';
+import { buildCatalog } from '../../src/tools/listio/addon/catalog.ts';
+import type {
+	CombinedList,
+	Title,
+} from '../../src/tools/listio/domain/types.ts';
 
 const title = (id: number): Title => ({
 	imdbId: `tt${id}`,
@@ -65,13 +68,13 @@ describe('clear list contents', () => {
 	it('allows cancellation and replaces overlapping titles through the original list endpoint only on Save', async () => {
 		let persisted = initial;
 		const fetcher = vi.fn(async (url: string, init: RequestInit) => {
-			if (url === '/api/titles/match')
+			if (url === '/listio/api/titles/match')
 				return new Response(
 					JSON.stringify(
 						[1, 2, 3].map((id) => ({ status: 'matched', title: title(id) }))
 					)
 				);
-			expect(url).toBe(`/api/lists/${initial.id}`);
+			expect(url).toBe(`/listio/api/lists/${initial.id}`);
 			expect(init.method).toBe('PUT');
 			const validated = savedDraft(JSON.parse(init.body as string), persisted);
 			expect(validated).not.toBeNull();
@@ -115,11 +118,11 @@ describe('clear list contents', () => {
 	it('blocks clearing during matching and can save an empty list without deleting its identity', async () => {
 		let resolve!: (response: Response) => void;
 		const fetcher = vi.fn((url: string, init: RequestInit) => {
-			if (url === '/api/titles/match')
+			if (url === '/listio/api/titles/match')
 				return new Promise<Response>((done) => {
 					resolve = done;
 				});
-			expect(url).toBe(`/api/lists/${initial.id}`);
+			expect(url).toBe(`/listio/api/lists/${initial.id}`);
 			const body = JSON.parse(init.body as string);
 			expect(body).toMatchObject({
 				titles: [],

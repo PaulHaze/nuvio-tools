@@ -1,14 +1,19 @@
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
-import { apiError, json, NAME_ERROR, readName } from '../../../api/http.ts';
-import { isRecord } from '../../../api/validate.ts';
-import { uniqueSlug } from '../../../domain/slug.ts';
+import {
+	apiError,
+	json,
+	NAME_ERROR,
+	readName,
+} from '@/tools/listio/api/http.ts';
+import { isRecord } from '@/tools/listio/api/validate.ts';
+import { uniqueSlug } from '@/tools/listio/domain/slug.ts';
 import {
 	createImportList,
 	getIndex,
 	getList,
 	putList,
-} from '../../../storage/lists.ts';
+} from '@/tools/listio/storage/lists.ts';
 
 export const GET: APIRoute = async () => {
 	try {

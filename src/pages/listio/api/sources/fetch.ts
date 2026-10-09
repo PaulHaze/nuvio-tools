@@ -1,12 +1,15 @@
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
-import { json } from '../../../api/http.ts';
-import { isRecord } from '../../../api/validate.ts';
-import { detectSource, SourceDetectionError } from '../../../sources/detect.ts';
-import { SourceRequestBudgetError } from '../../../sources/errors.ts';
-import { fetchTrakt } from '../../../sources/trakt.ts';
-import { fetchMdbList } from '../../../sources/mdblist.ts';
-import { fetchImdb } from '../../../sources/imdb.ts';
+import { json } from '@/tools/listio/api/http.ts';
+import { isRecord } from '@/tools/listio/api/validate.ts';
+import {
+	detectSource,
+	SourceDetectionError,
+} from '@/tools/listio/sources/detect.ts';
+import { SourceRequestBudgetError } from '@/tools/listio/sources/errors.ts';
+import { fetchTrakt } from '@/tools/listio/sources/trakt.ts';
+import { fetchMdbList } from '@/tools/listio/sources/mdblist.ts';
+import { fetchImdb } from '@/tools/listio/sources/imdb.ts';
 
 // Leave headroom below the Worker's 50 external subrequests per invocation.
 const MAX_SOURCE_PAGES = 40;

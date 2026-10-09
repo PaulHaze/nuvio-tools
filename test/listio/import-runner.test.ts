@@ -1,7 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ImportListRun } from '../src/client/importList.ts';
-import { pasteLines } from '../src/domain/pasteLines.ts';
-import type { CombinedList, Title } from '../src/domain/types.ts';
+import { ImportListRun } from '../../src/tools/listio/client/importList.ts';
+import { pasteLines } from '../../src/tools/listio/domain/pasteLines.ts';
+import type {
+	CombinedList,
+	Title,
+} from '../../src/tools/listio/domain/types.ts';
 const title = (id: number): Title => ({
 	imdbId: `tt${id}`,
 	type: 'movie',
@@ -57,10 +60,10 @@ describe('resumable single-list import', () => {
 		expect(
 			fetcher.mock.calls.map(([url, init]) => `${init.method} ${url}`)
 		).toEqual([
-			'POST /api/titles/match',
-			'GET /api/lists',
-			'POST /api/lists',
-			'PUT /api/lists/test',
+			'POST /listio/api/titles/match',
+			'GET /listio/api/lists',
+			'POST /listio/api/lists',
+			'PUT /listio/api/lists/test',
 		]);
 		expect(saved.titles.map((title) => [title.imdbId, title.addedSeq])).toEqual(
 			[
@@ -115,7 +118,8 @@ describe('resumable single-list import', () => {
 		const fetcher = vi.fn(async (url: string, init: RequestInit) => {
 			if (url.endsWith('/match'))
 				return response([{ status: 'matched', title: title(1) }]);
-			if (url === '/api/lists' && init.method === 'GET') return response([]);
+			if (url === '/listio/api/lists' && init.method === 'GET')
+				return response([]);
 			if (init.method === 'POST' || init.method === 'GET')
 				return response(empty);
 			if (fail) {
@@ -146,7 +150,8 @@ describe('resumable single-list import', () => {
 		const fetcher = vi.fn(async (url: string, init: RequestInit) => {
 			if (url.endsWith('/match'))
 				return response([{ status: 'matched', title: title(1) }]);
-			if (url === '/api/lists' && init.method === 'GET') return response([]);
+			if (url === '/listio/api/lists' && init.method === 'GET')
+				return response([]);
 			if (init.method === 'POST') return response(empty);
 			if (init.method === 'GET') return response(stale ? empty : saved);
 			const draft = JSON.parse(init.body as string);
@@ -182,7 +187,8 @@ describe('resumable single-list import', () => {
 		const fetcher = vi.fn(async (url: string, init: RequestInit) => {
 			if (url.endsWith('/match'))
 				return response([{ status: 'matched', title: title(1) }]);
-			if (url === '/api/lists' && init.method === 'GET') return response([]);
+			if (url === '/listio/api/lists' && init.method === 'GET')
+				return response([]);
 			if (init.method === 'POST') {
 				tokens.push(JSON.parse(init.body as string).creationId);
 				if (tokens.length === 1) throw new Error('Lost create response');
@@ -237,7 +243,7 @@ describe('resumable single-list import', () => {
 				expect(run.state.error).not.toContain('format');
 			} else expect(run.state.error).toContain('Check the list format');
 			expect(
-				fetcher.mock.calls.every(([url]) => url === '/api/titles/match')
+				fetcher.mock.calls.every(([url]) => url === '/listio/api/titles/match')
 			).toBe(true);
 		}
 	});

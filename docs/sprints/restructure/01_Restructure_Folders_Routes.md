@@ -1,6 +1,6 @@
 # Sprint 01 — Restructure: folders and routes
 
-**Status:** not started
+**Status:** implemented, manual check pending
 
 **Depends on:** nothing. First sprint of the Restructure epic (Nuvio Tools restructure, sprints 01–03).
 
@@ -146,14 +146,14 @@ after sprint 03.
 
 ## Tasks
 
-- [ ] Move Listio code into `src/tools/listio/` and site-wide files into `src/lib/ui/` as tabled
-- [ ] Add empty `src/tools/artnuvio/`, `src/tools/collectio/`, `src/lib/nuvio/` with `.gitkeep`
-- [ ] Move pages under `src/pages/listio/` (including `api/` and `addon/`); fix all imports
-- [ ] Update client fetch URLs, links, `collectionExportUrl`, and the logo link
-- [ ] Make `/` a temporary redirect or link to `/listio`
-- [ ] Update `middleware.ts` public paths (boundary-safe) and add the middleware tests
-- [ ] Reorganise `test/` and fix paths; all existing tests pass
-- [ ] (Optional) Move `docs/audits/*` to `docs/old/listio/audits/`
+- [x] Move Listio code into `src/tools/listio/` and site-wide files into `src/lib/ui/` as tabled
+- [x] Add empty `src/tools/artnuvio/`, `src/tools/collectio/`, `src/lib/nuvio/` with `.gitkeep`
+- [x] Move pages under `src/pages/listio/` (including `api/` and `addon/`); fix all imports
+- [x] Update client fetch URLs, links, `collectionExportUrl`, and the logo link
+- [x] Make `/` a temporary redirect or link to `/listio`
+- [x] Update `middleware.ts` public paths (boundary-safe) and add the middleware tests
+- [x] Reorganise `test/` and fix paths; all existing tests pass
+- [ ] (Optional, skipped) Move `docs/audits/*` to `docs/old/listio/audits/`
 - [ ] Manual check: every Listio screen works under `/listio` (Home, editor, import, export,
       review grid, addon manifest and catalogs)
 

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import type { APIContext, APIRoute } from 'astro';
-import { ImportListRun } from '../src/client/importList.ts';
-import { pasteLines } from '../src/domain/pasteLines.ts';
-import type { CombinedList } from '../src/domain/types.ts';
+import { ImportListRun } from '../../src/tools/listio/client/importList.ts';
+import { pasteLines } from '../../src/tools/listio/domain/pasteLines.ts';
+import type { CombinedList } from '../../src/tools/listio/domain/types.ts';
 
 const values = new Map<string, string>();
 let failKey = '';
@@ -28,8 +28,10 @@ const kv = {
 	},
 };
 vi.mock('cloudflare:workers', () => ({ env: { LISTIO: kv } }));
-const { POST, GET: index } = await import('../src/pages/api/lists/index.ts');
-const { GET, PUT, DELETE } = await import('../src/pages/api/lists/[id].ts');
+const { POST, GET: index } =
+	await import('../../src/pages/listio/api/lists/index.ts');
+const { GET, PUT, DELETE } =
+	await import('../../src/pages/listio/api/lists/[id].ts');
 const title = {
 	imdbId: 'tt123',
 	type: 'movie',
@@ -43,7 +45,7 @@ const title = {
 function call(route: APIRoute, method: string, body?: unknown, id?: string) {
 	return route({
 		params: { id },
-		request: new Request('https://listio.test/api/lists', {
+		request: new Request('https://listio.test/listio/api/lists', {
 			method,
 			...(body === undefined ? {} : { body: JSON.stringify(body) }),
 		}),
@@ -67,7 +69,7 @@ it.each(['index', 'initial:'])(
 				return new Response(JSON.stringify([{ status: 'matched', title }]));
 			}
 			const body = init.body ? JSON.parse(init.body as string) : undefined;
-			if (url === '/api/lists') {
+			if (url === '/listio/api/lists') {
 				if (init.method === 'POST') {
 					creates.push(body);
 					return call(POST, 'POST', body);

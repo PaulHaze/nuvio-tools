@@ -6,8 +6,8 @@ import {
 	ratingFromTmdb,
 	enrichTitle,
 	enrichTitles,
-} from '../src/tmdb/enrich.ts';
-import type { Title } from '../src/domain/types.ts';
+} from '../../src/tools/listio/tmdb/enrich.ts';
+import type { Title } from '../../src/tools/listio/domain/types.ts';
 
 function fixture(name: string): unknown {
 	const path = fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url));

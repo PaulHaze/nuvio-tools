@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { APIContext } from 'astro';
-import type { CombinedList } from '../src/domain/types.ts';
+import type { CombinedList } from '../../src/tools/listio/domain/types.ts';
 
 const values = new Map<string, string>();
 const kv = {
@@ -16,9 +16,9 @@ vi.mock('cloudflare:workers', () => ({
 }));
 
 const { GET: manifest } =
-	await import('../src/pages/addon/[secret]/manifest.json.ts');
+	await import('../../src/pages/listio/addon/[secret]/manifest.json.ts');
 const { GET: catalog } =
-	await import('../src/pages/addon/[secret]/catalog/[type]/[...rest].ts');
+	await import('../../src/pages/listio/addon/[secret]/catalog/[type]/[...rest].ts');
 
 function call(
 	route: typeof manifest,

@@ -46,7 +46,7 @@ export function Search({
 		const timer = setTimeout(() => {
 			setMessage('Searching…');
 			void api<Candidate[]>(
-				`/api/search?q=${encodeURIComponent(query.trim())}`,
+				`/listio/api/search?q=${encodeURIComponent(query.trim())}`,
 				controller.signal
 			)
 				.then((results) => {

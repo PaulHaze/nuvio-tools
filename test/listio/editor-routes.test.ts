@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { APIContext, APIRoute } from 'astro';
-import type { Title } from '../src/domain/types.ts';
+import type { Title } from '../../src/tools/listio/domain/types.ts';
 vi.mock('cloudflare:workers', () => ({
 	env: {
 		TRAKT_CLIENT_ID: 'trakt-key',
@@ -8,11 +8,13 @@ vi.mock('cloudflare:workers', () => ({
 		TMDB_API_KEY: 'tmdb-key',
 	},
 }));
-const { POST: source } = await import('../src/pages/api/sources/fetch.ts');
-const { POST: enrich } = await import('../src/pages/api/titles/enrich.ts');
+const { POST: source } =
+	await import('../../src/pages/listio/api/sources/fetch.ts');
+const { POST: enrich } =
+	await import('../../src/pages/listio/api/titles/enrich.ts');
 const call = (route: APIRoute, body: unknown) =>
 	route({
-		request: new Request('https://listio.test/api', {
+		request: new Request('https://listio.test/listio/api', {
 			method: 'POST',
 			body: JSON.stringify(body),
 		}),

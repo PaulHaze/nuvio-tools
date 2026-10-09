@@ -1,8 +1,8 @@
 ---
 import { env } from 'cloudflare:workers';
-import Layout from '@/layouts/Layout.astro';
-import { getIndex } from '@/storage/lists';
-import { MAX_NAME_LENGTH } from '@/api/http';
+import Layout from '@/lib/ui/Layout.astro';
+import { getIndex } from '@/tools/listio/storage/lists';
+import { MAX_NAME_LENGTH } from '@/tools/listio/api/http';
 
 export const prerender = false;
 const lists = await getIndex(env.LISTIO);
@@ -24,9 +24,9 @@ const changed = Astro.url.searchParams.get('changed') === '1';
 			</p>
 		)}
 		<p>
-			<a href="/import">Import from text</a>
+			<a href="/listio/import">Import from text</a>
 			{' · '}
-			<a href="/export">Export collection</a>
+			<a href="/listio/export">Export collection</a>
 		</p>
 		<list-manager>
 			<p class="error" role="alert" hidden></p>
@@ -47,7 +47,7 @@ const changed = Astro.url.searchParams.get('changed') === '1';
 						</div>
 					</form>
 				</details>
-				<a class="panel new-list" href="/import?mode=multiple">
+				<a class="panel new-list" href="/listio/import?mode=multiple">
 					+ Multiple Lists
 				</a>
 			</div>
@@ -93,7 +93,7 @@ const changed = Astro.url.searchParams.get('changed') === '1';
 								<div class="list-heading">
 									<a
 										class="list-name"
-										href={`/lists/${encodeURIComponent(list.id)}`}
+										href={`/listio/lists/${encodeURIComponent(list.id)}`}
 									>
 										{list.name}
 									</a>
@@ -252,8 +252,8 @@ const changed = Astro.url.searchParams.get('changed') === '1';
 				const create = form.dataset.action === 'create';
 				void this.save(
 					create
-						? '/api/lists'
-						: `/api/lists/${encodeURIComponent(form.dataset.id!)}`,
+						? '/listio/api/lists'
+						: `/listio/api/lists/${encodeURIComponent(form.dataset.id!)}`,
 					create ? 'POST' : 'PATCH',
 					{ name }
 				);
@@ -263,7 +263,7 @@ const changed = Astro.url.searchParams.get('changed') === '1';
 				if (!(toggle instanceof HTMLInputElement) || !toggle.dataset.home)
 					return;
 				void this.save(
-					`/api/lists/${encodeURIComponent(toggle.dataset.home)}`,
+					`/listio/api/lists/${encodeURIComponent(toggle.dataset.home)}`,
 					'PATCH',
 					{ showOnHome: toggle.checked }
 				).then((saved) => {
@@ -283,7 +283,7 @@ const changed = Astro.url.searchParams.get('changed') === '1';
 				)
 					return;
 				void this.save(
-					`/api/lists/${encodeURIComponent(button.dataset.delete!)}`,
+					`/listio/api/lists/${encodeURIComponent(button.dataset.delete!)}`,
 					'DELETE'
 				);
 			});
@@ -325,7 +325,7 @@ const changed = Astro.url.searchParams.get('changed') === '1';
 					throw new Error(data?.error || 'Unable to save this change.');
 				window.location.assign(
 					method === 'POST'
-						? `/lists/${encodeURIComponent(data!.id)}?created=1`
+						? `/listio/lists/${encodeURIComponent(data!.id)}?created=1`
 						: '/?changed=1'
 				);
 				return true;
