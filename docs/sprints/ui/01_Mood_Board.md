@@ -218,3 +218,42 @@ INDIVIDUAL ELEMENTS:
 - Sliders: Astra
 
 In fact all of Astra's elements are fine and will make a good baseline to build from.
+
+### Grill follow-up (2026-10-10)
+
+Astra's "Afterglow" is a control preset, not a palette: all four Astra presets share one palette
+(brand `#8580FF → #BA94FF`, Listio `#2DD4CF`, ArtNuvio `#306FE0`, Collectio `#E275EE`). The chosen
+direction is **Afterglow with overrides**: Outfit + Inter + Geist Mono, sharp corners (4px), subtle
+glow, dots, glass on, accent-tinted borders, aurora on but softer than Astra's.
+
+- **Header stays brand.** The brand strip keeps the indigo→violet gradient on every page.
+  Everything below it takes the tool's accent (buttons, sliders, focus rings, toggles, badges,
+  links, card borders/glows, aurora).
+- **Background tints per page; surfaces stay neutral.** Each page tints only `--bg`:
+  - Home: Astra's navy `#080b16` with dots and the indigo hero aurora, as-is.
+  - Listio: teal-green tint. ArtNuvio: royal-blue tint. Collectio: magenta tint.
+  - Tool tints are roughly as dark as Home's navy: "not quite as tinted as the mock, but more
+    than near-black".
+  - Only the base fill of cards, tables, inputs and panels stays neutral (readability in Listio,
+    colour accuracy in the ArtNuvio preview). Everything else on a card keeps Astra's per-tool
+    look inside its tool: accent-tinted border, accent glow, the accent light pool in the corner,
+    badges, icons, eyebrows and big numbers.
+- **Last pass:** `moodboard-Astra-v2.html` (Sonnet, medium) verifies the per-page tints and the
+  softer aurora before values are locked for `ui-02`.
+
+### Final values (v2 pass, 2026-10-10)
+
+Chosen in `moodboard-Astra-v2.html#page=listio&tint=2&aurora=0.45`, then nudged to 3% (tune further during the build).
+
+- **Aurora strength:** `0.45` (Astra used `0.65`).
+- **Tool background tint:** 3% of the tool hue mixed (oklab) into `#07080c`:
+
+| Page      | Tint hue  | `--bg`    |
+| --------- | --------- | --------- |
+| Home      | —         | `#080B16` |
+| Listio    | `#14b8a0` | `#090C10` |
+| ArtNuvio  | `#2f66e6` | `#080A11` |
+| Collectio | `#d03cc8` | `#0C0A10` |
+
+Everything else follows "Chosen direction" and "Grill follow-up" above, with Astra's file as the
+baseline for elements.

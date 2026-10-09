@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en" data-page="home">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Nuvio Tools · Moodboard Astra v2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Palette: Astra's, unchanged. Brand stays constant; tool containers replace only accent tokens.
+       Settled choices (Outfit + Inter + Geist Mono, 4px, subtle glow, dots, glass, accent borders) are the defaults. */
+    :root {
+      color-scheme: dark;
+      --bg:#080b16; --surface-1:#111625; --surface-2:#191f31;
+      --border:#343c52; --text:#eef0fa; --text-muted:#a6aec5;
+      --brand-from:#8580ff; --brand-to:#ba94ff;
+      --brand-fill-from:#5145c9; --brand-fill-to:#7142b8;
+      --accent:#a39bff; --accent-hover:#b9b3ff; --accent-tint:#a39bff12;
+      --accent-glow:#8b5cf638; --on-accent:#101020;
+      --radius:4px; --font-display:'Outfit',sans-serif;
+      --font-text:'Inter',sans-serif; --font-mono:'Geist Mono',monospace;
+      --glow-size:10px; --glow-hover:24px; --aurora-opacity:.45; --tint-strength:3;
+      --pattern:radial-gradient(#a6aec520 .7px,transparent .9px); --pattern-size:16px 16px; --glass-blur:18px;
+      --card-bg:color-mix(in srgb,var(--surface-1) 84%,transparent);
+      --card-border:color-mix(in srgb,var(--accent) 30%,var(--border));
+    }
+    /* Per-page background: only --bg tints. Home is Astra's navy exactly; tools mix a hue into near-black. */
+    [data-page="home"] { --bg:#080b16; }
+    [data-page="listio"] { --page-tint:#14b8a0; }
+    [data-page="artnuvio"] { --page-tint:#2f66e6; }
+    [data-page="collectio"] { --page-tint:#d03cc8; }
+    [data-page="listio"],[data-page="artnuvio"],[data-page="collectio"] { --bg:color-mix(in oklab,var(--page-tint) calc(var(--tint-strength) * 1%),#07080c); }
+    [data-tool="listio"] { --accent:#2dd4cf; --accent-hover:#67e8e2; --accent-tint:#2dd4cf12; --accent-glow:#22d3ee30; --on-accent:#052023; }
+    [data-tool="artnuvio"] { --accent:#306fe0; --accent-hover:#2663cb; --accent-tint:#306fe016; --accent-glow:#306fe040; --on-accent:#ffffff; --accent-ink:#8fb8ff; }
+    [data-tool="collectio"] { --accent:#e275ee; --accent-hover:#efa0f7; --accent-tint:#e275ee12; --accent-glow:#d946ef30; --on-accent:#28072e; }
+    [data-tool] { --card-border:color-mix(in srgb,var(--accent) 30%,var(--border)); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:24px; background:var(--bg); }
+    body { margin:0; background:var(--bg); transition:background .25s; color:var(--text); font:14px/1.6 var(--font-text); }
+    body::before { content:""; position:fixed; inset:0; background-image:var(--pattern); background-size:var(--pattern-size); pointer-events:none; z-index:-1; }
+    a { color:inherit; text-decoration:none; }
+    button,input,select { font:inherit; }
+    button,a,input,select,summary { -webkit-tap-highlight-color:transparent; }
+    :focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+    button,a,summary { touch-action:manipulation; }
+    button,select,summary { cursor:pointer; }
+    h1,h2,h3,h4,p { margin:0; }
+    h1,h2,h3,h4,.display { font-family:var(--font-display); }
+    .mono { font-family:var(--font-mono); }
+    .muted { color:var(--text-muted); }
+    .eyebrow { font:500 11px/1.5 var(--font-mono); text-transform:uppercase; letter-spacing:.15em; color:var(--text-muted); }
+    .gradient { background:linear-gradient(105deg,var(--brand-from),var(--brand-to)); background-clip:text; -webkit-text-fill-color:transparent; }
+    .brand-header { border-top:2px solid var(--brand-from); border-bottom:1px solid var(--border); background:linear-gradient(100deg,#5145c91c,#7142b80a); }
+    .header-inner { max-width:1440px; padding:20px 40px; display:flex; align-items:center; gap:32px; }
+    .wordmark { display:flex; align-items:center; gap:11px; font:700 21px var(--font-display); white-space:nowrap; }
+    .brand-icon { display:grid; place-items:center; width:33px; height:33px; border-radius:8px; color:#fff; background:linear-gradient(140deg,var(--brand-fill-from),var(--brand-fill-to)); font-size:20px; }
+    nav { display:flex; gap:25px; margin-left:auto; color:var(--text-muted); font-size:13px; }
+    nav a:hover { color:var(--text); }
+    .edition { border-left:1px solid var(--border); padding-left:24px; }
+    main { max-width:1440px; padding:0 360px 45px 40px; margin:auto; }
+    .hero { padding:66px 0 45px; position:relative; isolation:isolate; }
+    .hero::before { content:""; position:absolute; z-index:-1; inset:-30px -20px -20px; background:radial-gradient(ellipse at 55% 30%,var(--hero-aurora-1,#6741d43b),transparent 65%),radial-gradient(ellipse at 20% 60%,var(--hero-aurora-2,#315beb18),transparent 60%); opacity:var(--aurora-opacity); pointer-events:none; }
+    .hero h1 { font-size:clamp(36px,4.2vw,60px); line-height:1.08; letter-spacing:-.045em; font-weight:600; margin:19px 0; }
+    .hero p { font-size:15px; max-width:490px; color:var(--text-muted); }
+    .hero-bottom { margin-top:25px; display:flex; gap:20px; align-items:center; }
+    .button { display:inline-flex; align-items:center; justify-content:center; gap:15px; padding:10px 16px; border:1px solid transparent; border-radius:var(--radius); background:var(--accent); color:var(--on-accent); font-size:12px; font-weight:600; transition:background .16s,box-shadow .16s,transform .16s; }
+    .button:hover { background:var(--accent-hover); box-shadow:0 0 var(--glow-hover) var(--accent-glow); }
+    .button:active { transform:translateY(1px) scale(.98); }
+    .button.ghost { background:transparent; border-color:var(--border); color:var(--text); }
+    .button.ghost:hover { background:var(--accent-tint); border-color:var(--accent); }
+    .brand-button { background:linear-gradient(110deg,var(--brand-fill-from),var(--brand-fill-to)); color:#fff; }
+    .brand-button:hover { background:linear-gradient(110deg,var(--brand-fill-to),var(--brand-fill-from)); }
+    .section-heading { display:flex; align-items:baseline; justify-content:space-between; gap:15px; margin:0 0 15px; }
+    .section-heading h2 { font-size:17px; font-weight:500; letter-spacing:-.02em; }
+    .section-heading .eyebrow { font-size:10px; }
+    .three { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .card { border:1px solid var(--card-border); border-radius:var(--radius); background:var(--card-bg); backdrop-filter:blur(var(--glass-blur)); box-shadow:0 0 var(--glow-size) var(--accent-glow); }
+    .tool-card { padding:21px; position:relative; overflow:hidden; transition:border-color .18s,box-shadow .18s; }
+    .tool-card:hover { border-color:var(--accent); box-shadow:0 0 var(--glow-hover) var(--accent-glow); }
+    .tool-card::before,.specimen::before { content:""; position:absolute; inset:0; background:radial-gradient(ellipse at 80% 0%,var(--accent-glow),transparent 70%); opacity:var(--aurora-opacity); pointer-events:none; }
+    .tool-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
+    .tool-icon { width:38px; height:38px; border:1px solid var(--card-border); background:var(--accent-tint); border-radius:var(--radius); display:grid; place-items:center; color:var(--accent-ink,var(--accent)); }
+    svg { width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+    .tool-card h3 { font-size:21px; font-weight:600; margin-bottom:5px; }
+    .tool-card p { color:var(--text-muted); font-size:12px; min-height:40px; }
+    .tool-foot { border-top:1px solid var(--border); padding-top:13px; margin-top:18px; display:flex; justify-content:space-between; color:var(--accent-ink,var(--accent)); font:11px var(--font-mono); }
+    .type-section { margin:36px 0; }
+    .type-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:0; overflow:hidden; }
+    .type-cell { padding:15px 18px; min-width:0; border-bottom:1px solid var(--border); }
+    .type-cell small { display:block; font:9px var(--font-mono); color:var(--text-muted); margin-top:8px; }
+    .type-cell .sample { display:block; height:44px; display:flex; align-items:center; white-space:nowrap; }
+    .specimen { padding:20px; position:relative; overflow:hidden; }
+    .specimen > * { position:relative; }
+    .specimen .eyebrow { color:var(--accent-ink,var(--accent)); font-size:10px; }
+    .specimen h3 { font-size:20px; font-weight:600; margin:10px 0 4px; }
+    .specimen > p { font-size:12px; color:var(--text-muted); min-height:40px; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; margin:17px 0; }
+    .actions .button { padding:8px 12px; }
+    .example { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:18px; }
+    .example-top { display:flex; align-items:center; justify-content:space-between; gap:5px; font-size:11px; }
+    .badge { background:var(--accent-tint); color:var(--accent-ink,var(--accent)); border:1px solid var(--card-border); border-radius:30px; padding:2px 7px; font-size:9px; white-space:nowrap; }
+    .metric { font:500 34px/1.4 var(--font-display); letter-spacing:-.04em; margin-top:10px; }
+    .metric small { font:11px var(--font-text); color:var(--text-muted); letter-spacing:0; }
+    .example .mono { font-size:9px; color:var(--text-muted); }
+    label { display:block; color:var(--text-muted); font-size:11px; margin:12px 0 6px; }
+    input[type="text"],select { width:100%; min-width:0; border:1px solid var(--border); border-radius:var(--radius); color:var(--text); background:var(--surface-2); padding:9px 10px; font-size:12px; }
+    input:focus-visible,select:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+    .range-label { display:flex; align-items:center; justify-content:space-between; }
+    output { color:var(--text); font-family:var(--font-mono); }
+    input[type="range"] { --fill:50%; appearance:none; -webkit-appearance:none; width:100%; height:5px; border-radius:10px; background:linear-gradient(to right,var(--accent) var(--fill),var(--border) var(--fill)); margin:12px 0; cursor:pointer; }
+    input[type="range"]::-webkit-slider-thumb { appearance:none; width:13px; height:13px; background:var(--accent); border:2px solid var(--text); border-radius:50%; }
+    input[type="range"]::-moz-range-track { background:transparent; }
+    input[type="range"]::-moz-range-thumb { width:10px; height:10px; background:var(--accent); border:2px solid var(--text); border-radius:50%; }
+    footer { display:flex; justify-content:space-between; gap:10px; border-top:1px solid var(--border); margin-top:30px; padding-top:18px; font:10px var(--font-mono); color:var(--text-muted); }
+    /* Inside a tool: hero and primary actions switch to the tool accent (header is untouched). */
+    main[data-tool] { --hero-aurora-1:var(--accent-glow); --hero-aurora-2:var(--accent-tint); }
+    main[data-tool] .hero .gradient { background-image:linear-gradient(105deg,var(--accent-ink,var(--accent)),color-mix(in srgb,var(--accent-ink,var(--accent)) 60%,#fff)); }
+    main[data-tool] .brand-button { background:var(--accent); color:var(--on-accent); }
+    main[data-tool] .brand-button:hover { background:var(--accent-hover); }
+    .seg { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin:8px 0 4px; }
+    .seg button { padding:8px 6px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface-2); color:var(--text-muted); font-size:11px; }
+    .seg button:hover { border-color:var(--accent); color:var(--text); }
+    .seg button[aria-pressed="true"] { color:var(--text); border-color:var(--accent); background:var(--accent-tint); box-shadow:0 0 10px var(--accent-glow); }
+    .probe { position:absolute; width:0; height:0; visibility:hidden; background:var(--bg); }
+    .bg-list { display:grid; grid-template-columns:auto 1fr; gap:2px 10px; margin:6px 0; }
+    .chip { display:inline-block; width:9px; height:9px; border:1px solid var(--border); margin-right:6px; vertical-align:-1px; }
+    details.settled { margin-top:12px; font-size:10px; color:var(--text-muted); } details.settled summary { cursor:pointer; }
+    /* A separate floating workbench leaves the specimens unobstructed. */
+    .workbench { position:fixed; right:24px; top:104px; width:290px; max-height:calc(100dvh - 125px); overflow:auto; z-index:5; background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 20px 60px #0005; }
+    .workbench summary { padding:17px 18px; display:flex; justify-content:space-between; align-items:center; list-style:none; font:600 14px var(--font-display); }
+    .workbench summary::-webkit-details-marker { display:none; }
+    .workbench summary::after { content:"+"; color:var(--text-muted); }
+    .workbench[open] summary::after { content:"−"; }
+    .panel-body { border-top:1px solid var(--border); padding:15px 18px 18px; }
+    .panel-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .readout { padding-top:14px; margin-top:16px; border-top:1px solid var(--border); color:var(--text-muted); font:10px/1.9 var(--font-mono); }
+    .swatches { display:flex; gap:5px; margin:10px 0; }
+    .swatch { flex:1; height:5px; border-radius:2px; background:var(--accent); }
+    #copy { width:100%; margin-top:8px; }
+    #copy-status { font-size:10px; color:var(--text-muted); min-height:18px; margin-top:5px; }
+    @media(min-width:1600px) { .workbench { right:max(24px,calc((100vw - 1440px)/2 + 24px)); } }
+    @media(max-width:1150px) { main { padding-right:330px; padding-left:24px; } .three { gap:10px; } .tool-card,.specimen { padding:14px; } .type-strip { grid-template-columns:repeat(2,1fr); } .hero h1 { font-size:46px; } .edition { display:none; } }
+    @media(max-width:960px) { .workbench { position:relative; top:auto; right:auto; width:auto; max-height:none; margin:20px 24px 0; } main { padding:0 24px 30px; } .panel-body { display:grid; grid-template-columns:1fr 1fr; column-gap:24px; } .page-ctl,.readout { grid-column:1/-1; } .header-inner { padding:18px 24px; } .hero { padding-top:45px; } }
+    @media(max-width:600px) { .three { grid-template-columns:1fr; gap:16px; } nav { gap:12px; font-size:11px; } .wordmark { font-size:17px; } .brand-icon { display:none; } .header-inner { gap:12px; } .hero h1 { font-size:40px; } .hero-bottom .eyebrow { font-size:9px; } .section-heading .eyebrow { display:none; } .tool-card,.specimen { padding:22px; } .tool-card p,.specimen > p { min-height:0; } .panel-body { display:block; } .seg { grid-template-columns:1fr 1fr; } footer { flex-wrap:wrap; } }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { transition:none!important; animation:none!important; } }
+  </style>
+</head>
+<body>
+  <header class="brand-header" id="home">
+    <div class="header-inner">
+      <a class="wordmark" href="#home" data-scroll><span class="brand-icon" aria-hidden="true">n</span><span class="gradient">Nuvio Tools</span></a>
+      <nav aria-label="Main"><a href="#tools" data-scroll>Tools</a><a href="#typography" data-scroll>Typography</a><a href="#specimens" data-scroll>Components</a></nav>
+      <span class="edition eyebrow">Design study / Astra</span>
+    </div>
+  </header>
+  <details class="workbench" id="workbench" open>
+    <summary>Design controls <span class="eyebrow">Astra v2</span></summary>
+    <div class="panel-body">
+      <div class="page-ctl"><div class="eyebrow">Page</div><div class="seg" id="pages" role="group" aria-label="Page"></div></div>
+      <div><label class="range-label" for="tint">Background tint strength <output id="tint-out" for="tint"></output></label><input id="tint" type="range" min="0" max="30" step="1" value="3"></div>
+      <div><label class="range-label" for="aurora">Aurora strength <output id="aurora-out" for="aurora"></output></label><input id="aurora" type="range" min="0" max="1" step="0.05" value="0.45"></div>
+      <div class="readout">
+        <div id="state-line"></div>
+        <div class="bg-list" id="bg-list"></div>
+        <div class="swatches" aria-hidden="true"><span class="swatch"></span><span class="swatch" data-tool="listio"></span><span class="swatch" data-tool="artnuvio"></span><span class="swatch" data-tool="collectio"></span></div>
+        <div>Brand #8580FF → #BA94FF<br>Listio #2DD4CF · Art #306FE0<br>Collectio #E275EE</div>
+        <details class="settled"><summary>Settled (for reference)</summary>Outfit + Inter · Geist Mono<br>4px corners · subtle glow · dots<br>glass on · accent-tinted borders<br>Home bg #080B16 (fixed)</details>
+        <button class="button ghost" id="copy">Copy link <span aria-hidden="true">↗</span></button><p id="copy-status" role="status">Page, tint and aurora stay in the URL.</p>
+      </div>
+    </div>
+  </details>
+  <i class="probe" data-page="home"></i><i class="probe" data-page="listio"></i><i class="probe" data-page="artnuvio"></i><i class="probe" data-page="collectio"></i>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="eyebrow" id="hero-eyebrow">Your library. Your way.</div>
+      <h1 id="hero-heading"></h1>
+      <p id="hero-body">Curate the watchlist. Craft the artwork. Bring it all together. Three focused tools for your Nuvio setup.</p>
+      <div class="hero-bottom"><a class="button brand-button" href="#specimens" data-scroll><span id="hero-cta">Explore the tools</span> <span aria-hidden="true">↗</span></a><span class="eyebrow">Made for the Nuvio community</span></div>
+    </section>
+    <section id="tools" aria-labelledby="tools-heading">
+      <div class="section-heading"><h2 id="tools-heading">One toolkit. A little more you.</h2><span class="eyebrow">01 / The home experience</span></div>
+      <div class="three">
+        <a class="card tool-card" data-tool="listio" href="#listio" data-scroll><div class="tool-top"><span class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h8M3 6h.1M3 12h.1M3 18h.1"/></svg></span><span class="eyebrow">01</span></div><h3>Listio</h3><p>Good taste, beautifully cataloged.<br>Turn your lists into something watchable.</p><div class="tool-foot"><span>Curate your catalogs</span><span aria-hidden="true">↗</span></div></a>
+        <a class="card tool-card" data-tool="artnuvio" href="#artnuvio" data-scroll><div class="tool-top"><span class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m3 16 5-5 5 5 3-3 5 5"/><circle cx="16" cy="8" r="1.5"/></svg></span><span class="eyebrow">02</span></div><h3>ArtNuvio</h3><p>Every frame, a perfect fit.<br>Make artwork that feels right at home.</p><div class="tool-foot"><span>Shape your artwork</span><span aria-hidden="true">↗</span></div></a>
+        <a class="card tool-card" data-tool="collectio" href="#collectio" data-scroll><div class="tool-top"><span class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h5l3 3h6a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M3 10h18"/></svg></span><span class="eyebrow">03</span></div><h3>Collectio</h3><p>A place for every obsession.<br>Organise collections your own way.</p><div class="tool-foot"><span>Arrange your library</span><span aria-hidden="true">↗</span></div></a>
+      </div>
+    </section>
+    <section class="type-section" id="typography" aria-labelledby="type-heading">
+      <div class="section-heading"><h2 id="type-heading">Character, without the noise.</h2><span class="eyebrow">02 / Type system</span></div>
+      <div class="card type-strip">
+        <div class="type-cell"><span class="sample display" style="font-size:40px;font-weight:600;letter-spacing:-.04em">Aa</span><small>H1 / 40–60 / 600</small></div>
+        <div class="type-cell"><span class="sample display" style="font-size:28px;font-weight:600">Discover</span><small>H2 / 28 / 600</small></div>
+        <div class="type-cell"><span class="sample display" style="font-size:20px;font-weight:600">Your library</span><small>H3 / 20 / 600</small></div>
+        <div class="type-cell"><span class="sample display" style="font-size:16px;font-weight:500">The essentials</span><small>H4 / 16 / 500</small></div>
+        <div class="type-cell"><span class="sample">Made for movie nights.</span><small>BODY / 14 / 400</small></div>
+        <div class="type-cell"><span class="sample" style="font-size:12px">Last synced 2 minutes ago</span><small>SMALL / 12 / 400</small></div>
+        <div class="type-cell"><span class="sample muted display" style="font-size:11px;font-weight:500">CATALOG DETAILS</span><small>LABEL / 11 / 500</small></div>
+        <div class="type-cell"><span class="sample mono" style="font-size:12px">tt0083658 · 024</span><small>MONO / 12 / 400</small></div>
+      </div>
+    </section>
+    <section id="specimens" aria-labelledby="specimen-heading"><div class="section-heading"><h2 id="specimen-heading">Same system. Three personalities.</h2><span class="eyebrow">03 / Interactive specimens</span></div><div class="three" id="specimen-grid"></div></section>
+    <footer><span>NUVIO TOOLS / DESIGN EXPLORATION</span><span>ASTRA · Hover, focus & find your direction.</span></footer>
+  </main>
+  <script>
+    // Persisted values are allow-listed. Hash navigation never overwrites the design.
+    const root = document.documentElement;
+    const $ = id => document.getElementById(id);
+    const pages = {
+      home:{label:'Home',eyebrow:'Your library. Your way.',h1:'A better home for<br><span class="gradient">everything you love.</span>',body:'Curate the watchlist. Craft the artwork. Bring it all together. Three focused tools for your Nuvio setup.',cta:'Explore the tools'},
+      listio:{label:'Listio',tool:'listio',eyebrow:'Listio / Workspace',h1:'<span class="gradient">Listio</span><br>Curate something good.',body:'From Trakt, MDBList and IMDb to your next movie night.',cta:'Open Listio'},
+      artnuvio:{label:'ArtNuvio',tool:'artnuvio',eyebrow:'ArtNuvio / Workspace',h1:'<span class="gradient">ArtNuvio</span><br>Make the frame yours.',body:'Fine-tune the artwork. Find the perfect scale and finish.',cta:'Open ArtNuvio'},
+      collectio:{label:'Collectio',tool:'collectio',eyebrow:'Collectio / Workspace',h1:'<span class="gradient">Collectio</span><br>Everything in its place.',body:'A considered collection for every mood, genre and late night.',cta:'Open Collectio'}
+    };
+    const DEFAULTS = {page:'home', tint:3, aurora:0.45};
+    let state = {...DEFAULTS};
+    const specimens = [
+      {id:'listio',name:'Listio',heading:'Curate something good.',body:'From Trakt, MDBList and IMDb to your next movie night.',primary:'Publish catalog',secondary:'Preview',card:'Slow-burn sci-fi',badge:'Draft',count:'24',unit:'titles',meta:'tt0083658 · Blade Runner',label:'Catalog name',value:'Slow-burn sci-fi',range:'Title limit',min:10,max:100,step:1,start:40,unitRange:'',select:'Source',options:['Trakt list','MDBList','IMDb list']},
+      {id:'artnuvio',name:'ArtNuvio',heading:'Make the frame yours.',body:'Fine-tune the artwork. Find the perfect scale and finish.',primary:'Export artwork',secondary:'Preview',card:'Midnight cinema',badge:'Poster',count:'600',unit:'× 900 px',meta:'2:3 RATIO · PNG EXPORT',label:'Title overlay',value:'Midnight cinema',range:'Type size',min:12,max:72,step:1,start:36,unitRange:'px',select:'Canvas format',options:['Poster · 600 × 900','Hero · 1920 × 1080','Landscape · 1280 × 720']},
+      {id:'collectio',name:'Collectio',heading:'Everything in its place.',body:'A considered collection for every mood, genre and late night.',primary:'Create folder',secondary:'Preview',card:'Weekend worlds',badge:'Collection',count:'12',unit:'titles',meta:'03 FOLDERS · PERSONAL LIBRARY',label:'Folder name',value:'Weekend worlds',range:'Artwork scale',min:50,max:150,step:1,start:100,unitRange:'%',select:'Arrange by',options:['Custom order','Title A–Z','Recently added']}
+    ];
+    $('specimen-grid').innerHTML = specimens.map(s => `
+      <article class="card specimen" id="${s.id}" data-tool="${s.id}" data-own-tool="${s.id}" aria-labelledby="${s.id}-title">
+        <div class="eyebrow">${s.name} / Workspace</div><h3 id="${s.id}-title">${s.heading}</h3><p>${s.body}</p>
+        <div class="actions"><button class="button" type="button">${s.primary}</button><button class="button ghost" type="button">${s.secondary}</button></div>
+        <div class="example"><div class="example-top"><span>${s.card}</span><span class="badge">${s.badge}</span></div><div class="metric">${s.count} <small>${s.unit}</small></div><div class="mono">${s.meta}</div></div>
+        <label for="${s.id}-text">${s.label}</label><input id="${s.id}-text" type="text" value="${s.value}">
+        <label class="range-label" for="${s.id}-range">${s.range}<output id="${s.id}-output" for="${s.id}-range">${s.start}${s.unitRange}</output></label>
+        <input id="${s.id}-range" type="range" min="${s.min}" max="${s.max}" step="${s.step}" value="${s.start}" data-unit="${s.unitRange}">
+        <label for="${s.id}-select">${s.select}</label><select id="${s.id}-select">${s.options.map(o=>`<option>${o}</option>`).join('')}</select>
+      </article>`).join('');
+    for (const [key,p] of Object.entries(pages)) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = p.label; b.dataset.page = key;
+      b.addEventListener('click', () => { state.page = key; apply(); });
+      $('pages').append(b);
+    }
+    // Resolve any CSS colour (incl. color-mix) to #RRGGBB via a 1px canvas.
+    const ctx = document.createElement('canvas').getContext('2d', {willReadFrequently:true});
+    function toHex(css) {
+      ctx.clearRect(0,0,1,1); ctx.fillStyle = '#000'; ctx.fillStyle = css; ctx.fillRect(0,0,1,1);
+      const d = ctx.getImageData(0,0,1,1).data;
+      return '#' + [...d].slice(0,3).map(v => v.toString(16).padStart(2,'0')).join('').toUpperCase();
+    }
+    function readHash() {
+      const params = new URLSearchParams(location.hash.slice(1));
+      state = {...DEFAULTS};
+      if (pages[params.get('page')]) state.page = params.get('page');
+      const t = parseFloat(params.get('tint')), a = parseFloat(params.get('aurora'));
+      if (t >= 0 && t <= 30) state.tint = t;
+      if (a >= 0 && a <= 1) state.aurora = a;
+      apply(false);
+    }
+    function apply(save = true) {
+      const p = pages[state.page];
+      root.dataset.page = state.page;
+      root.style.setProperty('--tint-strength', state.tint);
+      root.style.setProperty('--aurora-opacity', state.aurora);
+      for (const el of [$('main'), $('workbench')]) { if (p.tool) el.dataset.tool = p.tool; else delete el.dataset.tool; }
+      document.querySelectorAll('.specimen').forEach(el => el.dataset.tool = p.tool || el.dataset.ownTool);
+      $('hero-eyebrow').textContent = p.eyebrow; $('hero-heading').innerHTML = p.h1;
+      $('hero-body').textContent = p.body; $('hero-cta').textContent = p.cta;
+      for (const b of $('pages').children) b.setAttribute('aria-pressed', String(b.dataset.page === state.page));
+      $('tint').value = state.tint; $('aurora').value = state.aurora;
+      $('tint-out').value = state.tint + '%'; $('aurora-out').value = Number(state.aurora).toFixed(2);
+      $('tint').dispatchEvent(new Event('fill')); $('aurora').dispatchEvent(new Event('fill'));
+      $('state-line').textContent = `page ${state.page} / tint ${state.tint}% / aurora ${Number(state.aurora).toFixed(2)}`;
+      // Read back the real computed --bg for each page from hidden probes.
+      $('bg-list').innerHTML = [...document.querySelectorAll('.probe')].map(el => {
+        const hex = toHex(getComputedStyle(el).backgroundColor);
+        return `<span>${el.dataset.page}</span><span><i class="chip" style="background:${hex}"></i>${hex}</span>`;
+      }).join('');
+      if (save) {
+        const hash = new URLSearchParams({page:state.page, tint:state.tint, aurora:Number(state.aurora).toFixed(2)}).toString();
+        try { history.replaceState(null,'',`#${hash}`); }
+        catch { location.hash = hash; }
+      }
+    }
+    $('tint').addEventListener('input', () => { state.tint = +$('tint').value; apply(); });
+    $('aurora').addEventListener('input', () => { state.aurora = +$('aurora').value; apply(); });
+    document.querySelectorAll('[data-scroll]').forEach(link=>link.addEventListener('click',event=>{
+      event.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      target.scrollIntoView(); target.setAttribute('tabindex','-1'); target.focus({preventScroll:true});
+    }));
+    document.querySelectorAll('input[type="range"]').forEach(range=>{
+      const update = () => {
+        range.style.setProperty('--fill', `${(range.value-range.min)/(range.max-range.min)*100}%`);
+        // Panel sliders (tint, aurora) have no "-range" id; apply() writes their outputs.
+        const out = range.id.endsWith('-range') && $(range.id.replace('-range','-output')); if (out) out.value = range.value + range.dataset.unit;
+      };
+      range.addEventListener('input',update); range.addEventListener('fill',update); update();
+    });
+    $('copy').addEventListener('click',async()=>{
+      apply();
+      try { await navigator.clipboard.writeText(location.href); $('copy-status').textContent = 'Copied. Keep the file with this link.'; }
+      catch { $('copy-status').textContent = 'Copy the address bar URL to save this state.'; }
+    });
+    window.addEventListener('hashchange',readHash);
+    readHash();
+  </script>
+</body>
+</html>
