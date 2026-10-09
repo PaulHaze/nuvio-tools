@@ -1,6 +1,6 @@
 # Sprint 03 — Domain switch
 
-**Status:** in progress
+**Status:** done (2026-10-09)
 
 **Depends on:** [sprint 01](./01_Restructure_Folders_Routes.md) and
 [sprint 02](./02_Home_Page_And_Renaming.md). The owner has already bought `nuvio-tools.com` through
@@ -60,8 +60,8 @@ origin, check it is not tied to a `workers.dev` host.
 - [x] `wrangler.jsonc` and `.example`: `name`, `routes`
 - [x] `astro.config.mjs`: `site`; check canonical link and request-origin URLs
 - [x] Fix live `workers.dev` references in `README.md`, `list-combiner-spec.md`, ADR 0004
-- [ ] Owner: complete the checklist above
-- [ ] Later in the checklist: set `"workers_dev": false` and redeploy
+- [x] Owner: complete the checklist above
+- [x] Later in the checklist: set `"workers_dev": false` and redeploy
 
 ## Done when
 
