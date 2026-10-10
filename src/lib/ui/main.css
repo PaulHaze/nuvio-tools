@@ -3,10 +3,6 @@
 
 @plugin '@tailwindcss/typography';
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
-/* Near-instant (rather than removed) so animationend/transitionend events
-   still fire for any JS waiting on them. */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
@@ -18,106 +14,138 @@
 	}
 }
 
-/* Every size is in rem, so this scales the whole UI (90% of the browser default). */
 html {
 	font-size: 90%;
 }
 
-/* #region THEME COLOURS */
-/* Hues are based on daisyUI's Emerald theme. Lightness is tuned so each colour
-   passes WCAG AA both as text on --background and as a fill with
-   --background text on top (e.g. `bg-primary text-background`), in both themes.
-   The muted tints are for subtle fills behind --foreground text. */
+/* #region TOKENS */
 :root {
-	color-scheme: light;
-
-	--background: oklch(100% 0 0);
-	--foreground: oklch(35.52% 0.032 262.99);
-
-	/* Background shades are calculated from --background: each step shifts only
-	   the lightness (l), keeping its chroma (c) and hue (h), so any tint carries
-	   through. The step is negative here (darker) and positive in dark mode
-	   (lighter), so change --background and the shades follow. */
-	--background-step: -0.03;
-	--background-100: var(--background);
-	--background-200: oklch(
-		from var(--background) calc(l + var(--background-step)) c h
-	);
-	--background-300: oklch(
-		from var(--background) calc(l + var(--background-step) * 2) c h
-	);
-
-	--primary: oklch(53% 0.12 163);
-	--primary-muted: oklch(96.5% 0.035 163);
-	--secondary: oklch(52% 0.2 261.29);
-	--secondary-muted: oklch(95% 0.03 261.29);
-	--accent: oklch(57% 0.18 38);
-
-	--caution: oklch(56% 0.13 65);
-	--alert: oklch(55% 0.21 25);
-	--success: oklch(54% 0.15 145);
-}
-
-:root[data-theme='dark'] {
 	color-scheme: dark;
 
-	--background: oklch(22% 0.014 262.99);
-	--foreground: oklch(93% 0.01 262.99);
+	/* Neutrals: surfaces never tint per page or tool. */
+	--bg: #080b16; /* Home navy; tool pages override, see below */
+	--surface-1: #111625;
+	--surface-2: #191f31;
+	--border: #343c52;
+	--text: #eef0fa;
+	--text-muted: #a6aec5;
 
-	--background-step: 0.03;
+	/* Brand: constant on every page (header, wordmark, home hero). */
+	--brand-from: #8580ff;
+	--brand-to: #ba94ff;
+	--brand-fill-from: #5145c9;
+	--brand-fill-to: #7142b8;
 
-	--primary: oklch(78% 0.14 163);
-	--primary-muted: oklch(30% 0.05 163);
-	--secondary: oklch(72% 0.15 261.29);
-	--secondary-muted: oklch(30% 0.06 261.29);
-	--accent: oklch(74% 0.14 38);
+	/* Accent: Home's defaults; [data-tool] replaces them. */
+	--accent: #a39bff;
+	--accent-hover: #b9b3ff;
+	--accent-tint: #a39bff12;
+	--accent-glow: #8b5cf638;
+	--accent-ink: #a39bff; /* accent used as text/icon colour on dark */
+	--on-accent: #101020; /* text on an --accent fill */
 
-	--caution: oklch(82% 0.15 75);
-	--alert: oklch(70% 0.18 22);
-	--success: oklch(76% 0.16 145);
+	/* Status (not in the mock; see Open questions). */
+	--danger: #f87171;
+	--warning: #fbbf24;
+	--success: #4ade80;
+
+	/* Shape and effects. */
+	--radius: 4px;
+	--glow-size: 10px;
+	--glow-hover: 24px;
+	--aurora-opacity: 0.45;
+	--glass-blur: 18px;
+	--hero-aurora-1: #6741d43b;
+	--hero-aurora-2: #315beb18;
+	--card-bg: color-mix(in srgb, var(--surface-1) 84%, transparent);
+	--pattern-dot: #a6aec520;
 }
-/* #endregion THEME COLOURS */
 
-/* Variables that reference other CSS custom properties must use inline so
-   utilities output var(--x) rather than the resolved value, letting the
-   dark-mode overrides above cascade through. */
+/* Per-page background: only --bg changes. Home is :root. */
+[data-page='listio'] {
+	--bg: color-mix(in oklab, #14b8a0 3%, #07080c); /* ≈ #090C10 */
+}
+[data-page='artnuvio'] {
+	--bg: color-mix(in oklab, #2f66e6 3%, #07080c); /* ≈ #080A11 */
+}
+[data-page='collectio'] {
+	--bg: color-mix(in oklab, #d03cc8 3%, #07080c); /* ≈ #0C0A10 */
+}
+
+/* Tool accents: data-tool swaps only accent tokens. Brand tokens never change. */
+[data-tool='listio'] {
+	--accent: #2dd4cf;
+	--accent-hover: #67e8e2;
+	--accent-tint: #2dd4cf12;
+	--accent-glow: #22d3ee30;
+	--accent-ink: #2dd4cf;
+	--on-accent: #052023;
+}
+[data-tool='artnuvio'] {
+	--accent: #306fe0;
+	--accent-hover: #2663cb; /* darker than --accent on purpose, so white text stays readable */
+	--accent-tint: #306fe016;
+	--accent-glow: #306fe040;
+	--accent-ink: #8fb8ff;
+	--on-accent: #ffffff;
+}
+[data-tool='collectio'] {
+	--accent: #e275ee;
+	--accent-hover: #efa0f7;
+	--accent-tint: #e275ee12;
+	--accent-glow: #d946ef30;
+	--accent-ink: #e275ee;
+	--on-accent: #28072e;
+}
+
+/* Derived tokens must be declared on both :root and [data-tool]:
+   var() resolves where it is declared, so a :root-only value keeps Home's accent in a tool. */
+:root,
+[data-tool] {
+	--card-border: color-mix(in srgb, var(--accent) 30%, var(--border));
+}
+[data-tool] {
+	--hero-aurora-1: var(--accent-glow);
+	--hero-aurora-2: var(--accent-tint);
+}
+/* #endregion TOKENS */
+
 @theme inline {
-	--color-background: var(--background);
-	--color-background-100: var(--background-100);
-	--color-background-200: var(--background-200);
-	--color-background-300: var(--background-300);
-	--color-foreground: var(--foreground);
+	--color-bg: var(--bg);
+	--color-surface-1: var(--surface-1);
+	--color-surface-2: var(--surface-2);
+	--color-border: var(--border);
+	--color-fg: var(--text);
+	--color-muted: var(--text-muted);
 
-	--color-primary: var(--primary);
-	--color-primary-muted: var(--primary-muted);
-	--color-secondary: var(--secondary);
-	--color-secondary-muted: var(--secondary-muted);
+	--color-brand-from: var(--brand-from);
+	--color-brand-to: var(--brand-to);
+
 	--color-accent: var(--accent);
+	--color-accent-hover: var(--accent-hover);
+	--color-accent-tint: var(--accent-tint);
+	--color-accent-ink: var(--accent-ink);
+	--color-on-accent: var(--on-accent);
 
-	--color-caution: var(--caution);
-	--color-alert: var(--alert);
+	--color-danger: var(--danger);
+	--color-warning: var(--warning);
 	--color-success: var(--success);
 
-	/* Custom Fonts: variables are generated by the Astro Fonts API
-	   (see `fonts` in astro.config.mjs and <Font /> in Layout.astro). */
-	--font-sans: var(--font-noto-sans);
-	--font-header: var(--font-anton);
+	--font-sans: var(--font-inter);
+	--font-display: var(--font-outfit);
+	--font-mono: var(--font-geist-mono);
 }
 
 @theme {
-	/* Add a small breakpoint for mobile */
 	--breakpoint-xs: 29rem;
 
-	/* Extra Text Sizes */
 	--text-6xl: 4rem;
 
-	/* Custom padding settings */
 	--spacing-psm: 1rem;
 	--spacing-pmd: 2rem;
 	--spacing-plg: 4rem;
 	--spacing-pxl: 8rem;
 
-	/* Custom screen size settings */
 	--spacing-sxs: 29rem;
 	--spacing-ssm: 40rem;
 	--spacing-smd: 48rem;
@@ -127,8 +155,20 @@ html {
 }
 
 @layer base {
+	html {
+		background-color: var(--bg);
+		background-image: radial-gradient(
+			var(--pattern-dot) 0.7px,
+			transparent 0.9px
+		);
+		background-size: 16px 16px;
+		background-attachment: fixed;
+	}
 	body {
-		@apply bg-background text-foreground;
+		color: var(--text);
+		font-family: var(--font-sans);
+		line-height: 1.6;
+		background: transparent;
 	}
 	h1,
 	h2,
@@ -136,41 +176,52 @@ html {
 	h4,
 	h5,
 	h6 {
-		@apply font-sans leading-normal font-normal;
+		font-family: var(--font-display);
+		font-weight: 600;
+		line-height: 1.2;
 	}
 	h1 {
-		@apply text-5xl;
+		font-size: clamp(2.75rem, 4.2vw, 4.15rem);
+		letter-spacing: -0.04em;
+		line-height: 1.08;
 	}
 	h2 {
-		@apply text-4xl;
+		font-size: 1.95rem;
+		letter-spacing: -0.02em;
 	}
 	h3 {
-		@apply text-3xl;
+		font-size: 1.4rem;
 	}
 	h4 {
-		@apply text-2xl;
+		font-size: 1.1rem;
+		font-weight: 500;
 	}
-	h5 {
-		@apply text-xl;
+	h5,
+	h6 {
+		font-size: 1rem;
+		font-weight: 500;
+	}
+	:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+	input[type='checkbox'],
+	input[type='radio'] {
+		accent-color: var(--accent);
 	}
 }
 
-/* Point `prose` at the theme colours so it follows light/dark mode. */
 @utility prose {
-	--tw-prose-body: var(--foreground);
-	--tw-prose-headings: var(--foreground);
-	--tw-prose-bold: var(--foreground);
-	--tw-prose-links: var(--primary);
-	--tw-prose-quotes: var(--foreground);
-	--tw-prose-code: var(--foreground);
-	--tw-prose-counters: color-mix(in oklch, var(--foreground) 70%, transparent);
-	--tw-prose-bullets: color-mix(in oklch, var(--foreground) 40%, transparent);
-	--tw-prose-hr: color-mix(in oklch, var(--foreground) 20%, transparent);
-	--tw-prose-quote-borders: color-mix(
-		in oklch,
-		var(--foreground) 20%,
-		transparent
-	);
+	--tw-prose-body: var(--text);
+	--tw-prose-headings: var(--text);
+	--tw-prose-bold: var(--text);
+	--tw-prose-links: var(--accent-ink);
+	--tw-prose-quotes: var(--text);
+	--tw-prose-code: var(--text);
+	--tw-prose-counters: color-mix(in oklch, var(--text) 70%, transparent);
+	--tw-prose-bullets: color-mix(in oklch, var(--text) 40%, transparent);
+	--tw-prose-hr: color-mix(in oklch, var(--text) 20%, transparent);
+	--tw-prose-quote-borders: color-mix(in oklch, var(--text) 20%, transparent);
 }
 
 @utility bb {
@@ -183,12 +234,12 @@ html {
 	@apply flex items-center justify-center;
 }
 
-/* Combined List management uses ordinary CSS over the shared theme. */
+/* Combined List management uses ordinary CSS over the shared tokens. */
 .site-credits {
 	max-width: 64rem;
 	margin: 0 auto;
 	padding: 1.5rem;
-	border-top: 1px solid var(--background-300);
+	border-top: 1px solid var(--border);
 	font-size: 0.85rem;
 }
 .site-credits h2 {
@@ -200,10 +251,10 @@ html {
 }
 .site-header {
 	padding: 1.25rem max(1.5rem, calc((100% - 64rem) / 2));
-	border-bottom: 1px solid var(--background-300);
+	border-bottom: 1px solid var(--border);
 }
 .site-header a {
-	color: var(--primary);
+	color: var(--accent-ink);
 	font-weight: 800;
 	font-size: 1.3rem;
 	text-decoration: none;
@@ -226,15 +277,15 @@ html {
 }
 .panel {
 	padding: 1.5rem;
-	border: 1px solid var(--background-300);
+	border: 1px solid var(--border);
 	border-radius: 0.75rem;
-	background: var(--background-200);
+	background: var(--surface-1);
 }
 .collection-dialog {
 	margin: auto;
 	width: min(32rem, calc(100vw - 2rem));
 	max-height: calc(100vh - 2rem);
-	color: var(--foreground);
+	color: var(--text);
 }
 .collection-dialog::backdrop {
 	background: rgb(0 0 0 / 45%);
@@ -296,27 +347,27 @@ html {
 }
 .list-sort-control select {
 	min-width: 12rem;
-	border: 1px solid var(--foreground);
+	border: 1px solid var(--border);
 	border-radius: 0.4rem;
 	padding: 0.55rem 0.75rem;
-	background: var(--background);
-	color: var(--foreground);
+	background: var(--surface-2);
+	color: var(--text);
 }
 .list-filter-control input {
 	flex: 1 1 12rem;
 	width: min(20rem, 100%);
 	min-width: 0;
-	border: 1px solid var(--foreground);
+	border: 1px solid var(--border);
 	border-radius: 0.4rem;
 	padding: 0.55rem 0.75rem;
-	background: var(--background);
-	color: var(--foreground);
+	background: var(--surface-2);
+	color: var(--text);
 }
 .list-filter-empty {
 	margin-top: 1rem;
 }
 .list-name {
-	color: var(--primary);
+	color: var(--accent-ink);
 	font-size: 1.4rem;
 	font-weight: 650;
 	overflow-wrap: anywhere;
@@ -340,7 +391,7 @@ html {
 	margin: 0.75rem 0 0;
 }
 .listio-main summary {
-	color: var(--primary);
+	color: var(--accent-ink);
 	cursor: pointer;
 	font-weight: 600;
 }
@@ -357,55 +408,54 @@ html {
 	flex-wrap: wrap;
 	gap: 0.75rem;
 }
-/* Keep the closed dropdown its own height while the other is open. */
 .new-entries {
 	align-items: flex-start;
 }
 .new-entries > a {
-	color: var(--primary);
+	color: var(--accent-ink);
 	font-weight: 600;
 	text-decoration: none;
 }
 .new-entries > a:hover {
-	background: var(--primary-muted);
+	background: var(--accent-tint);
 }
 .form-row input {
 	min-width: 0;
 	flex: 1 1 12rem;
-	border: 1px solid var(--foreground);
+	border: 1px solid var(--border);
 	border-radius: 0.4rem;
 	padding: 0.65rem 0.85rem;
-	background: var(--background);
+	background: var(--surface-2);
 }
 .listio-main button {
 	border-radius: 0.4rem;
-	background: var(--primary);
-	color: var(--background);
+	background: var(--accent);
+	color: var(--on-accent);
 	padding: 0.65rem 1rem;
 	font-weight: 600;
 	cursor: pointer;
 }
 .listio-main button.danger {
 	background: transparent;
-	color: var(--alert);
-	border: 1px solid var(--alert);
+	color: var(--danger);
+	border: 1px solid var(--danger);
 }
 .listio-main button:disabled {
 	opacity: 0.6;
 	cursor: wait;
 }
 .listio-main :is(a, button, input, summary):focus-visible {
-	outline: 2px solid var(--secondary);
+	outline: 2px solid var(--accent);
 	outline-offset: 3px;
 }
 .notice {
 	padding: 1rem;
 	border-radius: 0.5rem;
-	background: var(--primary-muted);
+	background: var(--accent-tint);
 	margin-bottom: 1.5rem;
 }
 .error {
-	color: var(--alert);
+	color: var(--danger);
 	margin: 1rem 0;
 }
 .empty-state {
@@ -484,7 +534,7 @@ list-editor {
 .poster-placeholder {
 	display: grid;
 	place-items: center;
-	background: var(--background-200);
+	background: var(--surface-1);
 }
 .title-card h3 {
 	font-size: 1rem;
@@ -501,10 +551,10 @@ list-editor {
 	margin-top: 0.25rem;
 }
 .editor select {
-	border: 1px solid var(--foreground);
+	border: 1px solid var(--border);
 	border-radius: 0.4rem;
 	padding: 0.5rem;
-	background: var(--background);
+	background: var(--surface-2);
 }
 .review-controls {
 	display: flex;
@@ -522,7 +572,7 @@ list-editor {
 .listio-main .view-tabs button[aria-pressed='false'] {
 	background: transparent;
 	color: inherit;
-	border: 1px solid var(--primary);
+	border: 1px solid var(--accent);
 }
 .card-tools {
 	display: flex;
@@ -546,7 +596,6 @@ list-editor {
 	flex-wrap: wrap;
 	gap: 1rem;
 }
-/* Room for the floating bar so it never covers the last row of cards. */
 .editor {
 	padding-bottom: 6rem;
 }
@@ -559,7 +608,7 @@ list-editor {
 	gap: 0.75rem;
 	padding: 0.75rem;
 	border-radius: 0.6rem;
-	background: var(--background);
+	background: var(--bg);
 	box-shadow: 0 4px 20px rgb(0 0 0 / 0.25);
 }
 
@@ -572,7 +621,7 @@ list-editor {
 .discovery-panels textarea {
 	display: block;
 	width: 100%;
-	border: 1px solid var(--background-300);
+	border: 1px solid var(--border);
 	border-radius: 0.5rem;
 	padding: 0.75rem;
 	margin: 0.5rem 0;
@@ -594,5 +643,5 @@ list-editor {
 }
 .match-review {
 	padding: 1rem 0;
-	border-top: 1px solid var(--background-300);
+	border-top: 1px solid var(--border);
 }
