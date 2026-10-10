@@ -1,6 +1,7 @@
 ---
 import { env } from 'cloudflare:workers';
 import Layout from '@/lib/ui/Layout.astro';
+import '@/tools/listio/listio.css';
 import { getList } from '@/tools/listio/storage/lists';
 import Editor from '@/tools/listio/components/editor/Editor';
 
@@ -19,13 +20,13 @@ const created = Astro.url.searchParams.get('created') === '1';
 		<a href="/listio">← Combined Lists</a>
 		{list ? (
 			<>
-				<header class="page-heading">
+				<header class="page-heading hero-aurora">
 					<h1>{list.name}</h1>
 				</header>
 				<Editor client:load initialList={list} created={created} />
 			</>
 		) : (
-			<header class="page-heading">
+			<header class="page-heading hero-aurora">
 				<h1>Combined List not found</h1>
 				<p>
 					It may have been deleted. Return home to open another Combined List.

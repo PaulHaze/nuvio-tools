@@ -1,6 +1,7 @@
 ---
 import { env } from 'cloudflare:workers';
 import Layout from '@/lib/ui/Layout.astro';
+import '@/tools/listio/listio.css';
 import { getIndex } from '@/tools/listio/storage/lists';
 import { MAX_NAME_LENGTH } from '@/tools/listio/api/http';
 
@@ -15,7 +16,7 @@ const changed = Astro.url.searchParams.get('changed') === '1';
 	description="Build curated movie and TV Combined Lists for Nuvio."
 >
 	<main class="listio-main">
-		<header class="page-heading">
+		<header class="page-heading hero-aurora">
 			<h1>Combined Lists</h1>
 			<p>Create and curate movie and TV lists for Nuvio.</p>
 		</header>

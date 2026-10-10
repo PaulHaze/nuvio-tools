@@ -64,3 +64,5 @@ Plain CSS classes in `src/lib/ui/main.css` (`/* #region SHELL */`). Use them for
 
 - No raw hex values outside `src/lib/ui/main.css`. Use a token in CSS or a Tailwind token class.
 - Do not add a light theme, a `data-theme` attribute or `dark:` variants.
+- Tool-specific CSS lives in `src/tools/<tool>/<tool>.css` and is imported by that tool's pages, never from `src/lib/`.
+- Data (title names, list names in tables) uses the body font (`--font-sans`). Page and panel headings use the display font (`--font-display`).

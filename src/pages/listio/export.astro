@@ -1,6 +1,7 @@
 ---
 import { env } from 'cloudflare:workers';
 import Layout from '@/lib/ui/Layout.astro';
+import '@/tools/listio/listio.css';
 import { getIndex } from '@/tools/listio/storage/lists';
 import { resolveAddonId } from '@/tools/listio/domain/addonId';
 import ExportCollection from '@/tools/listio/components/export/ExportCollection';
@@ -11,7 +12,7 @@ const lists = await getIndex(env.LISTIO);
 <Layout title="Export collection · Listio" tool="listio">
 	<main class="listio-main">
 		<a href="/listio">← Combined Lists</a>
-		<header class="page-heading">
+		<header class="page-heading hero-aurora">
 			<h1>Export collection</h1>
 			<p>
 				Download one Nuvio collection with a folder for each chosen Combined
