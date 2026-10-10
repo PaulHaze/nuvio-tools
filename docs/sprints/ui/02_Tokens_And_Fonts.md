@@ -1,6 +1,6 @@
 # ui-02: Dark-only tokens and fonts
 
-**Status:** not started
+**Status:** done (built in f339ac0; audit fixes applied, see docs/audits/ui-02-audit-opus.md)
 
 **Depends on:** [ui-01](./01_Mood_Board.md) (the "Chosen direction", "Grill follow-up" and "Final
 values" sections). Visual baseline:

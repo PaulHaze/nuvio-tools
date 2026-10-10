@@ -2,7 +2,6 @@
 import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import '@/lib/ui/main.css';
-import ThemeToggle from '@/lib/ui/ThemeToggle.astro';
 
 interface Props {
 	title: string;
@@ -28,6 +27,7 @@ const imageURL = image ? new URL(image, Astro.url.origin) : undefined;
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
+		<meta name="color-scheme" content="dark" />
 
 		<title>{title}</title>
 		<meta name="description" content={description} />
@@ -44,33 +44,13 @@ const imageURL = image ? new URL(image, Astro.url.origin) : undefined;
 			content={imageURL ? 'summary_large_image' : 'summary'}
 		/>
 
-		<Font cssVariable="--font-noto-sans" preload />
-		<Font cssVariable="--font-anton" />
+		<Font cssVariable="--font-inter" preload />
+		<Font cssVariable="--font-outfit" preload />
+		<Font cssVariable="--font-geist-mono" />
 
 		<ClientRouter />
-
-		<script is:inline>
-			// Runs before first paint so the page never flashes the wrong theme.
-			function applyTheme() {
-				const stored = localStorage.getItem('theme');
-				const theme =
-					stored === 'light' || stored === 'dark'
-						? stored
-						: window.matchMedia('(prefers-color-scheme: dark)').matches
-							? 'dark'
-							: 'light';
-				document.documentElement.dataset.theme = theme;
-			}
-			applyTheme();
-			// <ClientRouter /> swaps in the new page's <html> attributes on each
-			// navigation, so re-apply the theme before it renders.
-			document.addEventListener('astro:after-swap', applyTheme);
-		</script>
 	</head>
 	<body class="relative">
-		<div class="absolute top-1 right-1 z-99">
-			<ThemeToggle />
-		</div>
 		<header class="site-header">
 			<a href="/" aria-label="Nuvio Tools home">
 				Nuvio Tools
