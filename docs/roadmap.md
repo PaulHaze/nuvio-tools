@@ -2,7 +2,7 @@
 
 Where the project is going, written to guide folder structure and code placement in every sprint.
 It restates the agreed plan from [`nuvio-tools-next-steps.md`](./nuvio-tools-next-steps.md). Anything
-not yet decided is marked **Open**. The sprint list lives in [`sprints/README.md`](./sprints/README.md).
+not yet decided is marked **Open**. Each epic lists its sprints in `sprints/{epic}/README.md` (current: [`sprints/ui/README.md`](./sprints/ui/README.md)).
 
 ## The site
 

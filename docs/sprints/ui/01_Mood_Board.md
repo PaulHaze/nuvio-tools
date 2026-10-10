@@ -180,10 +180,13 @@ which one you would pick and why.
   font pair, type scale, radius, borders, glow, glass, background pattern, hover/active/focus
   rules), recorded at the bottom of this file as input for `ui-02`.
 - **ui-02 (next):** rewrite `src/lib/ui/main.css` as dark-only tokens (remove the light `:root`
-  and the `dark` custom variant), add the `data-tool` accent swap, self-host the two fonts via
+  and the `dark` custom variant), add the `data-tool` accent swap, self-host the fonts via
   Fontsource, and write a one-page `docs/DESIGN_SYSTEM.md` holding the usage rules only (no
   values; `main.css` is the source of truth). Listio picks up the new tokens as-is; fix only real
-  breakage. The epic ends there.
+  breakage.
+- **Revised plan (2026-10-10):** the epic now runs to ui-04. ui-02 is the tokens sprint above;
+  ui-03 applies the design to the site shell (layout wiring, brand header, home page, holding
+  pages); ui-04 is a CSS-only Listio pass. Still no components. See [README](./README.md).
 - **After this epic:** shared components epic (used by all three tools), then the Listio rebuild.
 
 ## Chosen direction

@@ -17,7 +17,7 @@
   after the implementation commit is complete. Invoke `$audit-commit` and
   write only the declared audit report; do not implement audit findings.
 - Sprints are completed one at a time in numeric order within an epic, as
-  listed in `docs/sprints/README.md`.
+  listed in the epic's `docs/sprints/{epic}/README.md`.
 - Audit destination: `docs/audits/{branch}-audit-astra.md`, named by the
   branch (for example, `restructure-02-audit-astra.md`).
 
