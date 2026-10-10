@@ -13,12 +13,12 @@
   and manages sprint branches; the skill must not create, switch, rename, merge,
   or delete branches.
 - Implementation agent: `gpt-6.1-sol` at medium reasoning effort.
-- Audit agent: `gpt-6-astra` at high reasoning effort, in a fresh context
-  after the implementation commit is complete. Invoke `$audit-commit` and
-  write only the declared audit report; do not implement audit findings.
+- Audit agent: `gpt-6-astra` at high reasoning effort, run manually by the
+  owner in a fresh context after the implementation commit is complete. Write
+  only the declared audit report; do not implement audit findings.
 - Sprints are completed one at a time in numeric order within an epic, as
   listed in the epic's `docs/sprints/{epic}/README.md`.
-- Audit destination: `docs/audits/{branch}-audit-astra.md`, named by the
+- Audit destination: `docs/sprints/{epic}/audits/{branch}-audit-astra.md`, named by the
   branch (for example, `restructure-02-audit-astra.md`).
 
 ### `$audit-commit` context
@@ -27,7 +27,7 @@
 - Implementation file: the unique sprint Markdown file in
   `docs/sprints/{epic}/` whose two-digit filename prefix matches `{nn}` from
   the branch `{epic}-{nn}`
-- Audit report directory: `docs/audits/`
+- Audit report directory: `docs/sprints/{epic}/audits/`
 - Audit report filename: `{branch}-audit-astra.md`
 
 ### `/audit-commit` context (Claude / Opus)
@@ -43,15 +43,14 @@ Opus's.
   `{nn}` (e.g. `restructure-02` →
   `docs/sprints/restructure/02_Home_Page_And_Renaming.md`). The whole file is
   the task scope; there are no `Task NN` headings to match.
-- Audits directory: `docs/audits/`
+- Audits directory: `docs/sprints/{epic}/audits/`
 - Claude audit filename: `{branch}-audit-opus.md`
-- After writing the Opus audit, `/audit-commit` runs `/audit-sum` if
-  `docs/audits/{branch}-audit-astra.md` exists; otherwise it skips with a
-  one-line note.
+- `/audit-commit` does not run `/audit-sum`. The owner runs `/audit-sum`
+  manually, after the Astra audit exists, if a summary is wanted.
 
 ### `$audit-sum` context
 
-- Audits directory: `docs/audits/`
+- Audits directory: `docs/sprints/{epic}/audits/`
 - Claude audit (input): `{branch}-audit-opus.md`. Auditor label: **Opus**.
 - Counterpart audit (input, read-only, owned by Astra):
   `{branch}-audit-astra.md`. Auditor label: **Astra** (use this wherever

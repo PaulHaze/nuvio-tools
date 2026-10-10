@@ -53,9 +53,9 @@ Launch one Agent with `model: "haiku"` and `effort: "medium"` (this overrides th
 
 ## 4. Audit with Opus
 
-Invoke the `audit-commit` skill (it pins Opus 5.5 at high effort). It audits `HEAD` against the sprint doc and writes `docs/audits/{branch}-audit-opus.md` in the format set out in `AGENTS.md`.
+Invoke the `audit-commit` skill (it pins Opus 5.5 at high effort). It audits `HEAD` against the sprint doc and writes `docs/sprints/{epic}/audits/{branch}-audit-opus.md` in the format set out in `AGENTS.md`.
 
-There is no Astra audit at this stage, so `audit-commit` will skip `/audit-sum` with its one-line note. That is expected. Astra runs an adversarial audit and the summary separately at the end of the sprint.
+`audit-commit` does not run `/audit-sum`. Astra's audit and `/audit-sum` are manual steps the owner runs later, if needed.
 
 ## 5. Report
 
