@@ -1,0 +1,30 @@
+/* Buttons: accent fill by default, ghost and brand variants. */
+@layer components {
+	.btn {
+		@apply inline-flex btn-accent items-center justify-center gap-[0.6rem] px-[1.1rem] py-[0.7rem] no-underline hover:bg-accent-hover hover:shadow-glow-hover;
+	}
+	.btn-ghost {
+		@apply ghost-fill hover:border-accent hover:bg-accent-tint;
+	}
+	.btn-brand {
+		@apply text-white;
+		background: linear-gradient(
+			110deg,
+			var(--brand-fill-from),
+			var(--brand-fill-to)
+		);
+	}
+	.btn-brand:hover {
+		background: linear-gradient(
+			110deg,
+			var(--brand-fill-to),
+			var(--brand-fill-from)
+		);
+	}
+	[data-tool] .btn-brand {
+		@apply bg-accent bg-none text-on-accent;
+	}
+	[data-tool] .btn-brand:hover {
+		@apply bg-accent-hover;
+	}
+}

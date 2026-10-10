@@ -1,0 +1,37 @@
+/* Cards, glow surfaces and badges. */
+@layer components {
+	.card {
+		@apply glass-card;
+	}
+	.card-glow {
+		@apply relative overflow-hidden;
+	}
+	.card-glow::before {
+		@apply pointer-events-none absolute inset-0 opacity-(--aurora-opacity) content-[''];
+		background: radial-gradient(
+			ellipse at 80% 0%,
+			var(--accent-glow),
+			transparent 70%
+		);
+	}
+	.card-glow > * {
+		@apply relative;
+	}
+	.hero-aurora {
+		@apply relative isolate;
+	}
+	.hero-aurora::before {
+		@apply pointer-events-none absolute -z-1 opacity-(--aurora-opacity) content-[''];
+		inset: -30px -20px -20px;
+		background:
+			radial-gradient(
+				ellipse at 55% 30%,
+				var(--hero-aurora-1),
+				transparent 65%
+			),
+			radial-gradient(ellipse at 20% 60%, var(--hero-aurora-2), transparent 60%);
+	}
+	.badge {
+		@apply pill;
+	}
+}

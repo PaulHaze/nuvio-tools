@@ -1,0 +1,12 @@
+/* Focus: teal ring on every control. */
+@layer components {
+	.listio-main :is(a, button, summary, input[type='checkbox']):focus-visible {
+		@apply outline-2 outline-offset-[3px] outline-accent;
+	}
+	.listio-main
+		:is(input:not([type='checkbox']), select, textarea):focus-visible,
+	.collection-dialog
+		:is(input:not([type='checkbox']), select, textarea):focus-visible {
+		@apply outline-2 outline-offset-2 outline-accent;
+	}
+}

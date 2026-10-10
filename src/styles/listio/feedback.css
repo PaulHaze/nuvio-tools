@@ -1,0 +1,16 @@
+/* Notices, errors and empty states. */
+@layer components {
+	.notice {
+		@apply mb-6 rounded-(--radius) border border-(--card-border) bg-accent-tint p-4 text-fg;
+	}
+	.error {
+		@apply my-4 text-danger;
+	}
+	.empty-state {
+		@apply mt-8;
+	}
+	list-manager,
+	list-editor {
+		@apply block;
+	}
+}

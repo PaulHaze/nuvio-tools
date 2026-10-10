@@ -1,0 +1,18 @@
+/* Panels: the shell .card treatment, with the Listio padding. */
+@layer components {
+	.panel {
+		@apply glass-card p-6;
+	}
+	.collection-dialog {
+		@apply m-auto max-h-[calc(100vh-2rem)] w-[min(32rem,calc(100vw-2rem))] bg-surface-1 text-fg backdrop-filter-none;
+	}
+	.collection-dialog::backdrop {
+		@apply bg-[rgb(0_0_0/60%)] backdrop-blur-[4px];
+	}
+	.panel h2 {
+		@apply font-display text-[1.3rem] font-semibold;
+	}
+	.panel p + p {
+		@apply mt-3;
+	}
+}

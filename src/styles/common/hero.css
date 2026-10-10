@@ -1,0 +1,24 @@
+/* Page layout and Home hero. */
+@layer components {
+	.shell-main {
+		@apply page-column px-6 pb-12;
+	}
+	.shell-hero {
+		@apply pt-[4.5rem] pb-12;
+	}
+	.shell-hero h1 {
+		@apply my-[1.2rem];
+	}
+	.hero-copy {
+		@apply max-w-[34rem] text-[1.05rem] text-muted;
+	}
+	.hero-actions {
+		@apply mt-6 flex flex-wrap items-center gap-5;
+	}
+	.section-heading {
+		@apply mb-4 flex flex-wrap items-baseline justify-between gap-4;
+	}
+	.section-heading h2 {
+		@apply text-[1.2rem] font-medium tracking-[-0.02em];
+	}
+}

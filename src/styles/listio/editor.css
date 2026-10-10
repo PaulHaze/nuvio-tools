@@ -1,0 +1,40 @@
+/* List editor: actions, sources, floating bar and discovery panels. */
+@layer components {
+	.editor-actions {
+		@apply my-6 flex flex-wrap items-center gap-4;
+	}
+	.editor-actions p {
+		@apply flex-[1_1_20rem];
+	}
+	.add-source {
+		@apply mt-4;
+	}
+	.source-status {
+		@apply mt-2 min-h-6;
+	}
+	.source-history {
+		@apply mt-4;
+	}
+	.source-history li {
+		@apply mt-2 wrap-anywhere;
+	}
+	.editor {
+		@apply pb-24;
+	}
+	.floating-actions {
+		@apply fixed right-6 bottom-6 z-10 flex gap-3 glass-card p-3;
+		box-shadow:
+			0 8px 30px rgb(0 0 0 / 0.45),
+			0 0 var(--glow-size) var(--accent-glow);
+	}
+	.discovery-panels {
+		@apply grid items-start gap-4;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+	}
+	.discovery-panels textarea {
+		@apply my-2 block w-full;
+	}
+	.conflict {
+		@apply flex flex-wrap items-center gap-4;
+	}
+}

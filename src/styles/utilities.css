@@ -1,0 +1,57 @@
+/* Shared single-purpose utilities. */
+@utility prose {
+	--tw-prose-body: var(--text);
+	--tw-prose-headings: var(--text);
+	--tw-prose-bold: var(--text);
+	--tw-prose-links: var(--accent-ink);
+	--tw-prose-quotes: var(--text);
+	--tw-prose-code: var(--text);
+	--tw-prose-counters: color-mix(in oklch, var(--text) 70%, transparent);
+	--tw-prose-bullets: color-mix(in oklch, var(--text) 40%, transparent);
+	--tw-prose-hr: color-mix(in oklch, var(--text) 20%, transparent);
+	--tw-prose-quote-borders: color-mix(in oklch, var(--text) 20%, transparent);
+}
+
+/* Debug borders that change colour per breakpoint. */
+@utility bb {
+	@apply border border-red-600 sm:border-blue-600 md:border-green-600 lg:border-indigo-600 xl:border-pink-600;
+}
+@utility bb2 {
+	@apply border border-green-600 sm:border-red-600 md:border-blue-600 lg:border-pink-600 xl:border-indigo-600;
+}
+
+@utility flex-center {
+	@apply flex items-center justify-center;
+}
+
+/* Centered, 64rem-wide page column. */
+@utility page-column {
+	@apply mx-auto max-w-5xl;
+}
+
+/* Frosted card surface: accent-tinted border, glass blur and glow. */
+@utility glass-card {
+	@apply rounded-(--radius) border border-(--card-border) bg-(--card-bg) shadow-glow backdrop-blur-(--glass-blur);
+}
+
+/* Small accent pill used for badges. */
+@utility pill {
+	@apply rounded-full border border-(--card-border) bg-accent-tint px-2 py-[0.15rem] text-[0.7rem] whitespace-nowrap text-accent-ink;
+}
+
+/* Accent-filled button look shared by .btn and Listio buttons. */
+@utility btn-accent {
+	@apply rounded-(--radius) border border-transparent bg-accent text-[0.85rem] font-semibold text-on-accent;
+	transition:
+		background 0.16s,
+		box-shadow 0.16s,
+		transform 0.16s;
+	&:active:not(:disabled) {
+		transform: translateY(1px) scale(0.98);
+	}
+}
+
+/* Ghost treatment: transparent fill, subtle border, accent on hover. */
+@utility ghost-fill {
+	@apply border-border bg-transparent text-fg;
+}

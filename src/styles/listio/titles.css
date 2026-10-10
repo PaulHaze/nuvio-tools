@@ -1,0 +1,70 @@
+/* Title grids, poster cards, search results and review controls. */
+@layer components {
+	.title-grid {
+		@apply mt-6 grid list-none grid-cols-2 gap-4 sm:grid-cols-3 min-[60rem]:grid-cols-4;
+	}
+	.title-card {
+		@apply min-w-0;
+	}
+	.poster {
+		@apply relative;
+	}
+	.rating {
+		@apply absolute right-[0.4rem] bottom-[0.4rem] rounded-(--radius) bg-[rgb(0_0_0/0.75)] px-[0.45rem] py-[0.15rem] text-[0.85rem] font-semibold text-[#f5c518];
+	}
+	.title-card img,
+	.poster-placeholder {
+		@apply aspect-[2/3] w-full rounded-(--radius) object-cover;
+	}
+	.poster-placeholder {
+		@apply grid place-items-center border border-border bg-surface-2 text-muted;
+	}
+	.title-card h3 {
+		@apply mt-2 font-sans text-[1rem] font-semibold;
+	}
+	.title-card p {
+		@apply mt-1 line-clamp-5 text-[0.9rem] text-muted;
+	}
+	.review-controls {
+		@apply mt-4 flex flex-wrap items-center gap-3;
+	}
+	.view-tabs {
+		@apply mr-auto flex flex-wrap gap-2;
+	}
+	/* Unpressed review tab: ghost. Pressed keeps the accent fill from .listio-main button. */
+	.listio-main .view-tabs button[aria-pressed='false'] {
+		@apply ghost-fill;
+	}
+	.listio-main .view-tabs button[aria-pressed='false']:hover:not(:disabled) {
+		@apply border-accent bg-accent-tint;
+	}
+	.card-tools {
+		@apply mt-[0.4rem] flex items-center justify-between;
+	}
+	.card-tools input {
+		@apply size-[1.1rem];
+	}
+	.listio-main .card-tools button {
+		@apply px-2 py-1;
+	}
+	.grid-sentinel {
+		@apply h-px;
+	}
+
+	/* Search results reuse .title-grid with narrower columns. */
+	.search-grid {
+		grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+	}
+	.search-grid .title-card h3 {
+		@apply text-[0.9rem];
+	}
+	.search-grid button {
+		@apply m-2;
+	}
+	.media-badge {
+		@apply inline-block pill;
+	}
+	.match-review {
+		@apply border-t border-border px-0 py-4;
+	}
+}

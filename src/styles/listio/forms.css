@@ -1,0 +1,36 @@
+/* Labels, field rows and form controls. */
+@layer components {
+	/* Labels are muted; checkbox labels and .home-toggle keep the body text colour. */
+	.listio-main label {
+		@apply mb-2 block text-[0.85rem] font-semibold text-muted;
+	}
+	.listio-main label:has(> input[type='checkbox']),
+	.listio-main .home-toggle {
+		@apply text-fg;
+	}
+	.form-row {
+		@apply flex flex-wrap gap-3;
+	}
+	.new-entries {
+		@apply items-start;
+	}
+	.new-entries > .panel {
+		@apply font-semibold text-accent-ink no-underline hover:border-accent hover:bg-accent-tint;
+	}
+	.form-row input {
+		@apply min-w-0 flex-[1_1_12rem];
+	}
+
+	/* Form controls: one shared look. Layout stays on the per-control rules above. */
+	.listio-main
+		:is(input:not([type='checkbox'], [type='radio']), select, textarea),
+	.collection-dialog
+		:is(input:not([type='checkbox'], [type='radio']), select, textarea) {
+		@apply rounded-(--radius) border border-border bg-surface-2 px-3 py-[0.6rem] text-fg;
+		font: inherit;
+	}
+	.listio-main :is(input, textarea)::placeholder,
+	.collection-dialog :is(input, textarea)::placeholder {
+		@apply text-muted;
+	}
+}

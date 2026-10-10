@@ -1,0 +1,58 @@
+/* Base layer: element defaults, reduced-motion and focus. */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+@layer base {
+	html {
+		font-size: 100%;
+		background-color: var(--bg);
+		background-image: radial-gradient(
+			var(--pattern-dot) 0.7px,
+			transparent 0.9px
+		);
+		background-size: 16px 16px;
+		background-attachment: fixed;
+	}
+	body {
+		@apply bg-transparent font-sans leading-[1.6] text-fg;
+	}
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		@apply font-display leading-[1.2] font-semibold;
+	}
+	h1 {
+		@apply text-[clamp(2.75rem,4.2vw,4.15rem)] leading-[1.08] tracking-[-0.04em];
+	}
+	h2 {
+		@apply text-[1.95rem] tracking-[-0.02em];
+	}
+	h3 {
+		@apply text-[1.4rem];
+	}
+	h4 {
+		@apply text-[1.1rem] font-medium;
+	}
+	h5,
+	h6 {
+		@apply text-[1rem] font-medium;
+	}
+	:focus-visible {
+		@apply outline-2 outline-offset-[3px] outline-accent;
+	}
+	input[type='checkbox'],
+	input[type='radio'] {
+		@apply accent-accent;
+	}
+}

@@ -1,6 +1,6 @@
 # Nuvio Tools design system
 
-Usage rules only. The values live in `src/lib/ui/main.css` (the source of truth); this page does not repeat them. Use the token names from `:root` and Tailwind token classes, never raw colours.
+Usage rules only. The values live in `src/styles/main.css` (the source of truth); this page does not repeat them. Use the token names from `:root` and Tailwind token classes, never raw colours.
 
 ## Theme
 
@@ -50,7 +50,7 @@ Usage rules only. The values live in `src/lib/ui/main.css` (the source of truth)
 
 ## Shell classes
 
-Plain CSS classes in `src/lib/ui/main.css` (`/* #region SHELL */`). Use them for the site shell, holding pages and home. The components epic will replace them with components; until then, reuse these rather than writing new ones.
+Component classes in `src/styles/common/*.css` (`@layer components`, built with `@apply`; shared utilities in `src/styles/utilities.css`). Use them for the site shell, holding pages and home. The components epic will replace them with components; until then, reuse these rather than writing new ones.
 
 - `.brand-header`: the site header only. Brand tokens, never a tool's accent.
 - `.text-gradient`: a gradient phrase or wordmark. Brand on Home and the header; accent inside a tool, automatically.
@@ -62,7 +62,7 @@ Plain CSS classes in `src/lib/ui/main.css` (`/* #region SHELL */`). Use them for
 
 ## Rules for new code
 
-- No raw hex values outside `src/lib/ui/main.css`. Use a token in CSS or a Tailwind token class.
+- No raw hex values outside `src/styles/`. Use a token in CSS or a Tailwind token class.
 - Do not add a light theme, a `data-theme` attribute or `dark:` variants.
-- Tool-specific CSS lives in `src/tools/<tool>/<tool>.css` and is imported by that tool's pages, never from `src/lib/`.
+- All CSS lives in `src/styles/`. Tool-specific CSS is `src/styles/<tool>/` with an `index.css` entry (it starts with `@reference '../main.css'` and imports its partials), imported by that tool's pages. Prefer `@apply` over raw declarations; repeated patterns become an `@utility` in `utilities.css`.
 - Data (title names, list names in tables) uses the body font (`--font-sans`). Page and panel headings use the display font (`--font-display`).

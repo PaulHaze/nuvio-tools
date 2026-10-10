@@ -1,0 +1,159 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@plugin '@tailwindcss/typography';
+
+/* Order matters: base, then utilities, then shared components. */
+@import './base.css';
+@import './utilities.css';
+@import './common/text.css';
+@import './common/card.css';
+@import './common/button.css';
+@import './common/header.css';
+@import './common/hero.css';
+@import './common/tool-card.css';
+@import './common/footer.css';
+
+/* Listio loads separately: see ./listio/index.css (imported by Listio pages). */
+
+/* #region TOKENS */
+:root {
+	color-scheme: dark;
+
+	/* Neutrals: surfaces never tint per page or tool. */
+	--bg: #080b16; /* Home navy; tool pages override, see below */
+	--surface-1: #111625;
+	--surface-2: #191f31;
+	--border: #343c52;
+	--text: #eef0fa;
+	--text-muted: #a6aec5;
+
+	/* Brand: constant on every page (header, wordmark, home hero). */
+	--brand-from: #8580ff;
+	--brand-to: #ba94ff;
+	--brand-fill-from: #5145c9;
+	--brand-fill-to: #7142b8;
+
+	/* Accent: Home's defaults; [data-tool] replaces them. */
+	--accent: #a39bff;
+	--accent-hover: #b9b3ff;
+	--accent-tint: #a39bff12;
+	--accent-glow: #8b5cf638;
+	--accent-ink: #a39bff; /* accent used as text/icon colour on dark */
+	--on-accent: #101020; /* text on an --accent fill */
+
+	/* Status (not in the mock; see Open questions). */
+	--danger: #f87171;
+	--warning: #fbbf24;
+	--success: #4ade80;
+
+	/* Shape and effects. */
+	--radius: 4px;
+	--glow-size: 10px;
+	--glow-hover: 24px;
+	--aurora-opacity: 0.45;
+	--glass-blur: 18px;
+	--hero-aurora-1: #6741d43b;
+	--hero-aurora-2: #315beb18;
+	--card-bg: color-mix(in srgb, var(--surface-1) 84%, transparent);
+	--pattern-dot: #a6aec520;
+}
+
+/* Per-page background: only --bg changes. Home is :root. */
+[data-page='listio'] {
+	--bg: color-mix(in oklab, #14b8a0 3%, #07080c); /* ≈ #090C10 */
+}
+[data-page='artnuvio'] {
+	--bg: color-mix(in oklab, #2f66e6 3%, #07080c); /* ≈ #080A11 */
+}
+[data-page='collectio'] {
+	--bg: color-mix(in oklab, #d03cc8 3%, #07080c); /* ≈ #0C0A10 */
+}
+
+/* Tool accents: data-tool swaps only accent tokens. Brand tokens never change. */
+[data-tool='listio'] {
+	--accent: #2dd4cf;
+	--accent-hover: #67e8e2;
+	--accent-tint: #2dd4cf12;
+	--accent-glow: #22d3ee30;
+	--accent-ink: #2dd4cf;
+	--on-accent: #052023;
+}
+[data-tool='artnuvio'] {
+	--accent: #306fe0;
+	--accent-hover: #2663cb; /* darker than --accent on purpose, so white text stays readable */
+	--accent-tint: #306fe016;
+	--accent-glow: #306fe040;
+	--accent-ink: #8fb8ff;
+	--on-accent: #ffffff;
+}
+[data-tool='collectio'] {
+	--accent: #e275ee;
+	--accent-hover: #efa0f7;
+	--accent-tint: #e275ee12;
+	--accent-glow: #d946ef30;
+	--accent-ink: #e275ee;
+	--on-accent: #28072e;
+}
+
+/* Derived tokens must be declared on both :root and [data-tool]:
+   var() resolves where it is declared, so a :root-only value keeps Home's accent in a tool. */
+:root,
+[data-tool] {
+	--card-border: color-mix(in srgb, var(--accent) 30%, var(--border));
+}
+[data-tool] {
+	--hero-aurora-1: var(--accent-glow);
+	--hero-aurora-2: var(--accent-tint);
+}
+/* #endregion TOKENS */
+
+@theme inline {
+	--color-bg: var(--bg);
+	--color-surface-1: var(--surface-1);
+	--color-surface-2: var(--surface-2);
+	--color-border: var(--border);
+	--color-fg: var(--text);
+	--color-muted: var(--text-muted);
+
+	--color-brand-from: var(--brand-from);
+	--color-brand-to: var(--brand-to);
+
+	--color-accent: var(--accent);
+	--color-accent-hover: var(--accent-hover);
+	--color-accent-tint: var(--accent-tint);
+	--color-accent-ink: var(--accent-ink);
+	--color-on-accent: var(--on-accent);
+
+	--color-danger: var(--danger);
+	--color-warning: var(--warning);
+	--color-success: var(--success);
+
+	--font-sans: var(--font-inter);
+	--font-display: var(--font-outfit);
+	--font-mono: var(--font-geist-mono);
+}
+
+@theme {
+	--breakpoint-xs: 29rem;
+
+	--text-6xl: 4rem;
+
+	--spacing-psm: 1rem;
+	--spacing-pmd: 2rem;
+	--spacing-plg: 4rem;
+	--spacing-pxl: 8rem;
+
+	--spacing-sxs: 29rem;
+	--spacing-ssm: 40rem;
+	--spacing-smd: 48rem;
+	--spacing-slg: 64rem;
+	--spacing-sxl: 80rem;
+	--spacing-s2xl: 96rem;
+}
+
+/* Glow shadows. Inline so they read the per-tool --accent-glow at the element. */
+@theme inline {
+	--shadow-glow: 0 0 var(--glow-size) var(--accent-glow);
+	--shadow-glow-hover: 0 0 var(--glow-hover) var(--accent-glow);
+}

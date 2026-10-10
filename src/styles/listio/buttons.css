@@ -1,0 +1,20 @@
+/* Buttons: the .btn look from the shell. */
+@layer components {
+	.listio-main button {
+		@apply btn-accent cursor-pointer px-4 py-[0.65rem];
+		font-family: inherit;
+	}
+	.listio-main button:hover:not(:disabled) {
+		@apply bg-accent-hover shadow-glow-hover;
+	}
+	.listio-main button.danger {
+		@apply border border-danger bg-transparent text-danger;
+	}
+	.listio-main button.danger:hover:not(:disabled) {
+		@apply shadow-none;
+		background: color-mix(in srgb, var(--danger) 12%, transparent);
+	}
+	.listio-main button:disabled {
+		@apply cursor-wait opacity-60;
+	}
+}

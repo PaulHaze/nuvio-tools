@@ -286,7 +286,7 @@ Neither writes production KV. Keep `.dev.vars.example` empty of actual credentia
 
 ### Notes
 
-- Dark mode is driven by the `data-theme` attribute on `<html>`. Theme colours live in `src/lib/ui/main.css` as CSS variables and are exposed as Tailwind colours (`background`, `foreground`, `primary`, `secondary`, `accent`, `caution`, `alert`, `success`, plus muted variants).
+- Dark mode is driven by the `data-theme` attribute on `<html>`. Theme colours live in `src/styles/main.css` as CSS variables and are exposed as Tailwind colours (`background`, `foreground`, `primary`, `secondary`, `accent`, `caution`, `alert`, `success`, plus muted variants).
 - Fonts are configured under `fonts` in `astro.config.mjs`, downloaded from Fontsource at build time and self-hosted.
 - pnpm only runs install scripts for packages listed under `allowBuilds` in `pnpm-workspace.yaml`. Add new entries there if `pnpm install` reports ignored builds.
 - `pmOnFail: ignore` in `pnpm-workspace.yaml` keeps `pnpm-lock.yaml` as a single YAML document, because GitHub's dependency graph can't yet read pnpm 12's two-document format ([dependabot-core#15904](https://github.com/dependabot/dependabot-core/issues/15904)).

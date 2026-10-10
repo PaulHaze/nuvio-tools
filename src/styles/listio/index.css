@@ -1,0 +1,14 @@
+/* Listio styles. Imported by Listio pages only; tokens and shell come from ../main.css. */
+/* Combined List management uses ordinary CSS over the shared tokens. */
+@reference '../main.css';
+
+/* Order matters: later partials win ties on equal specificity. */
+@import './layout.css';
+@import './panel.css';
+@import './lists.css';
+@import './forms.css';
+@import './buttons.css';
+@import './focus.css';
+@import './feedback.css';
+@import './editor.css';
+@import './titles.css';

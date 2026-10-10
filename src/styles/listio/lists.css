@@ -1,0 +1,54 @@
+/* Combined List cards, list controls and the list actions area. */
+@layer components {
+	.list-grid {
+		@apply mt-6 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
+	}
+	.list-grid > li.panel {
+		@apply focus-within:border-accent hover:border-accent;
+		transition: border-color 0.18s;
+	}
+	.list-controls {
+		@apply mt-6 flex w-full flex-wrap items-center justify-between gap-3;
+	}
+	.list-sort-control,
+	.list-filter-control {
+		@apply flex flex-wrap items-center gap-3;
+	}
+	.list-filter-control {
+		@apply flex-[1_1_20rem] justify-end;
+	}
+	.list-sort-control label,
+	.list-filter-control label {
+		@apply m-0 font-semibold;
+	}
+	.list-sort-control select {
+		@apply min-w-[12rem];
+	}
+	.list-filter-control input {
+		@apply w-[min(20rem,100%)] min-w-0 flex-[1_1_12rem];
+	}
+	.list-filter-empty {
+		@apply mt-4;
+	}
+	.list-name {
+		@apply font-display text-[1.25rem] font-semibold wrap-anywhere text-fg no-underline hover:text-accent-ink;
+	}
+	.list-heading p {
+		@apply mt-1 font-mono text-[0.75rem] text-muted;
+	}
+	.list-actions {
+		@apply mt-4 flex items-start gap-4;
+	}
+	.list-actions details {
+		@apply flex-1;
+	}
+	.listio-main .home-toggle {
+		@apply mt-3 mb-0 flex items-center gap-2;
+	}
+	.listio-main summary {
+		@apply cursor-pointer font-semibold text-accent-ink;
+	}
+	.listio-main form {
+		@apply mt-4;
+	}
+}

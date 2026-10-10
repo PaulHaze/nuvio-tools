@@ -1,0 +1,23 @@
+/* Page column, headings and links. */
+@layer components {
+	.listio-main {
+		@apply page-column px-6 py-10;
+	}
+	.page-heading {
+		@apply mt-4 mb-8;
+	}
+	.page-heading h1 {
+		@apply text-[clamp(2rem,5vw,3rem)] font-semibold tracking-[-0.03em] wrap-anywhere;
+	}
+	.page-heading p {
+		@apply mt-2 text-muted;
+	}
+
+	/* Links. Back links ("← Combined Lists") are the first child of .listio-main. */
+	.listio-main a:not(.panel, .list-name) {
+		@apply text-accent-ink no-underline underline-offset-[3px] hover:underline;
+	}
+	.listio-main > a:first-child:not(.panel) {
+		@apply text-muted hover:text-fg;
+	}
+}

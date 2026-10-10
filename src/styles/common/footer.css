@@ -1,0 +1,12 @@
+/* Footer: inside .site-body, so it follows the tool tint. */
+@layer components {
+	.site-credits {
+		@apply page-column mt-12 border-t border-border p-6 text-[0.8rem] text-muted;
+	}
+	.site-credits h2 {
+		@apply mb-2;
+	}
+	.site-credits img {
+		@apply my-3;
+	}
+}
