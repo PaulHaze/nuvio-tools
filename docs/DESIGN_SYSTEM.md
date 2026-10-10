@@ -48,6 +48,18 @@ Usage rules only. The values live in `src/lib/ui/main.css` (the source of truth)
 - Respect `prefers-reduced-motion`: motion is already reduced globally; new animations must follow it.
 - Range sliders follow the mock's style (accent fill, 5px track, small accent thumb with a `--text` ring). Not built until a tool needs one.
 
+## Shell classes
+
+Plain CSS classes in `src/lib/ui/main.css` (`/* #region SHELL */`). Use them for the site shell, holding pages and home. The components epic will replace them with components; until then, reuse these rather than writing new ones.
+
+- `.brand-header`: the site header only. Brand tokens, never a tool's accent.
+- `.text-gradient`: a gradient phrase or wordmark. Brand on Home and the header; accent inside a tool, automatically.
+- `.eyebrow`: short mono uppercase label above a heading, or a small caption.
+- `.card`: glass surface for cards. `.card-glow` adds the corner aurora; use it on cards that are links or feature a tool.
+- `.hero-aurora`: a hero section only. Never a card or a panel.
+- `.btn`: primary action in a tool. `.btn-ghost`: secondary action. `.btn-brand`: the single brand call to action on Home; inside a tool it switches to the accent fill.
+- `.badge`: a small status label (for example "Coming soon"). Not a button.
+
 ## Rules for new code
 
 - No raw hex values outside `src/lib/ui/main.css`. Use a token in CSS or a Tailwind token class.

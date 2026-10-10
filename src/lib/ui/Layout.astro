@@ -8,12 +8,14 @@ interface Props {
 	description?: string;
 	/** Social share image: a path under public/ or an absolute URL. */
 	image?: string;
+	tool?: 'listio' | 'artnuvio' | 'collectio';
 }
 
 const {
 	title,
 	description = 'Tools for Nuvio: lists, artwork and collections.',
 	image,
+	tool,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.url.origin);
@@ -21,7 +23,7 @@ const imageURL = image ? new URL(image, Astro.url.origin) : undefined;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-page={tool ?? 'home'}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -51,25 +53,53 @@ const imageURL = image ? new URL(image, Astro.url.origin) : undefined;
 		<ClientRouter />
 	</head>
 	<body class="relative">
-		<header class="site-header">
-			<a href="/" aria-label="Nuvio Tools home">
-				Nuvio Tools
-			</a>
+		<header class="brand-header">
+			<div class="brand-header-inner">
+				<a class="wordmark" href="/" aria-label="Nuvio Tools home">
+					<span class="brand-icon" aria-hidden="true">
+						n
+					</span>
+					<span class="text-gradient">Nuvio Tools</span>
+				</a>
+				<nav aria-label="Tools">
+					<a
+						href="/listio"
+						aria-current={tool === 'listio' ? 'page' : undefined}
+					>
+						Listio
+					</a>
+					<a
+						href="/artnuvio"
+						aria-current={tool === 'artnuvio' ? 'page' : undefined}
+					>
+						ArtNuvio
+					</a>
+					<a
+						href="/collectio"
+						aria-current={tool === 'collectio' ? 'page' : undefined}
+					>
+						Collectio
+					</a>
+				</nav>
+			</div>
 		</header>
-		<slot />
-		<footer class="site-credits" aria-label="Credits">
-			<h2>Credits</h2>
-			<a href="https://www.themoviedb.org">
-				<img
-					src="/tmdb-logo.svg"
-					alt="The Movie Database (TMDB)"
-					width="80"
-					height="10"
-				/>
-			</a>
-			<p>
-				This product uses the TMDB API but is not endorsed or certified by TMDB.
-			</p>
-		</footer>
+		<div class="site-body" data-tool={tool}>
+			<slot />
+			<footer class="site-credits" aria-label="Credits">
+				<h2 class="eyebrow">Credits</h2>
+				<a href="https://www.themoviedb.org">
+					<img
+						src="/tmdb-logo.svg"
+						alt="The Movie Database (TMDB)"
+						width="80"
+						height="10"
+					/>
+				</a>
+				<p>
+					This product uses the TMDB API but is not endorsed or certified by
+					TMDB.
+				</p>
+			</footer>
+		</div>
 	</body>
 </html>

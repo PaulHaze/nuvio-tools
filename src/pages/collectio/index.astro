@@ -4,12 +4,23 @@ import Layout from '@/lib/ui/Layout.astro';
 export const prerender = false;
 ---
 
-<Layout title="Collectio · Nuvio Tools" description="Collectio is coming soon.">
-	<main class="flex min-h-screen flex-col items-center justify-center gap-6 text-center">
-		<h1 class="font-bold tracking-tight">Collectio</h1>
-		<p class="text-xl">Coming soon.</p>
-		<a href="/" class="text-accent-ink underline underline-offset-4">
-			Back to Nuvio Tools
-		</a>
+<Layout
+	title="Collectio · Nuvio Tools"
+	description="Collectio is coming soon."
+	tool="collectio"
+>
+	<main class="shell-main">
+		<section class="hero-aurora shell-hero">
+			<p class="eyebrow">Collectio / Coming soon</p>
+			<h1>
+				<span class="text-gradient">Collectio</span>
+			</h1>
+			<p class="hero-copy">Coming soon.</p>
+			<div class="hero-actions">
+				<a class="btn btn-ghost" href="/">
+					← Back to Nuvio Tools
+				</a>
+			</div>
+		</section>
 	</main>
 </Layout>

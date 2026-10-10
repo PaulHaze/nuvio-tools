@@ -6,11 +6,18 @@ import Layout from '@/lib/ui/Layout.astro';
 	title="Page not found"
 	description="The page you requested could not be found."
 >
-	<main class="flex min-h-screen flex-col items-center justify-center gap-6 text-center">
-		<h1 class="font-bold tracking-tight">404</h1>
-		<p class="text-xl">Sorry, we couldn't find that page.</p>
-		<a href="/" class="text-accent-ink underline underline-offset-4">
-			Go back home
-		</a>
+	<main class="shell-main">
+		<section class="hero-aurora shell-hero">
+			<p class="eyebrow">404</p>
+			<h1>
+				<span class="text-gradient">Page not found</span>
+			</h1>
+			<p class="hero-copy">Sorry, we couldn't find that page.</p>
+			<div class="hero-actions">
+				<a class="btn btn-ghost" href="/">
+					← Back to Nuvio Tools
+				</a>
+			</div>
+		</section>
 	</main>
 </Layout>
