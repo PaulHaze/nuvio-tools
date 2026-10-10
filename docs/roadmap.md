@@ -2,18 +2,18 @@
 
 Where the project is going, written to guide folder structure and code placement in every sprint.
 It restates the agreed plan from [`nuvio-tools-next-steps.md`](./nuvio-tools-next-steps.md). Anything
-not yet decided is marked **Open**. Each epic lists its sprints in `sprints/{epic}/README.md` (current: [`sprints/ui/README.md`](./sprints/ui/README.md)).
+not yet decided is marked **Open**. Each epic lists its sprints in `sprints/{epic}/README.md` (current: [`sprints/artmvp/README.md`](./sprints/artmvp/README.md)).
 
 ## The site
 
 One site, `nuvio-tools.com`: one Astro app, one Cloudflare Worker, one domain
 ([ADR 0008](./adr/0008-one-site-tools-under-path-prefixes.md)). A home page links to three tools.
 
-| Tool          | Path         | What it does                                                                                                                                                    |
-| ------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Listio**    | `/listio`    | List creation. Builds curated Combined Lists from Trakt, MDBList, IMDb, pasted text and search, and serves them as a Nuvio addon. Exists today.                 |
-| **ArtNuvio**  | `/artnuvio`  | Art creation. Takes an image URL and fits it to Nuvio's hero, poster or landscape size without stretching, then hosts the result.                               |
-| **Collectio** | `/collectio` | Collection management. A visual manager for Nuvio collections: drag and drop folders between collections, folder artwork, folder management. The biggest build. |
+| Tool          | Path         | What it does                                                                                                                                                          |
+| ------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Listio**    | `/listio`    | List creation. Builds curated Combined Lists from Trakt, MDBList, IMDb, pasted text and search, and serves them as a Nuvio addon. Exists today.                       |
+| **ArtNuvio**  | `/artnuvio`  | Art creation. Fits an image (URL, paste or file) to Nuvio's hero, landscape, poster or square size without stretching, then hosts it at a permanent, replaceable URL. |
+| **Collectio** | `/collectio` | Collection management. A visual manager for Nuvio collections: drag and drop folders between collections, folder artwork, folder management. The biggest build.       |
 
 ## Target folder layout
 
@@ -74,29 +74,23 @@ through direct imports.
 
 ## Planned infrastructure per tool
 
-| Tool          | Infrastructure                                                                                                                                                                                                                                                         |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Listio**    | Workers KV, binding `LISTIO`. The Nuvio addon at `/listio/addon/<secret>/*`. TMDB, Trakt and MDBList keys as Worker secrets.                                                                                                                                           |
-| **ArtNuvio**  | A CORS image proxy (takes `?url=`, returns the image with CORS headers, stores nothing). A save endpoint that validates and writes a WebP to Cloudflare R2 under a content-hash key. An R2 bucket served from `img.nuvio-tools.com` with long-lived immutable caching. |
-| **Collectio** | Storage is **open**.                                                                                                                                                                                                                                                   |
+| Tool          | Infrastructure                                                                                                                                                                                                                                                                                                                                |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Listio**    | Workers KV, binding `LISTIO`. The Nuvio addon at `/listio/addon/<secret>/*`. TMDB, Trakt and MDBList keys as Worker secrets.                                                                                                                                                                                                                  |
+| **ArtNuvio**  | An image proxy route (`/artnuvio/api/fetch-image`, stores nothing). Artwork routes that write JPEGs and JSON records to the R2 bucket `artnuvio` (binding `ARTNUVIO`). The bucket is served from `img.nuvio-tools.com` with a short cache time, so Replaced images reach Nuvio ([ADR 0009](./adr/0009-artwork-served-from-own-subdomain.md)). |
+| **Collectio** | Storage is **open**.                                                                                                                                                                                                                                                                                                                          |
 
-ArtNuvio details, from the planning notes:
-
-- **Flow:** paste an image URL (no uploads), pick hero, poster or landscape, optionally add small
-  text, save, and get back a hosted URL for use in Nuvio. The browser fetches the source through
-  the proxy, fits it on a canvas, exports WebP, and POSTs it to the save endpoint.
-- **Proxy guardrails:** images only (`Content-Type: image/*`), a size cap (about 10–20 MB), block
-  localhost, private IP ranges and non-http(s) schemes, a redirect limit, rate limiting.
-- **Save guardrails:** reject uploads over about 1 MB and anything that isn't webp, jpeg or png
-  (check magic bytes), per-IP rate limits, and Cloudflare Turnstile.
-- **Cost:** R2 has free egress and a free tier of 10 GB. The only certain cost is the domain
-  (about $10–12 a year); even if all three tools take off, expect around $5 a month.
+ArtNuvio details are in the MVP epic, [`sprints/artmvp/README.md`](./sprints/artmvp/README.md):
+four Frames, JPEG at 0.88, Artworks named per folder with one Artwork per Frame, Replace without a
+URL change (one previous image kept), Delete, and a Library. Cost: R2 has free egress and a free
+tier of 10 GB; expect around $5 a month at most even if all three tools take off.
 
 ## Auth
 
-Today the whole site sits behind Basic Auth (one `ADMIN_USER` and `ADMIN_PASSWORD`), except
-`/listio/addon/*` (Nuvio needs it, and the secret in the URL protects it) and `/robots.txt`
-([ADR 0006](./adr/0006-basic-auth-instead-of-cloudflare-access.md)).
+Basic Auth (one `ADMIN_USER` and `ADMIN_PASSWORD`) guards `/listio` and, from `artmvp-01`,
+`/artnuvio`. `/listio/addon/*` stays open (Nuvio needs it, and the secret in the URL protects
+it), as do the home page and `/robots.txt` ([ADR 0006](./adr/0006-basic-auth-instead-of-cloudflare-access.md)).
+ArtNuvio images on `img.nuvio-tools.com` are public by design.
 
 Some tools may go public later. [ADR 0007](./adr/0007-public-list-builder-byok.md) already proposes
 a public Listio list builder with users' own TMDB keys, and ArtNuvio would need an open save
@@ -110,18 +104,17 @@ close one tool without touching the rest. Which tools go public, and when, is **
 3. **UI** epic (branches `ui-{nn}`): settle the design system (dark only, brand gradient plus one
    accent per tool) and land its tokens in `src/lib/ui/`. Then a **shared components** epic for
    all three tools, then a **Listio rebuild** with new features.
-4. **ArtNuvio:** small and self-contained. Introduces the proxy, the save endpoint and R2.
+4. **ArtNuvio MVP** epic (sprints 01–12, branches `artmvp-01` to `artmvp-12`): private,
+   behind the login. Introduces the proxy, R2 and replaceable Artwork URLs. Text, overlays and
+   going public come in later ArtNuvio epics.
 5. **Collectio:** last, once `lib/nuvio/` has settled through Listio and ArtNuvio.
 
 ## Open decisions
 
-- **Image lifetime:** keep hosted artwork forever (simple, cheap, storage grows without bound) or
-  purge after a stated period. Users paste these URLs into Nuvio, so deleting breaks their art.
-- **Takedowns:** without accounts, users can't delete their own images. What is the takedown path
-  (for example a contact email and manual deletion)?
+- **ArtNuvio going public:** Turnstile, rate limits, accounts (and possibly a database) so users
+  can keep and Replace their own Artwork, image lifetime, terms and a takedown path. The private
+  MVP keeps Artwork until the owner deletes it.
 - **Collectio storage:** KV, D1, R2, or no storage (files in, files out like Listio's export)?
-- **ArtNuvio proxy:** a separate Worker, or a route in the same Worker as the rest of the site?
-  The same applies to the save endpoint.
 - **Public or private, per tool:** which tools stay behind Basic Auth, and what replaces it for
   public ones (accountless secret links, accounts, or nothing).
 - **Subdomains:** whether `www.nuvio-tools.com` is added as a redirect to the bare domain.

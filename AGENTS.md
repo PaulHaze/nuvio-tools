@@ -8,8 +8,8 @@
   `docs/sprints/restructure/01_Restructure_Folders_Routes.md`). The sprint file
   is the canonical implementation brief. An epic is a body of work made of
   numbered sprints; each epic numbers its sprints from 01.
-- Branch convention: `{epic}-{nn}` (for example, `restructure-01`; later
-  ArtNuvio epics use `artnv-{feature}-01`). The user creates
+- Branch convention: `{epic}-{nn}` (for example, `restructure-01`; the
+  ArtNuvio MVP is `artmvp-{nn}`, later ArtNuvio epics `artnv-{feature}-01`). The user creates
   and manages sprint branches; the skill must not create, switch, rename, merge,
   or delete branches.
 - Implementation agent: `gpt-6.1-sol` at medium reasoning effort.

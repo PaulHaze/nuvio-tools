@@ -19,7 +19,7 @@ The tool for creating lists: it builds Combined Lists and publishes them as Cata
 _Avoid_: list combiner
 
 **ArtNuvio**:
-The tool for creating artwork: it fits an image to Nuvio's hero, poster or landscape size and hosts the result. Not built yet.
+The tool for creating artwork: it fits an Original to a Frame and hosts the result as Artwork at a permanent, replaceable URL. Not built yet.
 _Avoid_: thumbnail maker
 
 **Collectio**:
@@ -54,3 +54,41 @@ _Avoid_: pending changes, working copy
 **Catalog**:
 How a Combined List appears inside Nuvio. A Catalog holds a single type (movie or series), so a Combined List containing both appears as two Catalogs.
 _Avoid_: feed, list
+
+### ArtNuvio
+
+**Artwork**:
+A named, permanent piece of art for one Frame, such as the Hero for "Serial Killer movies". It has one URL and one Frame for life. Its image can be Replaced at any time without the URL changing, so Nuvio picks up the new image by itself. A name can have at most one Artwork per Frame, so "Serial Killer movies" may have both a Hero and a Poster. Deleting an Artwork breaks its URL in Nuvio.
+_Avoid_: thumbnail, cover, image (when meaning the Artwork)
+
+**Replace**:
+To give an existing Artwork a new image, made from a new Original. The Artwork keeps its name, Frame and URL. The Frame can never change: a different shape needs a new Artwork.
+_Avoid_: update, re-upload, edit
+
+**Library**:
+The list of all saved Artworks, by name, where the user finds one to copy its URL or Replace it.
+_Avoid_: history, gallery, recents
+
+**Original**:
+The image an Artwork is made from: linked by URL, pasted from the clipboard, or picked from disk. Only the finished Artwork is ever stored; the Original is not kept.
+_Avoid_: source, source image, upload
+
+**Frame**:
+The Nuvio slot an Artwork is made for: Hero, Landscape, Poster or Square. Each Frame has a fixed shape and output size.
+_Avoid_: format, size, template
+
+**Hero**:
+The large backdrop image shown behind a folder in Nuvio. Same 16:9 shape as a Landscape, but it is a separate Artwork, often made from a different image, and it is saved at a larger size.
+_Avoid_: banner, backdrop
+
+**Landscape**:
+The 16:9 cover tile for a folder.
+_Avoid_: thumbnail, wide
+
+**Poster**:
+The 2:3 cover tile for a folder.
+_Avoid_: portrait, cover
+
+**Square**:
+The 1:1 cover tile for a folder. Nuvio's default tile shape.
+_Avoid_: tile, icon
