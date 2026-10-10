@@ -234,7 +234,6 @@ html {
 	@apply flex items-center justify-center;
 }
 
-/* Combined List management uses ordinary CSS over the shared tokens. */
 /* #region SHELL */
 /* Brand header: always brand tokens, never [data-tool]. */
 .brand-header {
@@ -564,6 +563,7 @@ html {
 .site-credits img {
 	margin: 0.75rem 0;
 }
+/* Combined List management uses ordinary CSS over the shared tokens. */
 .listio-main {
 	max-width: 64rem;
 	margin: 0 auto;
