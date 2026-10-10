@@ -1,6 +1,6 @@
 # ui-04: Listio visual pass
 
-**Status:** not started
+**Status:** done
 
 **Depends on:** [ui-02](./02_Tokens_And_Fonts.md) (tokens) and [ui-03](./03_Site_Shell_And_Home.md)
 (shell, `data-tool="listio"` on Listio pages, shell classes). Visual baseline: the Listio
