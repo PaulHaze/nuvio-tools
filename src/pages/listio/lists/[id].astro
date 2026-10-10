@@ -11,7 +11,10 @@ if (!list) Astro.response.status = 404;
 const created = Astro.url.searchParams.get('created') === '1';
 ---
 
-<Layout title={`${list?.name ?? 'Combined List not found'} · Listio`}>
+<Layout
+	title={`${list?.name ?? 'Combined List not found'} · Listio`}
+	tool="listio"
+>
 	<main class="listio-main">
 		<a href="/listio">← Combined Lists</a>
 		{list ? (

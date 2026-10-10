@@ -1,6 +1,6 @@
 # ui-03: Site shell and home page
 
-**Status:** not started
+**Status:** done
 
 **Depends on:** [ui-02](./02_Tokens_And_Fonts.md) (tokens, fonts, `DESIGN_SYSTEM.md`). Visual
 baseline: the header, hero, tool cards and footer in
@@ -190,14 +190,14 @@ placeholder mark, to be revised in a later logo pass.
 
 ## Tasks
 
-- [ ] `Layout.astro`: `tool` prop, `data-page` on `<html>`, `.site-body[data-tool]` wrapper
-- [ ] Pass `tool` from the four Listio pages and both holding pages
-- [ ] Brand header markup and CSS (replaces `.site-header`)
-- [ ] Shell classes in `main.css`; short section in `DESIGN_SYSTEM.md`
-- [ ] Home page: hero and three tool cards
-- [ ] Holding pages and 404 in the new pattern
-- [ ] Footer restyle
-- [ ] Favicon replaced with the brand "n" mark
+- [x] `Layout.astro`: `tool` prop, `data-page` on `<html>`, `.site-body[data-tool]` wrapper
+- [x] Pass `tool` from the four Listio pages and both holding pages
+- [x] Brand header markup and CSS (replaces `.site-header`)
+- [x] Shell classes in `main.css`; short section in `DESIGN_SYSTEM.md`
+- [x] Home page: hero and three tool cards
+- [x] Holding pages and 404 in the new pattern
+- [x] Footer restyle
+- [x] Favicon replaced with the brand "n" mark
 
 ## Done when
 

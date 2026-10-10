@@ -1,23 +1,32 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Layout from '@/lib/ui/Layout.astro';
 
-// Site home: one card per tool. Each tool owns its path prefix (ADR 0008).
 export const prerender = false;
 
 const tools = [
 	{
+		slug: 'listio',
 		name: 'Listio',
 		href: '/listio',
+		icon: 'lucide:list',
+		status: 'live',
 		description: 'Build curated movie and TV lists and publish them to Nuvio.',
 	},
 	{
+		slug: 'artnuvio',
 		name: 'ArtNuvio',
 		href: '/artnuvio',
+		icon: 'lucide:image',
+		status: 'coming-soon',
 		description: "Fit artwork to Nuvio's hero, poster and landscape sizes.",
 	},
 	{
+		slug: 'collectio',
 		name: 'Collectio',
 		href: '/collectio',
+		icon: 'lucide:folder',
+		status: 'coming-soon',
 		description: 'Manage Nuvio collections, their folders and folder artwork.',
 	},
 ];
@@ -27,15 +36,59 @@ const tools = [
 	title="Nuvio Tools"
 	description="Tools for Nuvio: lists, artwork and collections."
 >
-	<main class="mx-auto grid max-w-5xl gap-6 px-6 py-16 md:grid-cols-3">
-		{tools.map((tool) => (
-			<a
-				href={tool.href}
-				class="panel flex aspect-square flex-col items-center justify-center gap-3 text-center no-underline"
-			>
-				<h2>{tool.name}</h2>
-				<p>{tool.description}</p>
-			</a>
-		))}
+	<main class="shell-main">
+		<section class="hero-aurora shell-hero">
+			<p class="eyebrow">Your library. Your way.</p>
+			<h1>
+				A better home for
+				<br />
+				<span class="text-gradient">everything you love.</span>
+			</h1>
+			<p class="hero-copy">
+				Curate the watchlist. Craft the artwork. Bring it all together. Three
+				focused tools for your Nuvio setup.
+			</p>
+			<div class="hero-actions">
+				<a class="btn btn-brand" href="#tools">
+					Explore the tools <span aria-hidden="true">↗</span>
+				</a>
+				<p class="eyebrow">Made for the Nuvio community</p>
+			</div>
+		</section>
+
+		<section id="tools" aria-labelledby="tools-heading">
+			<div class="section-heading">
+				<h2 id="tools-heading">One toolkit. A little more you.</h2>
+				<p class="eyebrow">Three tools</p>
+			</div>
+			<div class="tool-grid">
+				{tools.map((tool, i) => (
+					<a
+						class="card card-glow tool-card"
+						data-tool={tool.slug}
+						href={tool.href}
+					>
+						<div class="tool-top">
+							<span class="tool-icon">
+								<Icon name={tool.icon} />
+							</span>
+							<span class="eyebrow">{String(i + 1).padStart(2, '0')}</span>
+						</div>
+						<h3>{tool.name}</h3>
+						<p>{tool.description}</p>
+						<div class="tool-foot">
+							{tool.status === 'live' ? (
+								<>
+									<span>Open {tool.name}</span>
+									<span aria-hidden="true">↗</span>
+								</>
+							) : (
+								<span class="badge">Coming soon</span>
+							)}
+						</div>
+					</a>
+				))}
+			</div>
+		</section>
 	</main>
 </Layout>
