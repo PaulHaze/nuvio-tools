@@ -28,15 +28,13 @@ beforeEach(() => {
 });
 
 describe('basic auth middleware', () => {
-	it('challenges the UI and API without credentials', async () => {
+	it('challenges Listio pages and API without credentials', async () => {
 		for (const path of [
-			'/',
 			'/listio',
+			'/listio/',
 			'/listio/import',
 			'/listio/lists/abc',
 			'/listio/api/lists',
-			'/artnuvio',
-			'/collectio',
 		]) {
 			const res = await call(path);
 			expect(res.status).toBe(401);
@@ -45,7 +43,7 @@ describe('basic auth middleware', () => {
 	});
 
 	it('uses the Nuvio Tools realm', async () => {
-		const res = await call('/');
+		const res = await call('/listio');
 		expect(res.headers.get('WWW-Authenticate')).toBe(
 			'Basic realm="Nuvio Tools", charset="UTF-8"'
 		);
@@ -55,10 +53,7 @@ describe('basic auth middleware', () => {
 		expect(
 			await call('/listio/api/lists', basic('paul', 'correct horse'))
 		).toBe(passed);
-		expect(await call('/', basic('paul', 'correct horse'))).toBe(passed);
-		expect(await call('/artnuvio', basic('paul', 'correct horse'))).toBe(
-			passed
-		);
+		expect(await call('/listio', basic('paul', 'correct horse'))).toBe(passed);
 	});
 
 	it('rejects a wrong password or user, and malformed headers', async () => {
@@ -78,15 +73,28 @@ describe('basic auth middleware', () => {
 		expect(await call('/robots.txt')).toBe(passed);
 	});
 
-	it('protects the old root paths now that Listio lives under /listio', async () => {
-		expect((await call('/addon/secret/manifest.json')).status).toBe(401);
-		expect((await call('/api/lists')).status).toBe(401);
+	it('leaves Home, ArtNuvio and Collectio open', async () => {
+		for (const path of ['/', '/artnuvio', '/collectio', '/listiox', '/404']) {
+			expect(await call(path)).toBe(passed);
+		}
+	});
+
+	it('protects encoded, upper-case and double-slash variants of /listio', async () => {
+		for (const path of [
+			'/listi%6F',
+			'/listio%2Fapi/lists',
+			'/LISTIO',
+			'//listio',
+			'/listio/addon%2F..%2Fapi/lists',
+			'/listio/%E0%A4%A',
+		]) {
+			expect((await call(path)).status).toBe(401);
+		}
 	});
 
 	it('does not let look-alike paths through the public rules', async () => {
 		expect((await call('/listio/addonx')).status).toBe(401);
 		expect((await call('/listio/addon')).status).toBe(401);
-		expect((await call('/robots.txt.bak')).status).toBe(401);
 	});
 
 	it('fails closed when credentials are not configured', async () => {

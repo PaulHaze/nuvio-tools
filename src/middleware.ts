@@ -1,17 +1,33 @@
 import type { MiddlewareHandler } from 'astro';
 import { env } from 'cloudflare:workers';
 
-// HTTP Basic Auth in front of everything except the addon (Nuvio can't log in;
-// it's guarded by ADDON_SECRET instead) and robots.txt. Fails closed when the
-// credentials aren't configured.
-// Public without login: the Nuvio addon (the secret in the URL is the protection)
-// and robots.txt. Matched on path boundaries so look-alikes stay protected.
-const PUBLIC_PATHS = new Set(['/robots.txt']);
+// HTTP Basic Auth in front of Listio only (/listio and everything under it).
+// Home, ArtNuvio, Collectio and robots.txt are public. The Listio addon stays
+// open too: Nuvio can't log in, so it's guarded by ADDON_SECRET in the URL.
+// Fails closed when the credentials aren't configured.
+const PROTECTED_DIR = '/listio';
 const PUBLIC_DIRS = ['/listio/addon/'];
 
-const isPublic = (pathname: string): boolean =>
-	PUBLIC_PATHS.has(pathname) ||
-	PUBLIC_DIRS.some((dir) => pathname.startsWith(dir));
+// Checked on the fully decoded path, because the router decodes it too: an
+// encoded path like /listi%6F or /listio%2Fapi must still be protected.
+// Duplicate slashes are collapsed and case is ignored, so //listio and /LISTIO
+// can't slip past. Undecodable paths and dot segments are always guarded.
+function needsLogin(rawPathname: string): boolean {
+	let pathname: string;
+	try {
+		pathname = decodeURIComponent(rawPathname)
+			.replace(/\/{2,}/g, '/')
+			.toLowerCase();
+	} catch {
+		return true;
+	}
+	if (pathname.split('/').some((part) => part === '.' || part === '..')) {
+		return true;
+	}
+	const inListio =
+		pathname === PROTECTED_DIR || pathname.startsWith(`${PROTECTED_DIR}/`);
+	return inListio && !PUBLIC_DIRS.some((dir) => pathname.startsWith(dir));
+}
 
 const encoder = new TextEncoder();
 
@@ -50,7 +66,7 @@ const challenge = () =>
 
 export const onRequest: MiddlewareHandler = async (context, next) => {
 	const { pathname } = context.url;
-	if (isPublic(pathname)) return next();
+	if (!needsLogin(pathname)) return next();
 
 	const user = env.ADMIN_USER;
 	const password = env.ADMIN_PASSWORD;
