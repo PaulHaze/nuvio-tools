@@ -64,6 +64,34 @@
 			}
 		}
 	}
+
+	/* Canvas stays at the whole Frame aspect, contained within the preview area. */
+	:where(&) .preview {
+		position: absolute;
+		inset: 40px 14px 14px;
+		display: grid;
+		place-items: center;
+		overflow: hidden;
+
+		canvas {
+			display: block;
+			background: #000;
+		}
+	}
+
+	&[data-dragging='1'] {
+		outline: 2px solid var(--accent);
+		outline-offset: -2px;
+	}
+}
+
+.original-message {
+	font-size: 0.8rem;
+	color: var(--accent-ink);
+
+	&:empty {
+		display: none;
+	}
 }
 
 /* Original bar. */

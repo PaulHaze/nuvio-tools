@@ -2,7 +2,7 @@
 import Layout from '@/lib/ui/Layout.astro';
 import '@/styles/artnuvio/index.css';
 import ToolHead from '@/tools/artnuvio/components/ToolHead.astro';
-import Editor from '@/tools/artnuvio/components/Editor.astro';
+import Editor from '@/tools/artnuvio/components/Editor.tsx';
 
 export const prerender = false;
 ---
@@ -14,6 +14,6 @@ export const prerender = false;
 >
 	<main class="artnuvio-main">
 		<ToolHead />
-		<Editor />
+		<Editor client:load />
 	</main>
 </Layout>

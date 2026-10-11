@@ -67,7 +67,7 @@ database, going public (Turnstile, rate limits, takedowns). See "After the MVP" 
 | --- | ---------------------------------------------------------------------------- | --------- |
 | 01  | [Layout mockups, login and page shell](./01_Mockups_Login_And_Page_Shell.md) | completed |
 | 02  | [Framing maths](./02_Framing_Maths.md)                                       | completed |
-| 03  | [Load an Original locally](./03_Load_Original_Locally.md)                    | planned   |
+| 03  | [Load an Original locally](./03_Load_Original_Locally.md)                    | completed |
 | 04  | [Editor controls](./04_Editor_Controls.md)                                   | planned   |
 | 05  | [Export and download](./05_Export_And_Download.md)                           | planned   |
 | 06  | [Image proxy](./06_Image_Proxy.md)                                           | planned   |
