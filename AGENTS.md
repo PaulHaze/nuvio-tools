@@ -1,5 +1,25 @@
 ## Agent skills
 
+### CSS nesting style
+
+- Prefer native CSS nesting: keep a component's descendant, state, and pseudo-element rules inside its root selector instead of repeating the root selector in separate rules.
+- Use `:where(&) .child` for nested descendant selectors when the child should retain the specificity it had as a standalone class selector. Nest pseudo-classes and pseudo-elements with `&`, such as `&:hover` and `&::before`.
+- Nest responsive overrides inside the component when they belong to that component. Keep unrelated selectors and page-level layout media queries at the top level.
+
+```css
+.card {
+	@apply rounded-lg;
+
+	:where(&) .card-title {
+		@apply font-semibold;
+	}
+
+	&:hover {
+		@apply shadow-lg;
+	}
+}
+```
+
 ### `$start-task` context
 
 - Work source: `docs/sprints/{epic}/`; strip the trailing `-{nn}` from the
