@@ -194,7 +194,7 @@ it('ignores files dropped outside the preview and reports non-image pastes', asy
 	);
 });
 
-function modeInput(mode: 'fit' | 'cover') {
+function modeInput(mode: 'fit' | 'cover' | 'custom') {
 	return host.querySelector<HTMLInputElement>(
 		`input[name="mode"][value="${mode}"]`
 	)!;
@@ -314,4 +314,52 @@ it('captures dragging in Frame pixels, preserves the mode, and resets an already
 	expect(lastPlacement()).toEqual(
 		placeMode(bitmap, FRAMES.hero.sizes[0], 'fit')
 	);
+});
+
+it('shows Custom and its hint after a slider move, and Fit/Cover snap back', async () => {
+	await choose();
+	const hint = () => host.querySelector('.c-fit .ctl-hint')!.textContent;
+	const cap = () => host.querySelector('.cap-right')!.textContent;
+	expect(modeInput('custom').checked).toBe(false);
+	await changeScale(5);
+	expect(cap()).toBe('Custom');
+	expect(modeInput('custom').checked).toBe(true);
+	expect(hint()).toBe('Custom sizing');
+	expect(host.querySelector('.marks')).toBeNull();
+	await act(async () => modeInput('fit').click());
+	expect(modeInput('custom').checked).toBe(false);
+	expect(cap()).toBe('Fit');
+});
+
+it('ignores non-primary pointerdown and ends a drag on lostpointercapture', async () => {
+	await choose();
+	const canvas = host.querySelector('canvas')!;
+	vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({
+		width: 600,
+		height: 337.5,
+	} as DOMRect);
+	const capture = vi.fn();
+	canvas.setPointerCapture = capture;
+	canvas.hasPointerCapture = () => false;
+	const fire = (type: string, button = 0) =>
+		act(async () =>
+			canvas.dispatchEvent(
+				new PointerEvent(type, {
+					bubbles: true,
+					pointerId: 1,
+					button,
+					clientX: 10,
+					clientY: 10,
+				})
+			)
+		);
+	const panning = () =>
+		host.querySelector('.preview')!.getAttribute('data-panning');
+	await fire('pointerdown', 2);
+	expect(capture).not.toHaveBeenCalled();
+	expect(panning()).toBe('0');
+	await fire('pointerdown');
+	expect(panning()).toBe('1');
+	await fire('lostpointercapture');
+	expect(panning()).toBe('0');
 });

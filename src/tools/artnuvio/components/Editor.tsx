@@ -6,10 +6,8 @@ import {
 	type CSSProperties,
 	type PointerEvent,
 } from 'react';
-import { FRAME_IDS, FRAMES, type FrameId } from '../frames';
+import { FRAME_IDS, FRAMES, type FrameId, type OutputSize } from '../frames';
 import {
-	fitScale,
-	coverScale,
 	panBy,
 	placeMode,
 	scaleRange,
@@ -30,7 +28,11 @@ type EditorState = {
 	frame: FrameId;
 	placement: Placement | null;
 };
-const fillHint = 'Cover fills the whole Frame. Fit shows the whole image.';
+const fillHints = {
+	cover: 'Cover the frame with the image',
+	fit: 'Fit the whole image into frame',
+	custom: 'Custom sizing',
+};
 
 function Glyph({ frame, size = 12 }: { frame: FrameId; size?: number }) {
 	const { width, height } = FRAMES[frame].aspect;
@@ -93,22 +95,31 @@ export default function Editor() {
 	const spec = FRAMES[frame];
 	const frameSize = spec.sizes[0];
 	const range = original ? scaleRange(original, frameSize) : { min: 0, max: 1 };
+	const hint = fillHints[placement?.mode ?? 'custom'];
 	const scalePercent = (scale: number) =>
 		`${((scale - range.min) / (range.max - range.min)) * 100}%`;
 
-	const selectMode = (mode: Exclude<Mode, null>) =>
+	const updatePlacement = (
+		change: (
+			original: Original,
+			size: OutputSize,
+			placement: Placement
+		) => Placement
+	) =>
 		setEditor((current) =>
-			current.original
+			current.original && current.placement
 				? {
 						...current,
-						placement: placeMode(
+						placement: change(
 							current.original,
 							FRAMES[current.frame].sizes[0],
-							mode
+							current.placement
 						),
 					}
 				: current
 		);
+	const selectMode = (mode: Exclude<Mode, null>) =>
+		updatePlacement((original, size) => placeMode(original, size, mode));
 
 	const movePointer = (event: PointerEvent<HTMLCanvasElement>) => {
 		const pan = panRef.current;
@@ -118,20 +129,15 @@ export default function Editor() {
 		const dx = event.clientX - pan.x;
 		const dy = event.clientY - pan.y;
 		panRef.current = { id: pan.id, x: event.clientX, y: event.clientY };
-		setEditor((current) => {
-			if (!current.original || !current.placement) return current;
-			const size = FRAMES[current.frame].sizes[0];
-			return {
-				...current,
-				placement: panBy(
-					current.original,
-					size,
-					current.placement,
-					(dx * size.width) / rect.width,
-					(dy * size.height) / rect.height
-				),
-			};
-		});
+		updatePlacement((original, size, placement) =>
+			panBy(
+				original,
+				size,
+				placement,
+				(dx * size.width) / rect.width,
+				(dy * size.height) / rect.height
+			)
+		);
 	};
 	const stopPointer = (event: PointerEvent<HTMLCanvasElement>) => {
 		if (panRef.current?.id !== event.pointerId) return;
@@ -225,10 +231,21 @@ export default function Editor() {
 			if (ctx)
 				drawPlacement(ctx, original.bitmap, frameSize, placement, canvas);
 		};
-		// ResizeObserver fires once on observe, which performs the first draw.
-		const observer = new ResizeObserver(draw);
+		// Keep the existing canvas scaled in CSS while the window is moving, then
+		// resize its backing store and redraw once the layout settles. Reallocating
+		// a high-DPI canvas for every resize notification can stall Firefox during
+		// rapid window resizing and leave the editor unresponsive to file drops.
+		let resizeTimer: number | undefined;
+		const observer = new ResizeObserver(() => {
+			window.clearTimeout(resizeTimer);
+			resizeTimer = window.setTimeout(draw, 120);
+		});
 		observer.observe(area);
-		return () => observer.disconnect();
+		draw();
+		return () => {
+			observer.disconnect();
+			window.clearTimeout(resizeTimer);
+		};
 	}, [original, placement, frameSize]);
 
 	const pickFrame = (frame: FrameId) =>
@@ -483,8 +500,19 @@ export default function Editor() {
 									/>
 									Cover
 								</label>
+								<label>
+									<input
+										type="radio"
+										name="mode"
+										value="custom"
+										checked={!!placement && placement.mode === null}
+										readOnly
+										disabled={!original}
+									/>
+									Custom
+								</label>
 							</div>
-							<p className="ctl-hint">{fillHint}</p>
+							<p className="ctl-hint">{hint}</p>
 						</fieldset>
 						<div className={`ctl c-scale ${original ? '' : 'is-disabled'}`}>
 							<label className="eyebrow ctl-label" htmlFor="scale-in">
@@ -509,56 +537,16 @@ export default function Editor() {
 									}
 									onChange={(event) => {
 										const scale = event.currentTarget.valueAsNumber;
-										setEditor((current) =>
-											current.original && current.placement
-												? {
-														...current,
-														placement: zoomTo(
-															current.original,
-															FRAMES[current.frame].sizes[0],
-															current.placement,
-															scale
-														),
-													}
-												: current
+										updatePlacement((original, size, placement) =>
+											zoomTo(original, size, placement, scale)
 										);
 									}}
 									disabled={!original}
 								/>
-								<div className="marks" aria-hidden="true">
-									<button
-										type="button"
-										className="mark"
-										tabIndex={-1}
-										style={{
-											left: original
-												? scalePercent(fitScale(original, frameSize))
-												: '30%',
-										}}
-										onClick={() => selectMode('fit')}
-										disabled={!original}
-									>
-										Fit
-									</button>
-									<button
-										type="button"
-										className="mark"
-										tabIndex={-1}
-										style={{
-											left: original
-												? scalePercent(coverScale(original, frameSize))
-												: '50%',
-										}}
-										onClick={() => selectMode('cover')}
-										disabled={!original}
-									>
-										Cover
-									</button>
-								</div>
 							</div>
 							<p className="soft" aria-live="polite" />
 						</div>
-						<p className="ctl-hint adj-hint">{fillHint}</p>
+						<p className="ctl-hint adj-hint">{hint}</p>
 						<fieldset className="ctl c-size is-disabled">
 							<legend className="eyebrow">Saved size</legend>
 							<div className="size-body">
