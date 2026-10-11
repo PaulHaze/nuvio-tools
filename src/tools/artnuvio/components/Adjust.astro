@@ -1,13 +1,17 @@
 ---
-// Fill, scale and the Saved size. Empty shell: the controls are disabled.
-// The Saved size lists Hero's two sizes because Hero is the Frame picked by default.
+// Fill, Scale and Saved size. In the rail they are three sections; when stacked they
+// share one box, with one hint line under Fill and Scale (.adj-hint) instead of the Fill
+// hint. Empty state: all disabled. Saved size shows Hero's two sizes, as Hero is picked.
+// The file sizes are the mock's estimates until real ones are measured (sprint 05).
 import { FRAMES } from '../frames';
 
+const hint = 'Cover fills the whole Frame. Fit shows the whole image.';
+const estimate: Record<string, string> = { full: '1.4 MB', standard: '0.5 MB' };
 const heroSizes = FRAMES.hero.sizes;
 ---
 
-<section class="ed-adjust" aria-label="Fill and scale">
-	<fieldset>
+<div class="adjust">
+	<fieldset class="ctl c-fit is-disabled">
 		<legend class="eyebrow">Fill</legend>
 		<div class="seg">
 			<label>
@@ -19,33 +23,78 @@ const heroSizes = FRAMES.hero.sizes;
 				Cover
 			</label>
 		</div>
+		<p class="ctl-hint">{hint}</p>
 	</fieldset>
-	<div class="scale">
-		<label class="eyebrow" for="scale-input">
-			Scale
+
+	<div class="ctl c-scale is-disabled">
+		<label class="eyebrow ctl-label" for="scale-in">
+			Scale{' '}
+			<output class="scale-out" for="scale-in">
+				–
+			</output>
 		</label>
-		<input
-			id="scale-input"
-			class="range"
-			type="range"
-			min="0"
-			max="1000"
-			value="0"
-			disabled
-		/>
+		<div class="range-wrap">
+			<input
+				id="scale-in"
+				class="range"
+				type="range"
+				min="0"
+				max="1000"
+				step="1"
+				value="500"
+				style="--fill: 50%"
+				disabled
+			/>
+			<div class="marks" aria-hidden="true">
+				<button
+					type="button"
+					class="mark"
+					tabindex="-1"
+					style="left: 30%"
+					disabled
+				>
+					Fit
+				</button>
+				<button
+					type="button"
+					class="mark"
+					tabindex="-1"
+					style="left: 50%"
+					disabled
+				>
+					Cover
+				</button>
+			</div>
+		</div>
+		<p class="soft" aria-live="polite"></p>
 	</div>
-	<p class="ed-hint hint-optional">
-		Cover fills the Frame. Fit shows the whole Original.
-	</p>
-	<fieldset class="saved-size">
+
+	<p class="ctl-hint adj-hint">{hint}</p>
+
+	<fieldset class="ctl c-size is-disabled">
 		<legend class="eyebrow">Saved size</legend>
-		<div class="seg">
-			{heroSizes.map((size) => (
-				<label>
-					<input type="radio" name="size" value={size.key} disabled />
-					{size.width}×{size.height}
-				</label>
-			))}
+		<div class="size-body">
+			<div role="radiogroup" aria-label="Hero size">
+				{heroSizes.map((size, i) => (
+					<label class="size-opt">
+						<input
+							type="radio"
+							name="hero-size"
+							value={size.key}
+							checked={i === 0}
+							disabled
+						/>
+						<span class="font-mono">
+							{size.width}×{size.height}
+						</span>
+						<span class="text-muted">{estimate[size.key]}</span>
+					</label>
+				))}
+			</div>
+			<p class="ctl-hint">
+				{heroSizes[0].width}×{heroSizes[0].height} is offered when the Original
+				is big enough.
+			</p>
 		</div>
 	</fieldset>
-</section>
+</div>

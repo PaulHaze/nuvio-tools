@@ -1,4 +1,8 @@
-/* ArtNuvio styles. Imported by ArtNuvio pages only; tokens and shell come from ../main.css. */
+/* ArtNuvio styles. Imported by ArtNuvio pages only; tokens and shell come from ../main.css.
+   Built to the accepted mock, docs/sprints/artmvp/html_UI_mocks/artnuvio-opus-v2.html. */
 @reference '../main.css';
 
+/* Order matters: layout.css holds the breakpoint overrides, so it comes last. */
+@import './controls.css';
 @import './editor.css';
+@import './layout.css';

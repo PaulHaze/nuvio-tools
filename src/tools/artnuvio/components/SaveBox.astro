@@ -1,0 +1,34 @@
+---
+// Name and Save. In the rail: Name, hint, then a full-width Save. When stacked: Name and
+// Save share a row, with the hint under them. Empty state: Save is disabled until there
+// is an Original; the Name field already works.
+import { FRAME_IDS, FRAMES } from '../frames';
+
+const picked = FRAMES[FRAME_IDS[0]];
+---
+
+<div class="ctl c-save">
+	<label class="eyebrow ctl-label" for="artwork-name">
+		Name <span class="name-label-hint">the Nuvio folder it's for</span>
+	</label>
+	<div class="save-row">
+		<div class="name-wrap">
+			<input
+				id="artwork-name"
+				type="text"
+				autocomplete="off"
+				placeholder="e.g. Serial Killer movies"
+				aria-describedby="name-hint"
+			/>
+		</div>
+		<button type="button" class="btn btn-save" disabled>
+			Save {picked.label}
+		</button>
+	</div>
+	<p class="name-hint" id="name-hint">
+		<span>
+			One Artwork per Frame per name, so a folder can have a Hero <em>and</em> a
+			Poster.
+		</span>
+	</p>
+</div>

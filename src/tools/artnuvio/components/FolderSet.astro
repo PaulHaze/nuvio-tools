@@ -1,0 +1,38 @@
+---
+// The folder's four Frames, from the FRAMES table. Empty state: no Name yet, so every
+// slot is an empty outline at its Frame's shape and the picked Frame says "Editing".
+import { FRAME_IDS, FRAMES } from '../frames';
+import Glyph from './Glyph.astro';
+
+const picked = FRAME_IDS[0];
+---
+
+<section class="setstrip" aria-label="Folder set">
+	<div class="set-head">
+		<span class="eyebrow">Folder set</span>
+		<span class="text-muted">
+			Type a Name to see which Frames that folder already has.
+		</span>
+	</div>
+	<div class="set-slots">
+		{FRAME_IDS.map((id) => {
+			const { label, aspect } = FRAMES[id];
+			const current = id === picked;
+			return (
+				<div class:list={['slot', { cur: current }]}>
+					<button type="button" class="slot-hit" aria-label={`Edit ${label}`}>
+						<span
+							class="thumb thumb-empty"
+							style={`aspect-ratio:${aspect.width} / ${aspect.height}`}
+						/>
+						<span class="slot-name">
+							<Glyph frame={id} size={11} />
+							{label}
+						</span>
+						<span class="slot-stat">{current ? 'Editing' : 'Not made'}</span>
+					</button>
+				</div>
+			);
+		})}
+	</div>
+</section>

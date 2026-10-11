@@ -1,22 +1,28 @@
 ---
-// The ArtNuvio editor layout (layout A, chosen in docs/sprints/artmvp/html_UI_mocks).
-// Desktop (1024px and up): preview, Original bar and folder set on the left; the control
-// panel on the right. Below 1024px it becomes one column in this order: Frame picker,
-// preview, Original bar, Fill and scale, Name and Save with the folder set, then the result.
+// The ArtNuvio editor, layout A (mock: docs/sprints/artmvp/html_UI_mocks/artnuvio-opus-v2.html).
+// From 1024px: two independent columns, the preview, Original bar and Folder set on the
+// left, and one sticky settings rail on the right. Below 1024px the CSS flattens both
+// columns into one: Frame row, preview, Original bar, Fill + Scale box, then one card for
+// Name + Save with the Folder set. The save result goes after it (sprint 09).
 import FramePicker from './FramePicker.astro';
 import Stage from './Stage.astro';
 import OriginalBar from './OriginalBar.astro';
+import FolderSet from './FolderSet.astro';
 import Adjust from './Adjust.astro';
-import SaveCard from './SaveCard.astro';
+import SaveBox from './SaveBox.astro';
 ---
 
-<div class="ed-editor">
-	<FramePicker />
-	<Stage />
-	<OriginalBar />
-	<Adjust />
-	<div class="ed-setsave">
-		<SaveCard />
+<section aria-label="Editor">
+	<div class="ed">
+		<div class="ed-col">
+			<Stage />
+			<OriginalBar />
+			<FolderSet />
+		</div>
+		<aside class="rail panel" aria-label="Artwork settings">
+			<FramePicker />
+			<Adjust />
+			<SaveBox />
+		</aside>
 	</div>
-	<div class="ed-receipt" hidden></div>
-</div>
+</section>

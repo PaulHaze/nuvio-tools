@@ -1,18 +1,21 @@
 ---
-// The Original bar under the preview. Empty shell: nothing to show or change yet.
+// The Original bar under the preview. Empty state: nothing to show, so the edge toggle
+// and New Original are disabled.
+import { Icon } from 'astro-icon/components';
 ---
 
-<div class="ed-orig">
-	<span class="orig-thumb" aria-hidden="true"></span>
+<div class="orig-bar">
+	<span class="orig-thumb">
+		<Icon name="lucide:image" />
+	</span>
 	<div class="orig-meta">
 		<span class="orig-name">No Original yet</span>
-		<span class="orig-dims eyebrow">Paste, drop or choose an image</span>
+		<span class="orig-dims">Paste (⌘V), drop, or choose an image</span>
 	</div>
-	<label class="orig-check">
-		<input type="checkbox" disabled />
-		<span>Show cropped edges</span>
+	<label class="check">
+		<input type="checkbox" disabled /> Show cropped edges
 	</label>
-	<button type="button" class="btn btn-ghost" disabled>
+	<button type="button" class="btn btn-ghost btn-sm" disabled>
 		New Original
 	</button>
 </div>

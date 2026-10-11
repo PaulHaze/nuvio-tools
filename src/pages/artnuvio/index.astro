@@ -1,6 +1,7 @@
 ---
 import Layout from '@/lib/ui/Layout.astro';
 import '@/styles/artnuvio/index.css';
+import ToolHead from '@/tools/artnuvio/components/ToolHead.astro';
 import Editor from '@/tools/artnuvio/components/Editor.astro';
 
 export const prerender = false;
@@ -11,21 +12,8 @@ export const prerender = false;
 	description="ArtNuvio frames art at Nuvio's exact shapes and hosts it at a permanent URL."
 	tool="artnuvio"
 >
-	<main class="shell-main">
-		<section class="hero-aurora shell-hero">
-			<p class="eyebrow">ArtNuvio / Editor</p>
-			<h1>
-				<span class="text-gradient">ArtNuvio</span>
-			</h1>
-			<p class="hero-copy">
-				Frame art at Nuvio's exact shapes. Every Artwork gets one URL for life.
-			</p>
-			<div class="hero-actions">
-				<a class="btn btn-ghost" href="/">
-					← Back to Nuvio Tools
-				</a>
-			</div>
-		</section>
+	<main class="artnuvio-main">
+		<ToolHead />
 		<Editor />
 	</main>
 </Layout>

@@ -50,13 +50,16 @@ database, going public (Turnstile, rate limits, takedowns). See "After the MVP" 
   Dragging works with touch as well as a mouse.
 - **Private:** `/artnuvio` is behind the site's Basic Auth from sprint 01. Every sprint can be
   deployed safely. Only `img.nuvio-tools.com` is public.
-- **Layout (chosen in sprint 01, mock `artnuvio-opus-v2`):** the Frame picker, preview, Original
-  bar, Fill/Scale, Name and Save, and the folder's four Frames sit in layout A. From 1024px the
-  control panel (Frame, Fill and scale, Saved size, Name and Save) is on the right and the
-  preview with the Original bar and folder set on the left. Below 1024px it is one column in that
-  order, with the result after Save. The page reflows at the real window width and works from
-  768px. Below 600px, the Frame buttons are stacked tiles, the Folder set is 2×2, and secondary
-  hints are hidden. Sprints after 01 build into this layout; they don't redesign it.
+- **Layout (chosen in sprint 01, mock `artnuvio-opus-v2`):** layout A, built in
+  `src/tools/artnuvio/components/` to match the mock 1:1. From 1024px there are two independent
+  columns: the preview, Original bar and Folder set on the left, and one sticky 21rem settings
+  rail on the right (Frame picker as a 2×2 grid, Fill, Scale, Saved size, Name and Save, with a
+  divider between sections). Below 1024px it is one column: the Frame row (four across), the
+  preview, the Original bar, one Fill + Scale box (with Saved size), then one card with Name and
+  Save on a row and the Folder set under it, then the save result. The page reflows at the real
+  window width; the page column is the site's 64rem, widening to 80rem from 1360px and 92rem
+  from 1800px. Below 600px, the Frame buttons are stacked tiles, the Folder set is 2×2, and
+  secondary hints are hidden. Sprints after 01 build into this layout; they don't redesign it.
 
 ## Sprints
 
