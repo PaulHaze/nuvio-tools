@@ -17,7 +17,7 @@
 		}
 	}
 
-	/* Empty state: the whole stage is the drop zone, with one paste box as the obvious start. */
+	/* Empty state: the whole stage is the drop zone, with paste and Choose file as the obvious start. */
 
 	:where(&) .drop {
 		@apply absolute inset-[40px_14px_14px] z-4 grid place-items-center overflow-auto rounded-(--radius) border-[1.5px] border-dashed border-(--card-border) p-5 text-center;
@@ -42,14 +42,6 @@
 				@apply mt-[0.3rem] text-[0.9rem] text-muted;
 			}
 
-			:where(&) .paste-row {
-				@apply mt-[1.1rem] flex w-full gap-2;
-
-				.artnuvio-main & input {
-					@apply flex-1 border-(--card-border) px-4 py-[0.8rem];
-				}
-			}
-
 			:where(&) .drop-or {
 				@apply mt-4 mb-[0.85rem] flex w-full items-center gap-3 text-[0.75rem] text-muted;
 
@@ -64,9 +56,21 @@
 			}
 		}
 	}
+
+	/* Canvas stays at the whole Frame aspect, contained within the preview area. */
+	:where(&) .preview {
+		@apply absolute inset-[40px_14px_14px] grid place-items-center overflow-hidden;
+
+		canvas {
+			@apply block bg-black;
+		}
+	}
+
+	&[data-dragging='1'] {
+		@apply outline-2 -outline-offset-2 outline-accent;
+	}
 }
 
-/* Original bar. */
 .orig-bar {
 	@apply flex min-h-[3.6rem] items-center gap-[0.9rem] rounded-(--radius) border border-border bg-(--card-bg) px-3 py-[0.6rem];
 
@@ -87,6 +91,14 @@
 
 		:where(&) .orig-dims {
 			@apply font-mono text-[0.72rem] text-muted;
+		}
+
+		:where(&) .original-message {
+			@apply min-h-[1.1rem] text-[0.8rem] text-accent-ink;
+		}
+
+		:where(&) .original-error {
+			@apply text-[0.8rem];
 		}
 	}
 }

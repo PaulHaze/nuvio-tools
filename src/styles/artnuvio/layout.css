@@ -276,6 +276,9 @@
 			@apply hidden;
 		}
 	}
+	.preview {
+		@apply inset-[40px_8px_8px];
+	}
 	.drop {
 		@apply inset-[40px_8px_8px] p-[0.9rem];
 
@@ -289,10 +292,6 @@
 
 		:where(&) .drop-lead {
 			@apply text-[0.82rem];
-		}
-
-		:where(&) .drop-anywhere {
-			@apply hidden;
 		}
 	}
 
