@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<!--
+  ArtNuvio clickable mockup (Opus v2): round 2, built on artnuvio-opus.html from mockup-notes.md.
+  Changes: layout A stacks into one column below 1024px (Frame row on top, Original bar, Fill+Scale box,
+  merged Name/Save + Folder set card), plus a first try at phone widths (390px). Library unchanged on desktop.
+  Throwaway UI/UX exploration. One self-contained file: inline CSS + vanilla JS, Google Fonts only.
+  Tokens and component classes are copied from site-style-reference.html (sections 1-3 below);
+  section 4 is new ArtNuvio UI built only from those tokens; section 5 is mockup chrome.
+  Sample images load from ./artnuvio_examples/ (a placeholder is drawn if one is missing).
+  The whole view state lives in the URL hash, so a link reproduces "this one".
+-->
+<html lang="en" data-page="artnuvio">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>ArtNuvio mockup · Opus v2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    /* =====================================================================
+       1. SITE TOKENS (copied from site-style-reference.html)
+       ===================================================================== */
+    :root {
+      --font-inter: 'Inter', sans-serif;
+      --font-outfit: 'Outfit', sans-serif;
+      --font-geist-mono: 'Geist Mono', ui-monospace, monospace;
+      --spacing: .25rem;
+      --container-5xl: 64rem;
+      --leading-normal: 1.5;
+      color-scheme: dark;
+      --bg: #080b16;
+      --surface-1: #111625;
+      --surface-2: #191f31;
+      --border: #343c52;
+      --text: #eef0fa;
+      --text-muted: #a6aec5;
+      --brand-from: #8580ff;
+      --brand-to: #ba94ff;
+      --brand-fill-from: #5145c9;
+      --brand-fill-to: #7142b8;
+      --accent: #a39bff;
+      --accent-hover: #b9b3ff;
+      --accent-tint: #a39bff12;
+      --accent-glow: #8b5cf638;
+      --accent-ink: #a39bff;
+      --on-accent: #101020;
+      --danger: #f87171;
+      --warning: #fbbf24;
+      --success: #4ade80;
+      --radius: 4px;
+      --glow-size: 10px;
+      --glow-hover: 24px;
+      --aurora-opacity: .45;
+      --glass-blur: 18px;
+      --hero-aurora-1: #6741d43b;
+      --hero-aurora-2: #315beb18;
+      --card-bg: color-mix(in srgb, var(--surface-1) 84%, transparent);
+      --pattern-dot: #a6aec520;
+    }
+
+    [data-page=artnuvio] { --bg: oklab(14.7602% -.000282128 -.0151283); }
+
+    [data-tool=artnuvio] {
+      --accent: #306fe0;
+      --accent-hover: #2663cb;
+      --accent-tint: #306fe016;
+      --accent-glow: #306fe040;
+      --accent-ink: #8fb8ff;
+      --on-accent: #fff;
+    }
+
+    :root, [data-tool] { --card-border: color-mix(in srgb, var(--accent) 30%, var(--border)); }
+    [data-tool] { --hero-aurora-1: var(--accent-glow); --hero-aurora-2: var(--accent-tint); }
+
+    /* =====================================================================
+       2. SITE BASE (copied)
+       ===================================================================== */
+    *, :after, :before, ::backdrop { box-sizing: border-box; border: 0 solid; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; line-height: 1.5; font-family: var(--font-inter); -webkit-tap-highlight-color: transparent;
+      background-color: var(--bg); background-image: radial-gradient(var(--pattern-dot) .7px, transparent .9px);
+      background-size: 16px 16px; background-attachment: fixed; }
+    body { font-family: var(--font-inter); color: var(--text); background-color: #0000; line-height: 1.6; }
+    h1, h2, h3, h4, h5, h6 { font-family: var(--font-outfit); line-height: 1.2; font-weight: 600; font-size: inherit; }
+    h2 { letter-spacing: -.02em; font-size: 1.95rem; }
+    h3 { font-size: 1.4rem; }
+    a { color: inherit; text-decoration: inherit; }
+    ol, ul, menu { list-style: none; }
+    img, svg { vertical-align: middle; display: block; }
+    img { max-width: 100%; height: auto; }
+    button, input, select, textarea { font: inherit; letter-spacing: inherit; color: inherit; background-color: #0000; border-radius: 0; }
+    button { cursor: pointer; }
+    code, kbd { font-family: var(--font-geist-mono); font-size: 1em; }
+    [hidden]:where(:not([hidden=until-found])) { display: none !important; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    input[type=checkbox], input[type=radio] { accent-color: var(--accent); }
+    fieldset { min-width: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, :before, :after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+
+    /* =====================================================================
+       3. SITE COMPONENTS (copied: shell, card, panel, buttons, badge, forms, dialog, range)
+       ===================================================================== */
+    .text-gradient { -webkit-background-clip: text; background-clip: text; background-image: linear-gradient(105deg, var(--brand-from), var(--brand-to)); -webkit-text-fill-color: transparent; }
+    [data-tool] .text-gradient { background-image: linear-gradient(105deg, var(--accent-ink), color-mix(in srgb, var(--accent-ink) 60%, #fff)); }
+    .eyebrow { font-family: var(--font-geist-mono); font-size: .75rem; line-height: var(--leading-normal); font-weight: 500; letter-spacing: .15em; color: var(--text-muted); text-transform: uppercase; }
+    .card, .panel { border-radius: var(--radius); border: 1px solid var(--card-border); background-color: var(--card-bg);
+      box-shadow: 0 0 var(--glow-size) var(--accent-glow); -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur)); }
+    .panel { padding: calc(var(--spacing) * 6); }
+    .hero-aurora { isolation: isolate; position: relative; }
+    .hero-aurora:before { pointer-events: none; z-index: -1; opacity: var(--aurora-opacity); content: "";
+      background: radial-gradient(ellipse at 55% 30%, var(--hero-aurora-1), transparent 65%), radial-gradient(ellipse at 20% 60%, var(--hero-aurora-2), transparent 60%);
+      position: absolute; inset: -30px -20px -20px; }
+    .badge, .pill { border: 1px solid var(--card-border); background-color: var(--accent-tint); padding-inline: calc(var(--spacing) * 2); white-space: nowrap; color: var(--accent-ink); border-radius: 999px; padding-block: .15rem; font-size: .7rem; }
+    .btn { border-radius: var(--radius); background-color: var(--accent); font-size: .85rem; font-weight: 600; color: var(--on-accent); border: 1px solid #0000;
+      transition: background .16s, box-shadow .16s, transform .16s, border-color .16s; display: inline-flex; justify-content: center; align-items: center; gap: .6rem; padding: .7rem 1.1rem; text-decoration: none; white-space: nowrap; }
+    .btn:active:not(:disabled) { transform: translateY(1px) scale(.98); }
+    @media (hover:hover) { .btn:hover:not(:disabled) { background-color: var(--accent-hover); box-shadow: 0 0 var(--glow-hover) var(--accent-glow); } }
+    .btn-ghost { border-color: var(--border); color: var(--text); background-color: #0000; }
+    @media (hover:hover) { .btn-ghost:hover:not(:disabled) { border-color: var(--accent); background-color: var(--accent-tint); box-shadow: none; } }
+
+    .brand-header { border-top: 2px solid var(--brand-from); border-bottom: 1px solid var(--border);
+      background: linear-gradient(100deg, color-mix(in srgb, var(--brand-fill-from) 11%, transparent), color-mix(in srgb, var(--brand-fill-to) 4%, transparent)); }
+    .brand-header-inner { max-width: var(--tool-max, var(--container-5xl)); align-items: center; gap: calc(var(--spacing) * 8); padding: calc(var(--spacing) * 5) calc(var(--spacing) * 6); flex-wrap: wrap; margin-inline: auto; display: flex; }
+    .wordmark { align-items: center; gap: calc(var(--spacing) * 3); font-family: var(--font-outfit); font-weight: 700; font-size: 1.45rem; white-space: nowrap; display: flex; }
+    .brand-icon { width: 2.3rem; height: 2.3rem; color: #fff; background: linear-gradient(140deg, var(--brand-fill-from), var(--brand-fill-to)); border-radius: 8px; place-items: center; font-size: 1.2rem; display: grid; }
+    .brand-header nav { gap: calc(var(--spacing) * 7); color: var(--text-muted); margin-left: auto; font-size: .9rem; display: flex; }
+    .brand-header nav a { border-bottom: 2px solid #0000; padding-block: var(--spacing); }
+    .brand-header nav a:hover, .brand-header nav a[aria-current=page] { color: var(--text); }
+    .brand-header nav a[aria-current=page] { border-bottom-color: var(--brand-from); }
+    .brand-header :focus-visible { outline-color: var(--brand-from); }
+
+    /* Listio form styles, rescoped to .tool-ui / .dlg (the only forms on the site today) */
+    .tool-ui :is(input:not([type=checkbox], [type=radio], [type=range]), select, textarea),
+    .dlg :is(input:not([type=checkbox], [type=radio]), select, textarea) {
+      border-radius: var(--radius); border: 1px solid var(--border); background-color: var(--surface-2);
+      padding: .6rem calc(var(--spacing) * 3); color: var(--text); font: inherit; min-width: 0; }
+    .tool-ui :is(input, textarea)::placeholder, .dlg :is(input, textarea)::placeholder { color: var(--text-muted); }
+    .tool-ui :is(input:not([type=checkbox], [type=radio]), select, textarea):focus-visible,
+    .dlg :is(input:not([type=checkbox], [type=radio]), select, textarea):focus-visible { outline-offset: 2px; }
+    .error { color: var(--danger); }
+    .text-muted { color: var(--text-muted); }
+    .text-danger { color: var(--danger); }
+    .text-warning { color: var(--warning); }
+    .text-success { color: var(--success); }
+    .font-mono, .mono { font-family: var(--font-geist-mono); }
+    .sr-only { clip-path: inset(50%); white-space: nowrap; width: 1px; height: 1px; margin: -1px; overflow: hidden; position: absolute; }
+
+    /* Listio dialog (.collection-dialog), renamed .dlg */
+    .dlg { background-color: var(--surface-1); width: min(31rem, 100vw - 2rem); max-height: calc(100vh - 2rem); color: var(--text); margin: auto;
+      border: 1px solid var(--card-border); border-radius: var(--radius); box-shadow: 0 0 var(--glow-size) var(--accent-glow), 0 20px 60px #0009; }
+    .dlg::backdrop { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); background-color: #0009; }
+
+    /* Proposed range slider from the reference (accent fill, 5px track, accent thumb with a --text ring) */
+    .range { --fill: 20%; appearance: none; -webkit-appearance: none; width: 100%; height: 5px; border-radius: 10px;
+      background: linear-gradient(to right, var(--accent) var(--fill), var(--border) var(--fill)); margin: 12px 0; cursor: pointer; display: block; }
+    .range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; background: var(--accent); border: 2px solid var(--text); border-radius: 50%; }
+    .range::-moz-range-track { background: transparent; }
+    .range::-moz-range-thumb { width: 11px; height: 11px; background: var(--accent); border: 2px solid var(--text); border-radius: 50%; }
+    .range:disabled { cursor: not-allowed; }
+
+    /* =====================================================================
+       4. ARTNUVIO UI (new, built from the tokens above)
+       ===================================================================== */
+    /* Width: the editor wants more room than the 64rem site column on big screens. */
+    #viewport { --tool-max: var(--container-5xl); }
+    @container vp (width >= 1360px) { .brand-header-inner, .tool-main { --tool-max: 80rem; } }
+    @container vp (width >= 1800px) { .brand-header-inner, .tool-main { --tool-max: 92rem; } }
+
+    .tool-main { max-width: var(--tool-max); margin-inline: auto; padding: 0 calc(var(--spacing) * 6) calc(var(--spacing) * 16); }
+    .tool-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; padding: 2.25rem 0 1.5rem; }
+    .tool-title { font-size: 2.6rem; letter-spacing: -.04em; line-height: 1.05; margin: .35rem 0 .4rem; }
+    .tool-sub { color: var(--text-muted); max-width: 36rem; font-size: .95rem; }
+
+    .tool-tabs { display: flex; gap: .5rem; }
+    .tool-tabs .btn[aria-pressed=false] { border-color: var(--border); color: var(--text); background: #0000; }
+    @media (hover:hover) { .tool-tabs .btn[aria-pressed=false]:hover { border-color: var(--accent); background: var(--accent-tint); box-shadow: none; } }
+    .tab-count { font-family: var(--font-geist-mono); font-size: .72rem; font-weight: 500; opacity: .8; }
+
+    .btn svg, .icon-btn svg, .link svg { width: 1em; height: 1em; flex: none; }
+    .btn.sm { padding: .45rem .75rem; font-size: .78rem; gap: .4rem; }
+    .btn.xs { padding: .28rem .55rem; font-size: .72rem; gap: .35rem; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-danger { background: #0000; border-color: var(--danger); color: var(--danger); }
+    @media (hover:hover) { .btn-danger:hover:not(:disabled) { background: color-mix(in srgb, var(--danger) 12%, transparent); box-shadow: none; } }
+    .btn-danger-solid { background: var(--danger); color: #230707; }
+    @media (hover:hover) { .btn-danger-solid:hover:not(:disabled) { background: color-mix(in srgb, var(--danger) 85%, #fff); box-shadow: none; } }
+    .btn-replace { background: var(--warning); color: #1f1600; }
+    @media (hover:hover) { .btn-replace:hover:not(:disabled) { background: color-mix(in srgb, var(--warning) 80%, #fff); box-shadow: 0 0 var(--glow-hover) color-mix(in srgb, var(--warning) 30%, transparent); } }
+    .link { color: var(--accent-ink); font-weight: 600; font-size: .8rem; display: inline-flex; align-items: center; gap: .3rem; border-radius: 2px; }
+    @media (hover:hover) { .link:hover { text-decoration: underline; text-underline-offset: 3px; } }
+
+    .icon-btn { width: 30px; height: 30px; display: inline-grid; place-items: center; border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-muted); transition: border-color .16s, color .16s, background .16s; }
+    @media (hover:hover) { .icon-btn:hover { border-color: var(--accent); color: var(--text); background: var(--accent-tint); }
+      .icon-btn.danger:hover { border-color: var(--danger); color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); } }
+
+    kbd { font-size: .72rem; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 3px; padding: 0 .35rem; background: var(--surface-2); color: var(--text); }
+    mark { background: none; color: var(--accent-ink); font-weight: 600; }
+
+    /* Frame shape glyph: a tiny outline at the Frame's real proportions */
+    .glyph { display: inline-block; border: 1.5px solid currentColor; border-radius: 1.5px; vertical-align: -1px; flex: none; }
+
+    /* Segmented control (radio group) */
+    .seg { display: inline-flex; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); padding: 2px; gap: 2px; }
+    .seg label { position: relative; padding: .42rem .85rem; border-radius: 3px; font-weight: 600; font-size: .8rem; color: var(--text-muted); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap; }
+    .seg input { position: absolute; opacity: 0; pointer-events: none; }
+    .seg label:has(input:checked) { background: var(--accent); color: var(--on-accent); }
+    .seg label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+    @media (hover:hover) { .seg label:hover:not(:has(input:checked)) { color: var(--text); } }
+    .seg label:has(input:disabled) { cursor: not-allowed; opacity: .5; }
+
+    /* Thumbnails: always at the Frame's real shape. Image placed with the same maths as the editor. */
+    .thumb { position: relative; display: block; overflow: hidden; background: #000; border-radius: 2px; flex: none; }
+    .thumb img, .frame img, .ghost img { position: absolute; max-width: none; max-height: none; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+    .thumb-empty { background: #0000; border: 1.5px dashed var(--border); }
+
+    /* ---------- Editor shared ---------- */
+    .ctl { display: flex; flex-direction: column; gap: .5rem; }
+    .ctl > .seg { align-self: flex-start; }
+    .ctl > legend, .ctl-label { padding: 0; margin-bottom: .5rem; display: flex; justify-content: space-between; align-items: baseline; width: 100%; }
+    .ctl-hint { font-size: .78rem; color: var(--text-muted); line-height: 1.45; }
+    .is-disabled { opacity: .45; }
+    .is-disabled * { cursor: not-allowed !important; }
+
+    .stage { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: #05070e; }
+    .stage-cap { position: absolute; top: 0; left: 0; right: 0; height: 40px; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      font: 500 .7rem var(--font-geist-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); z-index: 3; pointer-events: none; }
+    .stage-cap .cap-left { display: flex; align-items: center; gap: .55rem; color: var(--text); white-space: nowrap; }
+    .stage-cap .cap-tag { color: #1f1600; background: var(--warning); padding: .1rem .45rem; border-radius: 2px; letter-spacing: .12em; }
+    .stage-cap .cap-right { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .frame { position: absolute; background: #000; overflow: hidden; cursor: grab; outline: 1px solid rgba(238, 240, 250, .3); z-index: 2; touch-action: none; user-select: none; -webkit-user-select: none; }
+    .stage.ready .frame, .stage.ready .ghost { transition: left .26s cubic-bezier(.4, 0, .2, 1), top .26s cubic-bezier(.4, 0, .2, 1), width .26s cubic-bezier(.4, 0, .2, 1), height .26s cubic-bezier(.4, 0, .2, 1); }
+    .stage.dragging .frame { cursor: grabbing; }
+    .stage.dragging .frame, .stage.dragging .ghost { transition: none; }
+    .frame:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+    .ghost { position: absolute; pointer-events: none; display: none; z-index: 1; }
+    .show-ghost .ghost { display: block; }
+    .ghost img { opacity: .2; }
+    .stage[data-has="0"] .frame, .stage[data-has="0"] .ghost { display: none; }
+    .is-replace .stage { border-color: color-mix(in srgb, var(--warning) 60%, var(--border)); }
+
+    /* Empty state: the whole stage is the drop zone, with one paste box as the obvious start */
+    .drop { position: absolute; inset: 40px 14px 14px; border: 1.5px dashed var(--card-border); border-radius: var(--radius); display: grid; place-items: center; text-align: center; padding: 1.25rem; z-index: 4;
+      background: color-mix(in srgb, var(--accent) 3%, #05070e); overflow: auto; }
+    .drop-inner { width: 100%; max-width: 34rem; display: flex; flex-direction: column; align-items: center; }
+    .drop-icon { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border: 1px solid var(--card-border); background: var(--accent-tint); color: var(--accent-ink); border-radius: var(--radius); margin-bottom: .9rem; }
+    .drop-icon svg { width: 1.3rem; height: 1.3rem; }
+    .drop-title { font-size: 1.45rem; letter-spacing: -.02em; }
+    .drop-lead { color: var(--text-muted); font-size: .9rem; margin-top: .3rem; }
+    .paste-row { display: flex; gap: .5rem; margin-top: 1.1rem; width: 100%; }
+    .paste-row input { flex: 1; font-size: .95rem; padding: .8rem 1rem !important; border-color: var(--card-border) !important; }
+    .paste-row input[aria-invalid=true] { border-color: var(--danger) !important; }
+    .url-err { margin-top: .7rem; width: 100%; text-align: left; display: flex; gap: .6rem; align-items: flex-start; padding: .7rem .85rem; border: 1px solid color-mix(in srgb, var(--danger) 45%, var(--border));
+      background: color-mix(in srgb, var(--danger) 8%, transparent); border-radius: var(--radius); font-size: .85rem; color: var(--text); }
+    .url-err svg { color: var(--danger); width: 1.1rem; height: 1.1rem; flex: none; margin-top: .15rem; }
+    .url-err b { color: var(--danger); }
+    .drop-or { display: flex; align-items: center; gap: .75rem; width: 100%; margin: 1rem 0 .85rem; color: var(--text-muted); font-size: .75rem; }
+    .drop-or:before, .drop-or:after { content: ""; flex: 1; border-top: 1px solid var(--border); }
+    .drop-file { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; justify-content: center; font-size: .85rem; }
+    .drop-samples { margin-top: 1.1rem; font-size: .75rem; color: var(--text-muted); display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; align-items: center; }
+    .drop-samples button { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; border-radius: 2px; }
+
+    .loading { position: absolute; inset: 40px 14px 14px; display: grid; place-items: center; text-align: center; z-index: 5; background: #05070e; border-radius: var(--radius); }
+    .spinner { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--accent); animation: spin .8s linear infinite; margin: 0 auto 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-url { font-family: var(--font-geist-mono); font-size: .75rem; color: var(--text-muted); max-width: 30rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: .3rem auto 1rem; }
+
+    .orig-bar { display: flex; align-items: center; gap: .9rem; padding: .6rem .75rem; margin-top: .75rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card-bg); min-height: 3.6rem; }
+    .orig-thumb { width: 40px; height: 40px; flex: none; display: grid; place-items: center; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
+    .orig-thumb img { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+    .orig-thumb svg { width: 1.1rem; height: 1.1rem; color: var(--text-muted); }
+    .orig-meta { display: flex; flex-direction: column; min-width: 0; flex: 1; line-height: 1.35; }
+    .orig-name { font-weight: 600; font-size: .88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .orig-dims { font-family: var(--font-geist-mono); font-size: .72rem; color: var(--text-muted); }
+    .check { display: inline-flex; gap: .45rem; align-items: center; font-size: .8rem; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+
+    /* Replace mode banner: amber edge + "now in Nuvio" thumbnail so it can't be mistaken for a new save */
+    .replace-banner { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 1.25rem; align-items: center; padding: .9rem 1.1rem; margin-bottom: 1rem;
+      border: 1px solid color-mix(in srgb, var(--warning) 45%, var(--border)); border-left: 4px solid var(--warning);
+      background: color-mix(in srgb, var(--warning) 6%, var(--surface-1)); border-radius: var(--radius); }
+    .rb-now { display: flex; flex-direction: column; gap: .3rem; align-items: center; }
+    .rb-now .thumb { height: 64px; }
+    .rb-now span.eyebrow { font-size: .62rem; }
+    .rb-eyebrow { color: var(--warning); display: flex; align-items: center; gap: .4rem; }
+    .rb-eyebrow svg { width: .95rem; height: .95rem; }
+    .rb-title { font-size: 1.35rem; margin: .1rem 0 .25rem; }
+    .rb-title .rb-frame { color: var(--warning); }
+    .rb-body p { font-size: .85rem; color: var(--text-muted); }
+    .rb-body code { color: var(--text); font-size: .78rem; }
+
+    /* Frame picker (layout A) */
+    .fpick { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+    .fopt { position: relative; display: grid; grid-template-columns: 26px 1fr; grid-template-rows: auto auto; column-gap: .6rem; align-items: center; padding: .55rem .65rem;
+      border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; background: var(--surface-2); transition: border-color .16s, background .16s; }
+    .fopt input { position: absolute; opacity: 0; pointer-events: none; }
+    .fopt .fshape { grid-row: 1 / 3; display: grid; place-items: center; width: 26px; height: 26px; color: var(--text-muted); }
+    .fopt .fname { font-weight: 600; font-size: .85rem; line-height: 1.2; display: flex; align-items: center; gap: .35rem; }
+    .fopt .fsize { font-family: var(--font-geist-mono); font-size: .68rem; color: var(--text-muted); line-height: 1.3; }
+    .fopt .fstat { position: absolute; top: .35rem; right: .4rem; color: var(--success); }
+    .fopt .fstat svg { width: .8rem; height: .8rem; }
+    .fopt:has(input:checked) { border-color: var(--accent); background: var(--accent-tint); }
+    .fopt:has(input:checked) .fshape { color: var(--accent-ink); }
+    .fopt:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .fopt:has(input:disabled) { opacity: .4; cursor: not-allowed; }
+    @media (hover:hover) { .fopt:hover:not(:has(input:checked, input:disabled)) { border-color: var(--card-border); } }
+
+    .range-wrap { position: relative; padding-bottom: 1.1rem; }
+    .marks { position: absolute; left: 7px; right: 7px; bottom: 0; height: 1.1rem; }
+    .mark { position: absolute; transform: translateX(-50%); font: 500 .62rem var(--font-geist-mono); color: var(--text-muted); letter-spacing: .06em; text-transform: uppercase; padding: 0 .2rem; border-radius: 2px; }
+    .mark:before { content: ""; position: absolute; left: 50%; top: -9px; width: 1px; height: 6px; background: var(--text-muted); }
+    .mark.on { color: var(--accent-ink); }
+    @media (hover:hover) { .mark:hover { color: var(--text); } }
+    .scale-out { font-family: var(--font-geist-mono); color: var(--text); letter-spacing: 0; text-transform: none; }
+    .soft { min-height: 2.5rem; font-size: .78rem; line-height: 1.4; display: flex; gap: .45rem; align-items: flex-start; color: var(--text-muted); }
+    .soft svg { width: .95rem; height: .95rem; flex: none; margin-top: .1rem; }
+    .soft.warn { color: var(--warning); }
+
+    .size-body { min-height: 4.6rem; display: flex; flex-direction: column; gap: .35rem; }
+    .size-opt { display: flex; align-items: center; gap: .55rem; font-size: .85rem; cursor: pointer; padding: .15rem 0; }
+    .size-opt .mono { font-size: .8rem; }
+    .size-opt .text-muted { font-size: .78rem; }
+    .size-fixed { display: flex; gap: .6rem; align-items: baseline; font-size: .85rem; }
+
+    .savebox input#nameIn { width: 100%; }
+    .name-label-hint { font-family: var(--font-inter); text-transform: none; letter-spacing: 0; font-size: .75rem; color: var(--text-muted); font-weight: 400; }
+    .name-hint { min-height: 2.3rem; font-size: .78rem; line-height: 1.4; color: var(--text-muted); display: flex; gap: .4rem; align-items: flex-start; }
+    .name-hint svg { width: .9rem; height: .9rem; flex: none; margin-top: .12rem; }
+    .name-hint.warn { color: var(--warning); }
+    .name-wrap { position: relative; }
+    .name-wrap .lock { position: absolute; right: .7rem; top: 50%; transform: translateY(-50%); color: var(--warning); width: .95rem; height: .95rem; }
+    input#nameIn[readonly] { border-color: color-mix(in srgb, var(--warning) 40%, var(--border)) !important; color: var(--text-muted) !important; padding-right: 2.2rem !important; }
+    .btn-save { width: 100%; padding-block: .8rem; font-size: .9rem; }
+    /* The input + Save share a row wrapper. In the rail and dock it dissolves, so the order stays Name, hint, Save. */
+    .save-row { display: contents; }
+    .savebox .name-hint { order: 1; }
+    .savebox .btn-save { order: 2; }
+    .savebox .conflict-box { order: 3; }
+    .adj-hint { display: none; }
+
+    .conflict-box { margin-top: .5rem; display: grid; grid-template-columns: auto 1fr; gap: .8rem; padding: .8rem; border: 1px solid color-mix(in srgb, var(--warning) 50%, var(--border));
+      background: color-mix(in srgb, var(--warning) 7%, transparent); border-radius: var(--radius); font-size: .85rem; }
+    .conflict-box .thumb { height: 54px; }
+    .conflict-box p + p { color: var(--text-muted); font-size: .78rem; margin-top: .2rem; }
+    .conflict-actions { display: flex; gap: .5rem; margin-top: .6rem; flex-wrap: wrap; }
+
+    .receipt { border: 1px solid color-mix(in srgb, var(--success) 40%, var(--border)); background: color-mix(in srgb, var(--success) 5%, var(--surface-1)); border-radius: var(--radius); padding: .9rem 1rem; }
+    .receipt-title { display: flex; gap: .5rem; align-items: center; font-weight: 600; font-size: .9rem; }
+    .receipt-title svg { color: var(--success); width: 1.05rem; height: 1.05rem; flex: none; }
+    .receipt .url { margin: .5rem 0 .7rem; }
+    .receipt-sub { font-size: .8rem; color: var(--text-muted); margin-top: .2rem; }
+    .receipt-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .next { margin-top: .85rem; padding-top: .75rem; border-top: 1px solid var(--border); }
+    .next .eyebrow { font-size: .65rem; display: block; margin-bottom: .45rem; }
+    .chips { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .chip { display: inline-flex; align-items: center; gap: .4rem; padding: .32rem .65rem; border: 1px solid var(--card-border); border-radius: 999px; font-size: .78rem; font-weight: 600; color: var(--accent-ink); background: var(--accent-tint); }
+    @media (hover:hover) { .chip:hover { border-color: var(--accent); color: var(--text); } }
+    .url { font-family: var(--font-geist-mono); font-size: .76rem; color: var(--text-muted); overflow-wrap: anywhere; line-height: 1.4; }
+
+    /* ---------- Editor layout A: stage + side rail ---------- */
+    .ed-a { display: grid; grid-template-columns: minmax(0, 1fr) 21rem; gap: 1.25rem; align-items: start; }
+    .ed-a .stage { height: clamp(380px, 40cqw, 680px); }
+    .ed-a .rail { padding: 1.1rem; display: flex; flex-direction: column; gap: .9rem; position: sticky; top: 1rem; }
+    .ed-a .rail > * + * { padding-top: .85rem; border-top: 1px solid var(--border); }
+    .ed-a .rail > .receipt { border-top: 1px solid color-mix(in srgb, var(--success) 40%, var(--border)); padding-top: .9rem; }
+    /* Below 1024px layout A is swapped for the stacked layout (.ed-s, below), so no narrow rail rules here. */
+
+    /* ---------- Editor layout A, stacked (v2): viewport below 1024px ----------
+       Order: Frame row > preview > Original bar > Fill + Scale box > Name/Save + Folder set card > result. */
+    .ed-s { display: flex; flex-direction: column; gap: .85rem; }
+    .ed-s .c-pick > legend { margin-bottom: .45rem; }
+    .ed-s .fpick { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .ed-s .stage { height: clamp(320px, 54cqw, 520px); }
+    .ed-s .orig-bar { margin-top: 0; }
+
+    /* Fill + Scale: one self-contained box, Fit/Cover and the slider on one row, one hint line under both */
+    .adjust { padding: .9rem 1.1rem; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 1.5rem; align-items: start; }
+    .adjust .c-fit .ctl-hint { display: none; }
+    .adjust .c-fit > legend, .adjust .c-scale > .ctl-label { margin-bottom: .35rem; }
+    .adjust .range-wrap { margin-top: -2px; }
+    .adjust .soft { min-height: 0; margin-top: .15rem; }
+    .adjust .soft:empty { display: none; }
+    .adjust .adj-hint { display: block; grid-column: 1 / -1; margin-top: .4rem; }
+    .adjust .c-size { grid-column: 1 / -1; margin-top: .75rem; padding-top: .7rem; border-top: 1px solid var(--border); gap: .2rem; }
+    .adjust .c-size > legend { float: left; width: 100%; margin-bottom: .3rem; }
+    .adjust .size-body { min-height: 0; flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: .2rem 1.1rem; }
+    .adjust .size-body [role=radiogroup] { display: flex; flex-wrap: wrap; gap: .1rem 1.1rem; }
+    .adjust .size-body .ctl-hint { flex-basis: 100%; }
+
+    /* Name + Save and the Folder set as one card: Name on the left, Save on the right, the set underneath */
+    .setsave { padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: .2rem; }
+    .setsave .save-row { display: flex; gap: .6rem; align-items: stretch; }
+    .setsave .name-wrap { flex: 1; min-width: 0; }
+    .setsave .btn-save { width: auto; flex: none; padding-inline: 1.4rem; }
+    .setsave .name-hint { min-height: 1.3rem; }
+    .setsave .setstrip { margin: .35rem 0 0; padding: .85rem 0 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; background: none; }
+    .ed-s .receipt.c-rec { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem 1.5rem; align-items: center; }
+    .ed-s .receipt.c-rec[hidden] { display: none; }
+    .ed-s .receipt .next { grid-column: 1 / -1; margin-top: .2rem; }
+
+
+    /* Folder set strip under the stage (layout A) */
+    .setstrip { margin-top: .75rem; padding: .85rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card-bg); }
+    .set-head { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; margin-bottom: .7rem; font-size: .88rem; }
+    .set-head b { font-family: var(--font-outfit); font-size: 1.05rem; font-weight: 600; }
+    .set-slots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }
+    .slot { display: flex; flex-direction: column; gap: .35rem; align-items: flex-start; padding: .5rem; border-radius: var(--radius); border: 1px solid #0000; text-align: left; min-width: 0; }
+    .slot-hit { display: flex; flex-direction: column; gap: .35rem; align-items: flex-start; width: 100%; border-radius: 2px; text-align: left; }
+    .slot .thumb { height: 56px; }
+    .slot.cur { border-color: var(--accent); background: var(--accent-tint); }
+    .slot-name { font-size: .8rem; font-weight: 600; display: flex; gap: .35rem; align-items: center; }
+    .slot-stat { font-size: .7rem; color: var(--text-muted); line-height: 1.3; }
+    .slot-stat.ok { color: var(--success); }
+    .slot .btn.xs { max-width: 100%; }
+
+    /* ---------- Editor layout B: contact sheet (stage on top, live Frame tiles, horizontal dock) ---------- */
+    .ed-b .stage { height: clamp(340px, 38cqw, 600px); }
+    .tiles { display: flex; gap: .85rem; margin-top: 1rem; align-items: stretch; --tile-h: 96px; }
+    @container vp (width >= 1360px) { .tiles { --tile-h: 118px; } }
+    @container vp (width < 980px) { .tiles { --tile-h: 74px; gap: .6rem; } .ed-b .stage { height: clamp(340px, 50cqw, 460px); } }
+    .tile { display: flex; flex-direction: column; gap: .5rem; padding: .6rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card-bg); text-align: left; min-width: 8.5rem; transition: border-color .16s, background .16s; }
+    .tile .thumb { height: var(--tile-h); }
+    .tile[aria-pressed=true] { border-color: var(--accent); background: var(--accent-tint); }
+    .tile:disabled { opacity: .38; cursor: not-allowed; }
+    @media (hover:hover) { .tile:hover:not(:disabled, [aria-pressed=true]) { border-color: var(--card-border); } }
+    .tile-meta { display: flex; flex-direction: column; line-height: 1.3; }
+    .tile-name { font-weight: 600; font-size: .85rem; display: flex; align-items: center; gap: .4rem; }
+    .tile-name svg { width: .8rem; height: .8rem; color: var(--warning); }
+    .tile-meta .mono { font-size: .68rem; color: var(--text-muted); }
+    .tile-stat { font-size: .7rem; color: var(--text-muted); display: flex; align-items: center; gap: .3rem; margin-top: .15rem; }
+    .tile-stat svg { width: .75rem; height: .75rem; }
+    .tile-stat.ok { color: var(--success); }
+    .tile-stat.cur { color: var(--accent-ink); }
+    .tiles-note { margin-left: auto; align-self: center; max-width: 15rem; font-size: .75rem; color: var(--text-muted); }
+    @container vp (width < 1200px) { .tiles-note { display: none; } }
+
+    .dock { margin-top: 1rem; padding: 1rem 1.15rem; display: grid; gap: 1rem 1.75rem; align-items: start;
+      grid-template-columns: auto minmax(13rem, 1fr) minmax(12rem, auto) minmax(17rem, 1.1fr); grid-template-areas: "fit scale size save"; }
+    .dock .c-fit { grid-area: fit; } .dock .c-scale { grid-area: scale; } .dock .c-size { grid-area: size; } .dock .c-save { grid-area: save; }
+    @container vp (width < 1240px) { .dock { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "fit scale" "size save"; } }
+    .ed-b .c-rec { margin-top: 1rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem 1.5rem; align-items: center; }
+    .ed-b .c-rec[hidden] { display: none; }
+    .ed-b .c-rec .next { grid-column: 1 / -1; margin-top: .2rem; }
+
+    @container vp (width < 1024px) {
+      .tool-head { padding: 1.6rem 0 1.1rem; }
+      .tool-title { font-size: 2.2rem; }
+    }
+
+    /* ---------- Library shared ---------- */
+    .lib-tools { display: flex; align-items: flex-end; gap: 1rem 1.5rem; flex-wrap: wrap; padding-bottom: 1rem; }
+    .lib-filter { display: flex; flex-direction: column; gap: .35rem; flex: 1 1 16rem; max-width: 22rem; }
+    .lib-filter input { width: 100%; }
+    .lib-show { display: flex; flex-direction: column; gap: .35rem; }
+    .lib-summary { margin-left: auto; font-size: .8rem; color: var(--text-muted); text-align: right; display: flex; flex-direction: column; gap: .2rem; align-items: flex-end; }
+    .lib-summary .link { font-size: .75rem; }
+    .lib-hint { font-size: .78rem; color: var(--text-muted); margin: -.25rem 0 1rem; display: flex; gap: .45rem; align-items: center; }
+    .lib-hint svg { width: .9rem; height: .9rem; color: var(--accent-ink); }
+    .lib-empty { padding: 3rem 1rem; text-align: center; color: var(--text-muted); border: 1px dashed var(--border); border-radius: var(--radius); }
+    .copied-tick { font-size: .7rem; color: var(--success); display: inline-flex; align-items: center; gap: .25rem; white-space: nowrap; }
+    .copied-tick svg { width: .75rem; height: .75rem; }
+    .btn-copy.flash { background: var(--success); color: #04220f; }
+
+    /* Library layout A: Shelf. Fixed Frame columns, one row per folder, equal thumbnail heights. */
+    .shelf { --th: 104px; --colmin: 9.75rem; }
+    @container vp (width >= 1360px) { .shelf { --th: 124px; } }
+    .shelf-head, .shelf-row { display: grid; gap: .75rem 1.25rem; align-items: start;
+      grid-template-columns: minmax(10rem, 1fr) repeat(2, max(var(--colmin), calc(var(--th) * 16 / 9))) repeat(2, var(--colmin)); }
+    .shelf-head { position: sticky; top: 0; z-index: 3; padding: .65rem 0; border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg) 92%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+    .sh-col { font-weight: 600; font-size: .85rem; display: flex; flex-direction: column; line-height: 1.3; }
+    .sh-col > span { display: flex; align-items: center; gap: .45rem; }
+    .sh-col small { font: 400 .68rem var(--font-geist-mono); color: var(--text-muted); }
+    .sh-name { font: 500 .7rem var(--font-geist-mono); letter-spacing: .15em; text-transform: uppercase; color: var(--text-muted); align-self: end; }
+    .shelf-row { padding: 1.1rem 0; border-bottom: 1px solid var(--border); }
+    .shelf-name h3 { font-size: 1.12rem; overflow-wrap: anywhere; }
+    .shelf-name .mono { font-size: .7rem; color: var(--text-muted); display: block; margin-top: .2rem; }
+    .cell { display: flex; flex-direction: column; align-items: flex-start; gap: .45rem; min-width: 0; transition: opacity .16s; }
+    .cell-thumb { height: var(--th); display: flex; align-items: flex-end; }
+    .cell-thumb .thumb { height: 100%; }
+    .cell-meta { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; font-size: .72rem; min-height: 1.2rem; }
+    .cell-meta .mono { color: var(--text-muted); }
+    .icon-row { display: flex; gap: .3rem; }
+    .empty-slot { height: 100%; border: 1.5px dashed var(--border); border-radius: 2px; display: grid; place-items: center; color: var(--text-muted); font-size: .75rem; font-weight: 600; transition: border-color .16s, color .16s; }
+    .empty-slot span { display: inline-flex; align-items: center; gap: .3rem; }
+    .empty-slot svg { width: .85rem; height: .85rem; }
+    @media (hover:hover) { .empty-slot:hover { border-color: var(--accent); color: var(--accent-ink); } }
+    .shelf[data-lf]:not([data-lf=all]) .cell:not(.lf-on) { opacity: .28; }
+    .shelf[data-lf]:not([data-lf=all]) .sh-col.lf-on { color: var(--accent-ink); }
+    @container vp (width < 980px) {
+      .shelf { --th: 84px; --colmin: 9rem; }
+      .shelf-head, .shelf-row { grid-template-columns: repeat(2, max(var(--colmin), calc(var(--th) * 16 / 9))) repeat(2, var(--colmin)); }
+      .shelf-name { grid-column: 1 / -1; display: flex; align-items: baseline; gap: .6rem; }
+      .shelf-name .mono { margin: 0; }
+      .sh-name { display: none; }
+    }
+
+    /* Library layout B: Copy list. One row per Artwork; Frame filter for paste sessions. */
+    .lgroup { padding: 1rem 0 .6rem; border-top: 1px solid var(--border); }
+    .lg-head { display: flex; align-items: center; gap: .5rem 1rem; flex-wrap: wrap; margin-bottom: .45rem; padding: 0 .75rem; }
+    .lg-head h3 { font-size: 1.12rem; }
+    .lg-frames { display: flex; gap: .45rem; align-items: center; color: var(--border); }
+    .lg-frames .on { color: var(--accent-ink); }
+    .lg-add { font-size: .75rem; color: var(--text-muted); display: flex; gap: .6rem; align-items: center; margin-left: auto; }
+    .lrow { display: grid; grid-template-columns: 5.25rem minmax(0, 1fr) auto auto; gap: .5rem 1.1rem; align-items: center; padding: .55rem .75rem; border-radius: var(--radius); border: 1px solid #0000; }
+    .lrow:hover, .lrow:focus-within { background: var(--accent-tint); border-color: var(--card-border); }
+    .lrow.is-copied .lcopy .btn { background: #0000; border-color: color-mix(in srgb, var(--success) 50%, var(--border)); color: var(--success); }
+    .tbox { width: 5.25rem; height: 4.5rem; display: grid; place-items: center; }
+    .tbox .thumb.f-hero, .tbox .thumb.f-landscape { width: 5.25rem; }
+    .tbox .thumb.f-poster { height: 4.5rem; }
+    .tbox .thumb.f-square { width: 3.75rem; }
+    .lmeta { min-width: 0; display: flex; flex-direction: column; gap: .3rem; }
+    .lmeta-top { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+    .lmeta-top .pill { display: inline-flex; align-items: center; gap: .35rem; font-size: .72rem; font-weight: 600; }
+    .lmeta-top .mono { font-size: .72rem; color: var(--text-muted); }
+    .lacts { display: flex; gap: .35rem; flex-wrap: wrap; justify-content: flex-end; }
+    .lcopy .btn { min-width: 11.5rem; }
+    @container vp (width < 1100px) {
+      .lrow { grid-template-columns: 5.25rem minmax(0, 1fr) auto; }
+      .lacts { grid-column: 2 / -1; justify-content: flex-start; }
+    }
+
+    /* Dialog content */
+    .dlg-body { padding: 1.5rem; display: flex; flex-direction: column; gap: .85rem; }
+    .dlg-body h2 { font-size: 1.3rem; letter-spacing: -.01em; }
+    .dlg-body p { font-size: .9rem; }
+    .dlg-eyebrow { display: flex; align-items: center; gap: .4rem; }
+    .dlg-eyebrow svg { width: .95rem; height: .95rem; }
+    .dlg-eyebrow.warn { color: var(--warning); }
+    .dlg-eyebrow.danger { color: var(--danger); }
+    .dlg-compare { display: flex; align-items: center; gap: 1rem; padding: .9rem; background: var(--surface-2); border-radius: var(--radius); justify-content: center; }
+    .dlg-compare figure { display: flex; flex-direction: column; align-items: center; gap: .35rem; }
+    .dlg-compare .thumb { height: 92px; }
+    .dlg-compare figcaption { font: 500 .65rem var(--font-geist-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); }
+    .dlg-compare .arrow { color: var(--text-muted); font-size: 1.2rem; }
+    .dlg-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: .4rem; }
+    .dlg-field { display: flex; flex-direction: column; gap: .4rem; }
+    .dlg-field label { font-weight: 600; font-size: .85rem; color: var(--text-muted); }
+
+    /* Toasts + whole-window drop overlay (outside the simulated viewport, so never scaled) */
+    .toasts { position: fixed; left: 1rem; bottom: 1rem; z-index: 250; display: flex; flex-direction: column; gap: .5rem; max-width: min(26rem, calc(100vw - 22rem)); }
+    .toast { display: flex; gap: .6rem; align-items: center; padding: .7rem .95rem; background: var(--surface-2); border: 1px solid var(--card-border); border-radius: var(--radius);
+      box-shadow: 0 10px 30px #0008; font-size: .85rem; animation: toast-in .2s ease-out; }
+    .toast svg { width: 1rem; height: 1rem; flex: none; color: var(--success); }
+    .toast .glyph { color: var(--accent-ink); }
+    .toast.out { opacity: 0; transform: translateY(6px); transition: opacity .25s, transform .25s; }
+    .toast small { display: block; color: var(--text-muted); font-size: .75rem; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
+    .drop-overlay { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; pointer-events: none; background: color-mix(in srgb, var(--bg) 78%, transparent); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+    .drop-overlay > div { border: 2px dashed var(--accent); border-radius: 10px; padding: 3rem 4rem; text-align: center; background: var(--accent-tint); }
+    .drop-overlay h2 { font-size: 1.8rem; }
+    .drop-overlay p { color: var(--text-muted); margin-top: .3rem; }
+
+    /* Kept last in section 4 so it overrides the Editor and Library rules above. */
+    /* ---------- Phone (v2 experiment): viewport below 600px ---------- */
+    @container vp (width < 600px) {
+      .brand-header-inner { padding: .85rem 1rem; gap: .5rem 1rem; }
+      .wordmark { font-size: 1.2rem; }
+      .brand-icon { width: 2rem; height: 2rem; font-size: 1rem; }
+      .brand-header nav { gap: 1rem; font-size: .85rem; }
+      .tool-main { padding: 0 1rem 4rem; }
+      .tool-head { padding: 1.25rem 0 1rem; gap: .9rem; }
+      .tool-title { font-size: 2rem; }
+      .tool-sub { font-size: .85rem; }
+      .tool-tabs { width: 100%; }
+      .tool-tabs .btn { flex: 1; }
+
+      /* Frame row: four compact stacked buttons */
+      .ed-s .fpick { gap: .35rem; }
+      .ed-s .fopt { grid-template-columns: 1fr; grid-template-rows: auto auto; justify-items: center; text-align: center; padding: .5rem .25rem .45rem; row-gap: .2rem; }
+      .ed-s .fopt .fshape { grid-row: auto; height: 22px; }
+      .ed-s .fopt .fname { font-size: .74rem; }
+      .ed-s .fopt .fsize { display: none; }
+      .ed-s .fopt .fstat { top: .2rem; right: .25rem; }
+
+      .ed-s .stage { height: clamp(260px, 78cqw, 360px); }
+      .ed-s .stage[data-has="0"] { height: 400px; }
+      .stage-cap { padding: 0 12px; }
+      .stage-cap .cap-right { display: none; }
+      .drop { inset: 40px 8px 8px; padding: .9rem; }
+      .drop-icon { display: none; }
+      .drop-title { font-size: 1.15rem; }
+      .drop-lead { font-size: .82rem; }
+      .drop-anywhere { display: none; }
+
+      .orig-bar { flex-wrap: wrap; row-gap: .5rem; }
+      .orig-meta { flex: 1 1 calc(100% - 3.5rem); }
+      .orig-bar .btn { margin-left: auto; }
+
+      .adjust { padding: .85rem .9rem; column-gap: 1rem; }
+      .adjust .seg label { padding: .42rem .7rem; }
+
+      .setsave { padding: .9rem; }
+      .setsave .btn-save { padding-inline: 1rem; }
+      .set-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+      .ed-s .receipt.c-rec { grid-template-columns: minmax(0, 1fr); }
+
+      .replace-banner { grid-template-columns: auto minmax(0, 1fr); gap: .75rem 1rem; padding: .8rem .9rem; }
+      .replace-banner > .btn { grid-column: 1 / -1; justify-self: start; }
+      .rb-title { font-size: 1.1rem; }
+
+      /* Library on a phone (desktop Library is unchanged) */
+      .lib-filter { max-width: none; flex-basis: 100%; }
+      .lib-show { width: 100%; }
+      .lib-show .seg { flex-wrap: wrap; }
+      .lib-summary { margin-left: 0; align-items: flex-start; text-align: left; }
+      .shelf { --th: 70px; }
+      .shelf-head { display: none; }
+      .shelf-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem .75rem; }
+      .lrow { grid-template-columns: 4.5rem minmax(0, 1fr); }
+      .tbox { width: 4.5rem; }
+      .tbox .thumb.f-hero, .tbox .thumb.f-landscape { width: 4.5rem; }
+      .lcopy, .lacts { grid-column: 1 / -1; }
+      .lcopy .btn { width: 100%; min-width: 0; }
+      .lg-add { margin-left: 0; flex-basis: 100%; }
+      .dlg-actions { flex-wrap: wrap; }
+    }
+
+    /* =====================================================================
+       5. MOCKUP CHROME: simulated viewport + floating control panel (not product UI)
+       ===================================================================== */
+    #vpOuter { width: 100%; }
+    #vpOuter.scaled { overflow: clip; }
+    #viewport { container-type: inline-size; container-name: vp; margin-inline: auto; transform-origin: top left; min-height: 100vh; overflow-x: clip; /* the title aurora bleeds 20px past the edge on phones */ }
+    #vpOuter.framed #viewport { box-shadow: 0 0 0 1px var(--border), 0 0 60px #0006; background: color-mix(in srgb, var(--bg) 60%, transparent); }
+    #vpOuter.scaled #viewport { margin-inline: 0; }
+
+    .mock-panel { position: fixed; right: 1rem; bottom: 1rem; z-index: 260; width: 19rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px;
+      box-shadow: 0 12px 40px #000a; font-size: .78rem; color: var(--text); }
+    .mp-head { width: 100%; display: flex; align-items: center; gap: .5rem; padding: .6rem .8rem; font-weight: 600; font-size: .8rem; border-radius: 6px; }
+    .mp-head .badge { margin-left: auto; }
+    .mp-head svg { width: 1rem; height: 1rem; transition: transform .16s; color: var(--text-muted); }
+    .mock-panel.collapsed .mp-head svg { transform: rotate(180deg); }
+    .mock-panel.collapsed .mp-body { display: none; }
+    .mp-body { padding: .2rem .8rem .8rem; display: grid; grid-template-columns: 1fr 1fr; gap: .55rem .6rem; border-top: 1px solid var(--border); padding-top: .7rem; max-height: calc(100vh - 6rem); overflow: auto; }
+    .mp-body label, .mp-field { display: flex; flex-direction: column; gap: .2rem; color: var(--text-muted); font-weight: 600; font-size: .7rem; min-width: 0; }
+    .mp-body .full { grid-column: 1 / -1; }
+    .mp-body select { width: 100%; min-width: 0; background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); padding: .35rem .4rem; color: var(--text); font-weight: 500; font-size: .76rem; }
+    .mp-body .seg label { padding: .3rem .2rem; font-size: .7rem; flex: 1 1 0; justify-content: center; flex-direction: row; color: var(--text-muted); min-width: 0; }
+    .mp-body .seg { width: 100%; background: var(--surface-1); }
+    .mp-body .seg label:has(input:checked) { background: var(--accent); color: var(--on-accent); }
+    .mp-body .mp-check { flex-direction: row; align-items: center; gap: .4rem; font-weight: 500; font-size: .74rem; }
+    .mp-actions { display: flex; gap: .4rem; }
+    .mp-actions button { flex: 1; padding: .4rem .5rem; border: 1px solid var(--border); border-radius: var(--radius); font-weight: 600; font-size: .72rem; background: var(--surface-1); }
+    @media (hover:hover) { .mp-actions button:hover { border-color: var(--accent); } }
+    .mp-note { grid-column: 1 / -1; font-size: .68rem; color: var(--text-muted); line-height: 1.4; }
+    @media (max-width: 700px) {
+      .mock-panel { right: .5rem; bottom: .5rem; width: min(19rem, calc(100vw - 1rem)); }
+      .toasts { left: .5rem; right: .5rem; bottom: 3.5rem; max-width: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="vpOuter">
+    <div id="viewport">
+      <header class="brand-header">
+        <div class="brand-header-inner"><a class="wordmark" href="#" data-noop aria-label="Nuvio Tools home"><span class="brand-icon" aria-hidden="true">n</span><span class="text-gradient">Nuvio Tools</span></a>
+          <nav aria-label="Tools"><a href="#" data-noop>Listio</a><a href="#" data-noop aria-current="page">ArtNuvio</a><a href="#" data-noop>Collectio</a></nav>
+        </div>
+      </header>
+
+      <main class="tool-main tool-ui" data-tool="artnuvio" id="main">
+        <div class="tool-head hero-aurora">
+          <div>
+            <p class="eyebrow">Nuvio Tools / 02</p>
+            <h1 class="tool-title"><span class="text-gradient">ArtNuvio</span></h1>
+            <p class="tool-sub">Frame art at Nuvio's exact shapes. Every Artwork gets one URL for life, and you can swap the image behind it whenever you like.</p>
+          </div>
+          <nav class="tool-tabs" aria-label="ArtNuvio sections">
+            <button type="button" class="btn" data-screen="editor" aria-pressed="true">Editor</button>
+            <button type="button" class="btn" data-screen="library" aria-pressed="false">Library <span class="tab-count" id="libCount">16</span></button>
+          </nav>
+        </div>
+
+        <section id="editorScreen" aria-label="Editor"></section>
+
+        <section id="libraryScreen" aria-label="Library" hidden>
+          <div class="lib-tools">
+            <div class="lib-filter"><label class="eyebrow" for="libQ">Filter folders</label><input id="libQ" type="search" placeholder="Type a name, e.g. horror" autocomplete="off"></div>
+            <div class="lib-show"><span class="eyebrow" id="lfLabel">Show</span>
+              <div class="seg" role="radiogroup" aria-labelledby="lfLabel" id="lfSeg">
+                <label><input type="radio" name="lf" value="all">All</label>
+                <label><input type="radio" name="lf" value="hero"><span class="glyph" style="width:13px;height:7.3px"></span>Hero</label>
+                <label><input type="radio" name="lf" value="landscape"><span class="glyph" style="width:13px;height:7.3px"></span>Landscape</label>
+                <label><input type="radio" name="lf" value="poster"><span class="glyph" style="width:8.7px;height:13px"></span>Poster</label>
+                <label><input type="radio" name="lf" value="square"><span class="glyph" style="width:11px;height:11px"></span>Square</label>
+              </div>
+            </div>
+            <div class="lib-summary" id="libSummary" aria-live="polite"></div>
+          </div>
+          <p class="lib-hint" id="libHint"></p>
+          <div id="libBody"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Editor components. Built once, then moved into whichever layout is active. -->
+  <template id="tplComponents">
+    <section data-comp="banner" class="replace-banner" aria-label="Replace mode">
+      <div class="rb-now"><span class="thumb" data-ref="rbThumb"></span><span class="eyebrow">Now in Nuvio</span></div>
+      <div class="rb-body">
+        <p class="eyebrow rb-eyebrow" data-ico="swap">Replace mode</p>
+        <h2 class="rb-title">Replacing <span data-ref="rbName"></span> · <span class="rb-frame" data-ref="rbFrame"></span></h2>
+        <p>Same URL, <code data-ref="rbUrl"></code>. Nuvio picks up the new image by itself. Nothing to paste.</p>
+      </div>
+      <button type="button" class="btn btn-ghost sm" data-ref="rbCancel">Cancel replace</button>
+    </section>
+
+    <div data-comp="stage" class="stage" data-has="0">
+      <div class="stage-cap"><span class="cap-left" data-ref="capLeft"></span><span class="cap-right" data-ref="capRight"></span></div>
+      <div class="ghost" data-ref="ghost" aria-hidden="true"><img alt="" data-ref="ghostImg" draggable="false"></div>
+      <div class="frame" data-ref="frame" tabindex="0" role="group" aria-roledescription="image framer" aria-label="Image position. Drag, or use the arrow keys, to move the image inside the Frame."><img alt="" data-ref="frameImg" draggable="false"></div>
+      <div class="drop" data-ref="drop">
+        <div class="drop-inner">
+          <span class="drop-icon" data-ico="image"></span>
+          <h2 class="drop-title" data-ref="dropTitle">Start with an Original</h2>
+          <p class="drop-lead" data-ref="dropLead">Paste an image, or a link to one. Either works in the same box.</p>
+          <form class="paste-row" data-ref="urlForm" novalidate>
+            <input type="text" inputmode="url" autocomplete="off" spellcheck="false" data-ref="urlIn" aria-label="Image URL, or paste an image" aria-describedby="urlErr">
+            <button type="submit" class="btn">Load</button>
+          </form>
+          <div class="url-err" id="urlErr" role="alert" data-ref="urlErr" hidden></div>
+          <div class="drop-or"><span>or</span></div>
+          <div class="drop-file"><button type="button" class="btn btn-ghost sm" data-ref="fileBtn"><span data-ico="upload"></span>Choose a file</button><span class="text-muted drop-anywhere">or drop one anywhere on this page</span></div>
+          <p class="drop-samples"><span>Mockup samples:</span><button type="button" data-sample="hero">hero_example.jpg</button><button type="button" data-sample="poster">poster_example.jpg</button><button type="button" data-sample="landscape">landscape_with_text_example.png</button></p>
+        </div>
+      </div>
+      <div class="loading" data-ref="loading" hidden>
+        <div><div class="spinner" aria-hidden="true"></div><p role="status"><b>Fetching the image…</b></p><p class="loading-url" data-ref="loadingUrl"></p><button type="button" class="btn btn-ghost sm" data-ref="loadCancel">Cancel</button></div>
+      </div>
+    </div>
+
+    <div data-comp="orig" class="orig-bar">
+      <span class="orig-thumb" data-ref="origThumb"></span>
+      <div class="orig-meta"><span class="orig-name" data-ref="origName">No Original yet</span><span class="orig-dims" data-ref="origDims">Paste, drop or choose an image</span></div>
+      <label class="check"><input type="checkbox" data-ref="ghostChk"> Show cropped edges</label>
+      <button type="button" class="btn btn-ghost sm" data-ref="newOrig">New Original</button>
+    </div>
+
+    <section data-comp="set" class="setstrip" aria-label="Folder set">
+      <div class="set-head" data-ref="setHead"></div>
+      <div class="set-slots" data-ref="setSlots"></div>
+    </section>
+
+    <fieldset data-comp="pick" class="ctl c-pick">
+      <legend class="eyebrow" data-ref="pickLegend">Frame</legend>
+      <div class="fpick" data-ref="fpick"></div>
+    </fieldset>
+
+    <div data-comp="tiles" class="tiles" role="group" aria-label="Frame" data-ref="tilesInner"></div>
+
+    <fieldset data-comp="fit" class="ctl c-fit">
+      <legend class="eyebrow">Fill</legend>
+      <div class="seg" data-ref="modeSeg">
+        <label><input type="radio" name="mode" value="fit">Fit</label>
+        <label><input type="radio" name="mode" value="cover">Cover</label>
+      </div>
+      <p class="ctl-hint" data-ref="modeHint"></p>
+    </fieldset>
+
+    <div data-comp="scale" class="ctl c-scale">
+      <label class="eyebrow ctl-label" for="scaleIn">Scale <output class="scale-out" data-ref="scaleOut" for="scaleIn">100%</output></label>
+      <div class="range-wrap">
+        <input id="scaleIn" class="range" type="range" min="0" max="1000" step="1" data-ref="scaleIn" aria-describedby="softWarn">
+        <div class="marks" aria-hidden="true"><button type="button" class="mark" tabindex="-1" data-ref="markFit">Fit</button><button type="button" class="mark" tabindex="-1" data-ref="markCover">Cover</button></div>
+      </div>
+      <p class="soft" id="softWarn" data-ref="soft" aria-live="polite"></p>
+    </div>
+
+    <p data-comp="adjhint" class="ctl-hint adj-hint" data-ref="adjHint" aria-live="polite"></p>
+
+    <fieldset data-comp="size" class="ctl c-size">
+      <legend class="eyebrow">Saved size</legend>
+      <div class="size-body" data-ref="sizeBody"></div>
+    </fieldset>
+
+    <div data-comp="save" class="ctl c-save savebox">
+      <label class="eyebrow ctl-label" for="nameIn">Name <span class="name-label-hint">the Nuvio folder it's for</span></label>
+      <div class="save-row">
+        <div class="name-wrap"><input id="nameIn" type="text" list="nameList" autocomplete="off" placeholder="e.g. Serial Killer movies" data-ref="nameIn" aria-describedby="nameHint"><span data-ref="nameLock" hidden></span></div>
+        <button type="button" class="btn btn-save" data-ref="saveBtn">Save Hero</button>
+      </div>
+      <datalist id="nameList" data-ref="nameList"></datalist>
+      <p class="name-hint" id="nameHint" data-ref="nameHint"></p>
+      <div class="conflict-box" role="alert" data-ref="conflict" hidden></div>
+    </div>
+
+    <div data-comp="receipt" class="receipt c-rec" data-ref="receiptInner" hidden></div>
+  </template>
+
+  <!-- Dialogs (native <dialog>, Listio's dialog style) -->
+  <dialog class="dlg" id="dlgReplace" data-tool="artnuvio" aria-labelledby="dlgReplaceT">
+    <form method="dialog" class="dlg-body">
+      <p class="eyebrow dlg-eyebrow warn" data-ico="swap">Replace image</p>
+      <h2 id="dlgReplaceT">Replace this image?</h2>
+      <div class="dlg-compare"><figure><span id="dlgRepNow"></span><figcaption>Now</figcaption></figure><span class="arrow" aria-hidden="true">→</span><figure><span id="dlgRepNew"></span><figcaption>New</figcaption></figure></div>
+      <p id="dlgReplaceMsg"></p>
+      <p class="url" id="dlgReplaceUrl"></p>
+      <div class="dlg-actions"><button type="button" class="btn btn-ghost" data-close autofocus>Cancel</button><button type="submit" value="ok" class="btn btn-replace">Replace image</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="dlg" id="dlgDelete" data-tool="artnuvio" aria-labelledby="dlgDeleteT">
+    <form method="dialog" class="dlg-body">
+      <p class="eyebrow dlg-eyebrow danger" data-ico="trash">Delete Artwork</p>
+      <h2 id="dlgDeleteT">Delete?</h2>
+      <div class="dlg-compare" id="dlgDelThumb"></div>
+      <p id="dlgDeleteMsg"></p>
+      <p class="url" id="dlgDeleteUrl"></p>
+      <div class="dlg-actions"><button type="button" class="btn btn-ghost" data-close autofocus>Cancel</button><button type="submit" value="ok" class="btn btn-danger-solid">Delete</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="dlg" id="dlgRename" data-tool="artnuvio" aria-labelledby="dlgRenameT">
+    <form method="dialog" class="dlg-body" id="renameForm">
+      <p class="eyebrow dlg-eyebrow" data-ico="pencil">Rename</p>
+      <h2 id="dlgRenameT">Rename Artwork</h2>
+      <div class="dlg-field"><label for="renameIn">Name</label><input id="renameIn" type="text" autocomplete="off" list="nameListDlg"></div>
+      <datalist id="nameListDlg"></datalist>
+      <p class="error" id="renameErr" role="alert" hidden></p>
+      <p class="text-muted" style="font-size:.82rem">The URL doesn't change: <span class="url" id="renameUrl"></span></p>
+      <div class="dlg-actions"><button type="button" class="btn btn-ghost" data-close>Cancel</button><button type="submit" value="ok" class="btn">Rename</button></div>
+    </form>
+  </dialog>
+
+  <input type="file" id="fileIn" accept="image/*" hidden>
+  <div class="toasts" id="toasts" data-tool="artnuvio" aria-live="polite"></div>
+  <div class="drop-overlay" id="dropOverlay" data-tool="artnuvio" hidden><div>
+      <h2>Drop to use as the Original</h2>
+      <p id="dropOverlayLead">Any image file, or an image dragged from another tab.</p>
+    </div></div>
+
+  <!-- Mockup control panel -->
+  <aside class="mock-panel" id="mockPanel" aria-label="Mockup controls">
+    <button type="button" class="mp-head" id="mpToggle" aria-expanded="true" aria-controls="mpBody">Mockup controls <span class="badge">Opus v2</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button>
+    <div class="mp-body" id="mpBody">
+      <label>Screen<select id="mpScreen">
+          <option value="editor">Editor</option>
+          <option value="library">Library</option>
+        </select></label>
+      <label>Editor state<select id="mpState">
+          <option value="empty">Empty</option>
+          <option value="loading">Loading</option>
+          <option value="error-page">Error: web page</option>
+          <option value="error-blocked">Error: blocked</option>
+          <option value="loaded">Loaded</option>
+          <option value="saved">Saved</option>
+          <option value="conflict">Name already used</option>
+          <option value="replace-empty">Replace: empty</option>
+          <option value="replace-loaded">Replace: loaded</option>
+          <option value="replaced">Replace: done</option>
+        </select></label>
+      <label>Frame<select id="mpFrame">
+          <option value="hero">Hero</option>
+          <option value="landscape">Landscape</option>
+          <option value="poster">Poster</option>
+          <option value="square">Square</option>
+        </select></label>
+      <label>Original<select id="mpImg">
+          <option value="hero">hero 3840×2160</option>
+          <option value="poster">poster 500×750</option>
+          <option value="landscape">landscape 2560×1440</option>
+          <option value="user" disabled>Your own file</option>
+        </select></label>
+      <label>Editor layout<select id="mpEl">
+          <option value="rail">A · Stage + rail (stacks below 1024)</option>
+          <option value="sheet">B · Contact sheet</option>
+        </select></label>
+      <label>Library layout<select id="mpLl">
+          <option value="shelf">A · Shelf</option>
+          <option value="list">B · Copy list</option>
+        </select></label>
+      <label class="full">Dialog<select id="mpDlg">
+          <option value="none">None</option>
+          <option value="replace">Replace confirmation</option>
+          <option value="delete">Delete confirmation</option>
+          <option value="rename">Rename</option>
+        </select></label>
+      <div class="mp-field full"><span id="mpWLabel">Width</span>
+        <div class="seg" role="radiogroup" aria-labelledby="mpWLabel" id="mpW">
+          <label><input type="radio" name="mpw" value="390">390</label>
+          <label><input type="radio" name="mpw" value="768">768</label>
+          <label><input type="radio" name="mpw" value="1024">1024</label>
+          <label><input type="radio" name="mpw" value="1440">1440</label>
+          <label><input type="radio" name="mpw" value="1920">1920</label>
+          <label><input type="radio" name="mpw" value="full">Full</label>
+        </div>
+      </div>
+      <label class="mp-check full"><input type="checkbox" id="mpFit"> Shrink to fit the window</label>
+      <div class="mp-actions full"><button type="button" id="mpCopy">Copy link to this view</button><button type="button" id="mpReset">Reset</button></div>
+      <p class="mp-note">Everything is fake: nothing is uploaded. Try your own image with paste, drop or Choose a file.</p>
+    </div>
+  </aside>
+
+  <script>
+    'use strict';
+    /* ======================================================================
+       Helpers
+       ====================================================================== */
+    const $ = (s, r = document) => r.querySelector(s);
+    const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+    const IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+    const PASTE_KEY = IS_MAC ? '⌘V' : 'Ctrl+V';
+
+    const ICONS = {
+      image: '<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+      upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+      copy: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+      ext: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+      pencil: '<path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>',
+      swap: '<path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/>',
+      trash: '<path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>',
+      check: '<path d="M20 6 9 17l-5-5"/>',
+      lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+      alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0ZM12 9v4M12 17h.01"/>',
+      plus: '<path d="M12 5v14M5 12h14"/>',
+      info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+    };
+    const ico = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
+    function fillIcons(root) { $$('[data-ico]', root).forEach(el => { el.insertAdjacentHTML('afterbegin', ico(el.dataset.ico)); el.removeAttribute('data-ico'); }); }
+
+    /* ======================================================================
+       Domain data
+       ====================================================================== */
+    const FRAMES = {
+      hero: { label: 'Hero', ar: 16 / 9, css: '16 / 9', shape: '16:9', w: 3840, h: 2160 },
+      landscape: { label: 'Landscape', ar: 16 / 9, css: '16 / 9', shape: '16:9', w: 2560, h: 1440, mb: '0.9 MB' },
+      poster: { label: 'Poster', ar: 2 / 3, css: '2 / 3', shape: '2:3', w: 1000, h: 1500, mb: '0.3 MB' },
+      square: { label: 'Square', ar: 1, css: '1 / 1', shape: '1:1', w: 1000, h: 1000, mb: '0.2 MB' },
+    };
+    const ORDER = ['hero', 'landscape', 'poster', 'square'];
+    const HERO_SIZES = { '4k': { w: 3840, h: 2160, mb: '1.4 MB' }, '1080': { w: 1920, h: 1080, mb: '0.5 MB' } };
+    const SOFT_AT = 1.25; // enlargement factor above which we warn "may look soft"
+    const DIR = 'artnuvio_examples/';
+    const IMAGES = {
+      hero: { src: DIR + 'hero_example.jpg', w: 3840, h: 2160 },
+      poster: { src: DIR + 'poster_example.jpg', w: 500, h: 750 },
+      landscape: { src: DIR + 'landscape_with_text_example.png', w: 2560, h: 1440 },
+      heroSmall: { src: DIR + 'hero_smaller_example.jpg', w: 1920, h: 1080 },
+      heroGrad: { src: DIR + 'hero_with_gradient_example.jpg', w: 3840, h: 2160 },
+      landLarge: { src: DIR + 'landscape_large_thumg_example.png', w: 2560, h: 1440 },
+      posterType: { src: DIR + 'poster_with_type_example.png', w: 1000, h: 1500 },
+    };
+    const fileOf = src => src.split('/').pop();
+    const heroOk = (iw, ih) => Math.max(3840 / iw, 2160 / ih) <= 1;
+    const glyph = (k, size = 12) => {
+      const ar = FRAMES[k].ar, s = k === 'square' ? size * .85 : size;
+      const w = ar >= 1 ? s : s * ar, h = ar >= 1 ? s / ar : s;
+      return `<span class="glyph" style="width:${w.toFixed(1)}px;height:${h.toFixed(1)}px" aria-hidden="true"></span>`;
+    };
+
+    /* ---------- Framing maths ----------
+       Work in "frame units": the Frame is ar wide and 1 tall.
+       rel = scale relative to Cover (1 = Cover). ox/oy = image centre offset from frame centre,
+       as fractions of frame width/height. Everything is independent of preview pixel size. */
+    function geom(iw, ih, ar, rel, ox, oy) {
+      const sc = Math.max(ar / iw, 1 / ih);
+      const dw = iw * sc * rel, dh = ih * sc * rel;
+      return { dw, dh, left: ar / 2 + ox * ar - dw / 2, top: .5 + oy - dh / 2 };
+    }
+    // Clamp: where the image covers an axis it may not leave a gap; where it doesn't, it may not leave the Frame.
+    function clampPos(iw, ih, ar, rel, ox, oy) {
+      const g = geom(iw, ih, ar, rel, ox, oy);
+      const left = clamp(g.left, Math.min(0, ar - g.dw), Math.max(0, ar - g.dw));
+      const top = clamp(g.top, Math.min(0, 1 - g.dh), Math.max(0, 1 - g.dh));
+      return { ox: (left + g.dw / 2 - ar / 2) / ar, oy: top + g.dh / 2 - .5 };
+    }
+    const fitRel = (iw, ih, ar) => Math.min(ar / iw, 1 / ih) / Math.max(ar / iw, 1 / ih);
+    function placeCss(iw, ih, ar, rel, ox, oy) {
+      const g = geom(iw, ih, ar, rel, ox, oy);
+      return `width:${(g.dw / ar * 100).toFixed(3)}%;height:${(g.dh * 100).toFixed(3)}%;left:${(g.left / ar * 100).toFixed(3)}%;top:${(g.top * 100).toFixed(3)}%`;
+    }
+    function placeImg(img, iw, ih, ar, rel, ox, oy) { img.style.cssText = placeCss(iw, ih, ar, rel, ox, oy); }
+
+    /* ---------- Placeholder images when a sample is missing ---------- */
+    const phCache = {};
+    function placeholder(w, h, label) {
+      const key = w + 'x' + h + label;
+      if (phCache[key]) return phCache[key];
+      const k = Math.min(1, 900 / Math.max(w, h)), cw = Math.round(w * k), ch = Math.round(h * k);
+      const c = document.createElement('canvas'); c.width = cw; c.height = ch;
+      const g = c.getContext('2d');
+      const grd = g.createLinearGradient(0, 0, cw, ch); grd.addColorStop(0, '#30364a'); grd.addColorStop(1, '#161a26');
+      g.fillStyle = grd; g.fillRect(0, 0, cw, ch);
+      g.strokeStyle = 'rgba(238,240,250,.07)'; g.lineWidth = 1;
+      const step = Math.max(cw, ch) / 12;
+      for (let x = step; x < cw; x += step) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, ch); g.stroke(); }
+      for (let y = step; y < ch; y += step) { g.beginPath(); g.moveTo(0, y); g.lineTo(cw, y); g.stroke(); }
+      g.strokeStyle = 'rgba(238,240,250,.22)'; g.lineWidth = 2;
+      g.beginPath(); g.moveTo(0, 0); g.lineTo(cw, ch); g.moveTo(cw, 0); g.lineTo(0, ch); g.stroke();
+      g.strokeRect(1, 1, cw - 2, ch - 2);
+      const fs = Math.max(12, Math.round(Math.min(cw, ch) / 13));
+      g.fillStyle = '#eef0fa'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = `600 ${fs}px Inter, sans-serif`; g.fillText(label, cw / 2, ch / 2 - fs * .7);
+      g.fillStyle = '#a6aec5'; g.font = `500 ${Math.round(fs * .75)}px Inter, sans-serif`;
+      g.fillText(`${w}×${h} · placeholder (file not found)`, cw / 2, ch / 2 + fs * .7);
+      return (phCache[key] = c.toDataURL('image/png'));
+    }
+    // Any <img> we create carries data-w/h/label; if it fails, swap in a same-shaped placeholder.
+    document.addEventListener('error', e => {
+      const im = e.target;
+      if (im && im.tagName === 'IMG' && im.dataset.w && !im.dataset.ph) { im.dataset.ph = '1'; im.src = placeholder(+im.dataset.w, +im.dataset.h, im.dataset.label || 'image'); }
+    }, true);
+    const imgAttrs = (src, w, h, label) => `src="${esc(src)}" alt="" draggable="false" data-w="${w}" data-h="${h}" data-label="${esc(label)}"`;
+    function setImg(img, src, w, h, label) {
+      if (img.dataset.orig === src) return;
+      delete img.dataset.ph; img.dataset.orig = src; img.dataset.w = w; img.dataset.h = h; img.dataset.label = label; img.src = src;
+    }
+
+    // A thumbnail at the Frame's real shape. t = {src, iw, ih, file, frame, rel, ox, oy}
+    function thumbHTML(t, cls = '', live = false) {
+      const f = FRAMES[t.frame];
+      return `<span class="thumb f-${t.frame} ${cls}" style="aspect-ratio:${f.css}"${live ? ' data-live' : ''}><img ${imgAttrs(t.src, t.iw, t.ih, t.file || fileOf(t.src))} style="${placeCss(t.iw, t.ih, f.ar, t.rel, t.ox, t.oy)}"></span>`;
+    }
+    const emptyThumb = (k, cls = '') => `<span class="thumb thumb-empty ${cls}" style="aspect-ratio:${FRAMES[k].css}"></span>`;
+
+    /* ---------- Library (fake server) ---------- */
+    const ID_CHARS = 'abcdefghjkmnpqrstuvwxyz23456789';
+    function hashId(s) {
+      let x = 2166136261;
+      for (const ch of s) { x ^= ch.charCodeAt(0); x = Math.imul(x, 16777619) >>> 0; }
+      let out = '';
+      for (let i = 0; i < 8; i++) { x = Math.imul(x ^ (x >>> 15), 2246822507) >>> 0; out += ID_CHARS[x % ID_CHARS.length]; }
+      return out;
+    }
+    const randId = () => Array.from({ length: 8 }, () => ID_CHARS[Math.floor(Math.random() * ID_CHARS.length)]).join('');
+    const urlOf = (id, frame) => `img.nuvio-tools.com/a/${id}-${frame}.jpg`;
+    const urlHTML = a => `img.nuvio-tools.com/a/${a.id}-<mark>${a.frame}</mark>.jpg`;
+
+    function makeArt(name, frame, imgKey, opt = {}) {
+      const I = IMAGES[imgKey], f = FRAMES[frame];
+      const rel = opt.rel || 1;
+      const pos = clampPos(I.w, I.h, f.ar, rel, opt.ox || 0, opt.oy || 0);
+      const size = frame === 'hero' ? HERO_SIZES[heroOk(I.w, I.h) ? '4k' : '1080'] : f;
+      const id = hashId(name + '|' + frame);
+      return { id, name, frame, w: size.w, h: size.h, src: I.src, iw: I.w, ih: I.h, file: fileOf(I.src), rel, ox: pos.ox, oy: pos.oy, url: urlOf(id, frame), replaced: opt.replaced || false };
+    }
+    function seedLibrary() {
+      return [
+        makeArt('80s Slashers', 'poster', 'posterType'),
+        makeArt('80s Slashers', 'square', 'poster', { oy: .12 }),
+        makeArt('A24 Horror', 'hero', 'heroGrad'),
+        makeArt('A24 Horror', 'landscape', 'landLarge'),
+        makeArt('A24 Horror', 'poster', 'heroGrad', { ox: .25 }),
+        makeArt('Christmas Movies', 'landscape', 'landscape'),
+        makeArt('Kaiju & Monsters', 'square', 'heroSmall', { ox: -.15 }),
+        makeArt('Midnight Movies', 'hero', 'hero', { replaced: true }),
+        makeArt('Midnight Movies', 'landscape', 'landscape', { rel: 1.2 }),
+        makeArt('Neo-Noir', 'poster', 'posterType', { rel: 1.15, oy: -.05 }),
+        makeArt('Serial Killer movies', 'hero', 'heroSmall'),
+        makeArt('Serial Killer movies', 'poster', 'poster'),
+        makeArt('Studio Ghibli', 'hero', 'landLarge'),
+        makeArt('Studio Ghibli', 'landscape', 'landLarge', { rel: 1.3, ox: .1 }),
+        makeArt('Studio Ghibli', 'poster', 'poster', { rel: 1.1 }),
+        makeArt('Studio Ghibli', 'square', 'heroGrad', { ox: .2 }),
+      ];
+    }
+    let LIB = seedLibrary();
+    const norm = s => s.trim().toLowerCase();
+    const findArt = (name, frame) => LIB.find(a => norm(a.name) === norm(name) && a.frame === frame);
+    const artById = id => LIB.find(a => a.id === id);
+    const framesFor = name => ORDER.filter(k => findArt(name, k));
+    function groups() {
+      const m = new Map();
+      for (const a of LIB) {
+        const k = norm(a.name);
+        if (!m.has(k)) m.set(k, { name: a.name, items: {} });
+        m.get(k).items[a.frame] = a;
+      }
+      return [...m.values()].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base', numeric: true }));
+    }
+    const copied = new Set(); // ids copied this visit (Library ticks)
+
+    /* ======================================================================
+       State. S = everything in the URL hash. ed = editor runtime.
+       ====================================================================== */
+    // v2: default to the real window width (no scaling), so the page reflows instead of shrinking.
+    // The control panel starts collapsed on phone-sized windows so it doesn't cover the page.
+    const DEFAULTS = { s: 'editor', st: 'empty', f: 'hero', img: 'hero', el: 'rail', ll: 'shelf', w: 'full', fit: '0', d: 'none', q: '', lf: 'all', cp: window.innerWidth < 700 ? '1' : '0', ghost: '0' };
+    const ALLOWED = {
+      s: ['editor', 'library'], f: ORDER, img: ['hero', 'poster', 'landscape'], el: ['rail', 'sheet'], ll: ['shelf', 'list'],
+      w: ['390', '768', '1024', '1440', '1920', 'full'], fit: ['0', '1'], d: ['none', 'replace', 'delete', 'rename'], lf: ['all', ...ORDER], cp: ['0', '1'], ghost: ['0', '1'],
+      st: ['empty', 'loading', 'error-page', 'error-blocked', 'loaded', 'saved', 'conflict', 'replace-empty', 'replace-loaded', 'replaced'],
+    };
+    const S = { ...DEFAULTS };
+    const ed = {
+      src: null, iw: 0, ih: 0, file: '', isUser: false,
+      mode: 'cover', rel: 1, ox: 0, oy: 0, heroSize: '4k',
+      name: '', phase: 'empty', err: null, url: '',
+      replaceId: null, lastSaved: null, savedKind: null, session: new Set(), token: 0,
+    };
+    const FR = () => FRAMES[S.f];
+    const hasImg = () => !!ed.src;
+    const canFrame = () => hasImg() && ['loaded', 'saved', 'conflict'].includes(ed.phase);
+
+    function outSize() {
+      if (S.f === 'hero') return HERO_SIZES[(ed.heroSize === '4k' && heroOk(ed.iw, ed.ih)) ? '4k' : '1080'];
+      return FR();
+    }
+    const enlargement = () => { const o = outSize(); return ed.rel * Math.max(o.w / ed.iw, o.h / ed.ih); };
+    function frameSizeLabel(k) {
+      if (k !== 'hero') return `${FRAMES[k].w}×${FRAMES[k].h}`;
+      if (hasImg() && (!heroOk(ed.iw, ed.ih) || ed.heroSize === '1080')) return '1920×1080';
+      return '3840×2160';
+    }
+    function phaseToSt() {
+      const p = ed.phase;
+      if (ed.replaceId) {
+        if (p === 'replaced') return 'replaced';
+        return ['empty', 'loading', 'error'].includes(p) ? 'replace-empty' : 'replace-loaded';
+      }
+      if (p === 'error') return 'error-' + ed.err;
+      if (p === 'saving') return 'loaded';
+      return p;
+    }
+
+    /* ---------- Original handling ---------- */
+    function resetFraming() { ed.mode = 'cover'; ed.rel = 1; ed.ox = 0; ed.oy = 0; }
+    function clearOriginal() { ed.src = null; ed.iw = ed.ih = 0; ed.file = ''; ed.isUser = false; }
+    function setOriginal(src, iw, ih, file, isUser, sampleKey) {
+      Object.assign(ed, { src, iw, ih, file, isUser, err: null });
+      if (sampleKey) S.img = sampleKey;
+      resetFraming();
+      ed.heroSize = heroOk(iw, ih) ? '4k' : '1080';
+    }
+    function loadSample(key) { const I = IMAGES[key]; setOriginal(I.src, I.w, I.h, fileOf(I.src), false, key); }
+    function ensureSample() { if (!hasImg() || (!ed.isUser && fileOf(IMAGES[S.img].src) !== ed.file)) loadSample(S.img); }
+
+    function useOriginal(src, iw, ih, file, isUser, sampleKey) {
+      setOriginal(src, iw, ih, file, isUser, sampleKey);
+      ed.phase = 'loaded'; ed.lastSaved = null; ed.savedKind = null;
+      if (S.s !== 'editor') S.s = 'editor';
+      renderAll();
+    }
+
+    const ERRORS = {
+      page: `<b>That's a web page, not an image.</b> Right-click the image and choose <em>Open image in new tab</em>, then copy that URL.`,
+      blocked: `<b>That site won't let ArtNuvio fetch the image.</b> Right-click it, choose <em>Copy image</em>, and paste it here instead.`,
+      notUrl: `<b>That doesn't look like a link.</b> Paste an image URL starting with https://, or paste the image itself.`,
+      file: `<b>That file isn't an image.</b> Try a JPG, PNG or WebP.`,
+      empty: `<b>Nothing to load yet.</b> Paste an image or an image URL first.`,
+    };
+    function fail(kind) { ed.phase = 'error'; ed.err = kind; clearOriginal(); renderAll(); }
+
+    // Mockup rules: page-looking links fail as "web page"; some hosts fail as "blocked"; others really load.
+    function loadFromUrl(raw) {
+      let url = (raw || '').trim();
+      ed.url = url;
+      if (!url) return fail('empty');
+      if (!/^(https?:|data:image|blob:)/i.test(url)) {
+        if (/^[\w-]+(\.[\w-]+)+(\/|$)/.test(url)) url = 'https://' + url; else return fail('notUrl');
+      }
+      clearOriginal(); ed.phase = 'loading'; ed.err = null; ed.lastSaved = null;
+      if (S.s !== 'editor') S.s = 'editor';
+      renderAll();
+      const token = ++ed.token;
+      setTimeout(() => {
+        if (token !== ed.token) return;
+        const isImg = /\.(jpe?g|png|webp|gif|avif)([?#].*)?$/i.test(url) || /^(data:image|blob:)/i.test(url);
+        if (/blocked|imdb\.com|media-amazon|instagram|facebook/i.test(url)) return fail('blocked');
+        if (!isImg && /pinterest\.[a-z.]+\/pin|\/wiki\/|\.html?([?#].*)?$|\/$|\/title\//i.test(url)) return fail('page');
+        const im = new Image();
+        im.onload = () => { if (token === ed.token) useOriginal(url, im.naturalWidth, im.naturalHeight, fileOf(url.split(/[?#]/)[0]) || 'image', true); };
+        im.onerror = () => { if (token === ed.token) fail(isImg ? 'blocked' : 'page'); };
+        im.src = url;
+      }, 900);
+    }
+    function loadFile(file, label) {
+      if (!file || !/^image\//.test(file.type)) { ed.url = ''; return fail('file'); }
+      const url = URL.createObjectURL(file);
+      const im = new Image();
+      const token = ++ed.token;
+      im.onload = () => {
+        if (token !== ed.token) return;
+        const name = label || file.name || 'Pasted image';
+        useOriginal(url, im.naturalWidth, im.naturalHeight, name, true);
+        toast(`${ico('check')}<span>Original loaded<small>${esc(name)} · ${im.naturalWidth}×${im.naturalHeight}</small></span>`);
+      };
+      im.onerror = () => fail('file');
+      im.src = url;
+    }
+
+    /* ---------- Canned states (control panel + hash) ---------- */
+    const SK_POSTER = () => findArt('Serial Killer movies', 'poster') || LIB[0];
+    function startReplace(id, loaded) {
+      const a = artById(id); if (!a) return;
+      ed.replaceId = id; S.f = a.frame; ed.name = a.name; ed.lastSaved = null;
+      if (loaded) { ensureSample(); resetFraming(); ed.phase = 'loaded'; } else { clearOriginal(); ed.phase = 'empty'; }
+    }
+    function applyState(st) {
+      ed.token++; ed.replaceId = null; ed.err = null; ed.lastSaved = null; ed.savedKind = null;
+      switch (st) {
+        case 'empty': clearOriginal(); ed.phase = 'empty'; break;
+        case 'loading': clearOriginal(); ed.url = 'https://i.pinimg.com/originals/3f/9a/c2/zodiac-backdrop.jpg'; ed.phase = 'loading'; break;
+        case 'error-page': clearOriginal(); ed.url = 'https://www.pinterest.com/pin/1407443627154561/'; ed.phase = 'error'; ed.err = 'page'; break;
+        case 'error-blocked': clearOriginal(); ed.url = 'https://m.media-amazon.com/images/M/MV5BZodiacPoster.jpg'; ed.phase = 'error'; ed.err = 'blocked'; break;
+        case 'saved':
+          ensureSample(); resetFraming(); ed.name = 'Found Footage';
+          LIB = LIB.filter(a => !(norm(a.name) === 'found footage' && a.frame === S.f)); // canned: always a fresh save
+          commitSave(ed.name, null); break;
+        case 'conflict': ensureSample(); ed.name = 'Serial Killer movies'; if (!findArt(ed.name, S.f)) S.f = 'poster'; resetFraming(); ed.phase = 'conflict'; break;
+        case 'replace-empty': startReplace(SK_POSTER().id, false); break;
+        case 'replace-loaded': startReplace(SK_POSTER().id, true); break;
+        case 'replaced': startReplace(SK_POSTER().id, true); commitReplace(artById(ed.replaceId), 'replaced'); break;
+        default: ensureSample(); resetFraming(); ed.phase = 'loaded';
+      }
+    }
+
+    /* ---------- Saving (fake) ---------- */
+    function commitSave(name, existing) {
+      if (existing) return commitReplace(existing, 'replaced-existing');
+      const id = randId(), o = outSize();
+      const a = { id, name, frame: S.f, w: o.w, h: o.h, src: ed.src, iw: ed.iw, ih: ed.ih, file: ed.file, rel: ed.rel, ox: ed.ox, oy: ed.oy, url: urlOf(id, S.f), replaced: false };
+      LIB.push(a);
+      ed.session.add(id); ed.lastSaved = id; ed.savedKind = 'new'; ed.phase = 'saved';
+    }
+    function commitReplace(a, kind) {
+      const o = outSize();
+      Object.assign(a, { src: ed.src, iw: ed.iw, ih: ed.ih, file: ed.file, rel: ed.rel, ox: ed.ox, oy: ed.oy, w: o.w, h: o.h, replaced: true });
+      ed.session.add(a.id); ed.lastSaved = a.id; ed.savedKind = kind;
+      ed.phase = kind === 'replaced' ? 'replaced' : 'saved';
+    }
+    function fakeAsync(fn) {
+      ed.phase = 'saving'; renderEditor();
+      const token = ++ed.token;
+      setTimeout(() => { if (token !== ed.token) return; fn(); renderAll(); }, 650);
+    }
+    function onSave() {
+      if (!hasImg()) return;
+      if (ed.replaceId) return openDialog('replace');
+      const name = C.nameIn.value.trim();
+      if (!name) { C.nameHint.className = 'name-hint warn'; C.nameHint.innerHTML = `${ico('alert')}<span>Type the folder name first. It's how you'll find this in the Library.</span>`; C.nameIn.focus(); return; }
+      ed.name = name;
+      if (findArt(name, S.f)) { ed.phase = 'conflict'; renderAll(); C.conflict.querySelector('button')?.focus(); return; }
+      fakeAsync(() => {
+        commitSave(name, null);
+        const a = artById(ed.lastSaved);
+        toast(`${glyph(a.frame, 14)}<span>${FRAMES[a.frame].label} saved for ${esc(a.name)}<small>${esc(a.url)}</small></span>`);
+      });
+    }
+
+    /* ---------- Editor interactions ---------- */
+    function setFrame(k) {
+      if (ed.replaceId && k !== artById(ed.replaceId)?.frame) { toast(`${ico('lock')}<span>The Frame is locked while replacing.</span>`); return; }
+      if (S.f === k) return;
+      const ae = document.activeElement;
+      const where = ae && ae.closest ? (ae.closest('.fpick') ? C.fpick : ae.closest('.tiles') ? C.tilesInner : ae.closest('.set-slots') ? C.setSlots : null) : null;
+      S.f = k; resetFraming();
+      if (['saved', 'conflict'].includes(ed.phase)) ed.phase = 'loaded';
+      renderEditor(); sync();
+      if (where) where.querySelector(`input[value="${k}"], [data-frame="${k}"]`)?.focus(); // re-render replaced the focused control
+    }
+    function setMode(m) {
+      if (!canFrame()) return;
+      ed.mode = m; ed.rel = m === 'fit' ? fitRel(ed.iw, ed.ih, FR().ar) : 1; ed.ox = 0; ed.oy = 0;
+      paint();
+    }
+    function relRange() { const fr = fitRel(ed.iw, ed.ih, FR().ar); return { min: fr * .5, max: 4, fit: fr }; }
+    function relToSlider(rel) { const r = relRange(); return 1000 * Math.log(rel / r.min) / Math.log(r.max / r.min); }
+    function sliderToRel(v) { const r = relRange(); return r.min * Math.pow(r.max / r.min, v / 1000); }
+    function setRel(rel) {
+      const k = rel / ed.rel; // zoom around the frame centre
+      ed.rel = rel; ed.ox *= k; ed.oy *= k; clampEd();
+    }
+    function clampEd() { const p = clampPos(ed.iw, ed.ih, FR().ar, ed.rel, ed.ox, ed.oy); ed.ox = p.ox; ed.oy = p.oy; }
+
+    /* ======================================================================
+       Editor components + layouts
+       ====================================================================== */
+    const COMP = {}, C = {};
+    (function buildComponents() {
+      const frag = $('#tplComponents').content.cloneNode(true);
+      fillIcons(frag);
+      [...frag.children].forEach(el => { COMP[el.dataset.comp] = el; });
+      $$('[data-ref]', frag).forEach(el => { C[el.dataset.ref] = el; });
+      Object.values(COMP).forEach(el => { if (el.dataset.ref) C[el.dataset.ref] = el; });
+      C.stage = COMP.stage;
+    })();
+    C.urlIn.placeholder = `Paste here (${PASTE_KEY}): an image, or https://…`;
+
+    const LAYOUTS = {
+      rail: `<div data-slot="banner"></div>
+        <div class="ed ed-a">
+          <div class="ed-col"><div data-slot="stage"></div><div data-slot="orig"></div><div data-slot="set"></div></div>
+          <aside class="rail panel" aria-label="Artwork settings"><div data-slot="pick"></div><div data-slot="fit"></div><div data-slot="scale"></div><div data-slot="size"></div><div data-slot="save"></div><div data-slot="receipt"></div></aside>
+        </div>`,
+      sheet: `<div data-slot="banner"></div>
+        <div class="ed ed-b">
+          <div data-slot="stage"></div><div data-slot="orig"></div><div data-slot="tiles"></div>
+          <div class="dock panel" aria-label="Artwork settings"><div data-slot="fit"></div><div data-slot="scale"></div><div data-slot="size"></div><div data-slot="save"></div></div>
+          <div data-slot="receipt"></div>
+        </div>`,
+      // v2: layout A below 1024px. One column: Frame row, preview, Original bar, Fill + Scale box,
+      // then one card for Name + Save with the folder's set underneath.
+      stack: `<div data-slot="banner"></div>
+        <div class="ed ed-s">
+          <div data-slot="pick"></div>
+          <div data-slot="stage"></div>
+          <div data-slot="orig"></div>
+          <div class="adjust panel" aria-label="Fill and scale"><div data-slot="fit"></div><div data-slot="scale"></div><div data-slot="adjhint"></div><div data-slot="size"></div></div>
+          <section class="setsave panel" aria-label="Name, save and folder set"><div data-slot="save"></div><div data-slot="set"></div></section>
+          <div data-slot="receipt"></div>
+        </div>`,
+    };
+    const STACK_BELOW = 1024; // px of viewport width
+    const layoutKey = () => (S.el === 'rail' && $('#viewport').clientWidth < STACK_BELOW) ? 'stack' : S.el;
+    const edRoot = $('#editorScreen');
+    let mounted = null;
+    function mountLayout(key) {
+      // Park every component first: a component not used by this layout must not stay in the old DOM.
+      Object.values(COMP).forEach(el => el.remove());
+      edRoot.innerHTML = LAYOUTS[key];
+      $$('[data-slot]', edRoot).forEach(slot => slot.replaceWith(COMP[slot.dataset.slot]));
+      mounted = key;
+      C.stage.classList.remove('ready');
+      requestAnimationFrame(() => { layoutStage(); requestAnimationFrame(() => C.stage.classList.add('ready')); });
+    }
+
+    // Fit the current Frame inside the fixed-size stage. The stage never changes size, so nothing else moves.
+    function layoutStage() {
+      const W = C.stage.clientWidth, H = C.stage.clientHeight;
+      if (!W || !H) return;
+      const padX = 22, padTop = 44, padBot = 22, aw = W - 2 * padX, ah = H - padTop - padBot, ar = FR().ar;
+      let fw, fh;
+      if (aw / ah > ar) { fh = ah; fw = ah * ar; } else { fw = aw; fh = aw / ar; }
+      const css = `left:${((W - fw) / 2).toFixed(1)}px;top:${(padTop + (ah - fh) / 2).toFixed(1)}px;width:${fw.toFixed(1)}px;height:${fh.toFixed(1)}px`;
+      C.frame.style.cssText = css; C.ghost.style.cssText = css;
+    }
+    new ResizeObserver(() => layoutStage()).observe(C.stage);
+
+    function setDisabled(el, off) {
+      el.classList.toggle('is-disabled', off);
+      $$('input, button, select', el).forEach(i => { i.disabled = off; });
+    }
+
+    // Cheap repaint for drag/slider: image placement, slider, mode radios, soft warning, live thumbnails.
+    function paint() {
+      const has = hasImg(), f = FR();
+      if (has) {
+        placeImg(C.frameImg, ed.iw, ed.ih, f.ar, ed.rel, ed.ox, ed.oy);
+        placeImg(C.ghostImg, ed.iw, ed.ih, f.ar, ed.rel, ed.ox, ed.oy);
+        $$('[data-live] img', edRoot).forEach(img => placeImg(img, ed.iw, ed.ih, f.ar, ed.rel, ed.ox, ed.oy));
+      }
+      // Fill radios + hint
+      $$('input[name=mode]', C.modeSeg).forEach(r => { r.checked = has && r.value === ed.mode; });
+      C.modeHint.textContent = C.adjHint.textContent = !has ? 'Cover fills the whole Frame. Fit shows the whole image.'
+        : ed.mode === 'cover' ? 'Cover fills the whole Frame. Some edges are cropped.'
+          : ed.mode === 'fit' ? 'Fit shows the whole image. Empty space is solid black.'
+            : 'Custom scale. Click Fit or Cover to snap back.';
+      // Slider + Fit/Cover marks on the track
+      if (has) {
+        const r = relRange(), v = relToSlider(ed.rel);
+        C.scaleIn.value = Math.round(v);
+        C.scaleIn.style.setProperty('--fill', (v / 10) + '%');
+        C.scaleOut.textContent = Math.round(ed.rel * 100) + '%';
+        C.markFit.style.left = (relToSlider(r.fit) / 10) + '%';
+        C.markCover.style.left = (relToSlider(1) / 10) + '%';
+        C.markFit.hidden = Math.abs(r.fit - 1) < .001; // same aspect: Fit == Cover
+        C.markFit.classList.toggle('on', ed.mode === 'fit'); C.markCover.classList.toggle('on', ed.mode === 'cover');
+        const e = enlargement(), o = outSize();
+        if (e > SOFT_AT) { C.soft.className = 'soft warn'; C.soft.innerHTML = `${ico('alert')}<span><b>May look soft.</b> The Original is enlarged ${e.toFixed(1)}× to fill ${o.w}×${o.h}.</span>`; }
+        else { C.soft.className = 'soft'; C.soft.innerHTML = `<span>Sharp enough: ${e.toFixed(2)}× of the Original's pixels.</span>`; }
+      } else {
+        C.scaleIn.value = 500; C.scaleIn.style.setProperty('--fill', '50%'); C.scaleOut.textContent = '–';
+        C.markFit.style.left = '30%'; C.markCover.style.left = '50%';
+        C.soft.className = 'soft'; C.soft.innerHTML = '';
+      }
+    }
+
+    function renderEditor() {
+      const key = layoutKey();
+      if (mounted !== key) mountLayout(key);
+      const f = FR(), has = hasImg(), p = ed.phase, rep = ed.replaceId ? artById(ed.replaceId) : null;
+      edRoot.classList.toggle('is-replace', !!rep);
+
+      // Replace banner
+      COMP.banner.hidden = !rep;
+      if (rep) {
+        C.rbThumb.style.aspectRatio = FRAMES[rep.frame].css;
+        C.rbThumb.innerHTML = `<img ${imgAttrs(rep.src, rep.iw, rep.ih, rep.file)} style="${placeCss(rep.iw, rep.ih, FRAMES[rep.frame].ar, rep.rel, rep.ox, rep.oy)}">`;
+        C.rbName.textContent = rep.name; C.rbFrame.textContent = FRAMES[rep.frame].label; C.rbUrl.textContent = rep.url;
+      }
+
+      // Stage
+      C.stage.dataset.has = has ? '1' : '0';
+      C.stage.classList.toggle('show-ghost', S.ghost === '1');
+      C.capLeft.innerHTML = `${rep ? '<span class="cap-tag">New image</span>' : ''}${glyph(S.f, 13)}<span>${f.label} · ${f.shape} · saves ${frameSizeLabel(S.f)}</span>`;
+      C.capRight.textContent = has ? (p === 'replaced' ? 'Replaced' : 'Drag to move · arrow keys nudge') : '';
+      if (has) { setImg(C.frameImg, ed.src, ed.iw, ed.ih, ed.file); setImg(C.ghostImg, ed.src, ed.iw, ed.ih, ed.file); }
+      C.frame.tabIndex = canFrame() ? 0 : -1;
+      C.drop.hidden = has || p === 'loading';
+      C.loading.hidden = p !== 'loading';
+      C.loadingUrl.textContent = ed.url;
+      C.dropTitle.textContent = rep ? `New image for ${rep.name}` : 'Start with an Original';
+      C.dropLead.innerHTML = rep ? `It will be framed as the ${FRAMES[rep.frame].label} and replace the current one. Paste an image, or a link to one.` : 'Paste an image, or a link to one. Either works in the same box.';
+      if (p === 'error') {
+        C.urlErr.hidden = false; C.urlErr.innerHTML = ico('alert') + `<span>${ERRORS[ed.err] || ERRORS.blocked}</span>`;
+        C.urlIn.setAttribute('aria-invalid', 'true'); C.urlIn.value = ed.url;
+      } else { C.urlErr.hidden = true; C.urlIn.removeAttribute('aria-invalid'); if (p === 'empty') C.urlIn.value = ''; }
+
+      // Original bar
+      if (has) {
+        C.origThumb.innerHTML = `<img ${imgAttrs(ed.src, ed.iw, ed.ih, ed.file)}>`;
+        C.origName.textContent = ed.file || 'Pasted image';
+        C.origDims.textContent = `${ed.iw}×${ed.ih} · Original`;
+      } else {
+        C.origThumb.innerHTML = ico('image'); C.origName.textContent = 'No Original yet';
+        C.origDims.textContent = p === 'loading' ? 'Loading…' : `Paste (${PASTE_KEY}), drop, or choose an image`;
+      }
+      C.ghostChk.checked = S.ghost === '1'; C.ghostChk.disabled = !has; C.newOrig.disabled = !has || p === 'saving';
+
+      // Frame picker (A) + tiles (B)
+      renderPicker(rep);
+      renderTiles(rep);
+      renderSet(rep);
+
+      // Controls availability
+      const lockCtl = !canFrame();
+      renderSize();
+      setDisabled(COMP.fit, lockCtl); setDisabled(COMP.scale, lockCtl); setDisabled(COMP.size, lockCtl);
+
+      // Save box
+      C.nameIn.value = ed.name;
+      C.nameIn.readOnly = !!rep;
+      C.nameLock.hidden = !rep; C.nameLock.innerHTML = ico('lock'); C.nameLock.className = 'lock';
+      C.nameList.innerHTML = groups().map(g => `<option value="${esc(g.name)}">`).join('');
+      C.saveBtn.className = 'btn btn-save' + (rep ? ' btn-replace' : '');
+      C.saveBtn.innerHTML = p === 'saving' ? 'Saving…' : rep ? `${ico('swap')} Replace image` : `Save ${f.label}`;
+      C.saveBtn.disabled = !has || p === 'saving' || p === 'replaced';
+      renderNameHint(rep);
+      renderConflict();
+      renderReceipt();
+
+      paint();
+      layoutStage();
+    }
+
+    function renderNameHint(rep) {
+      const name = ed.name.trim(), f = FR();
+      let cls = 'name-hint', html;
+      if (rep) html = `${ico('lock')}<span>Name and Frame are fixed while replacing.</span>`;
+      else if (!name) html = `<span>One Artwork per Frame per name, so a folder can have a Hero <em>and</em> a Poster.</span>`;
+      else if (findArt(name, S.f) && ed.phase !== 'saved') { cls += ' warn'; html = `${ico('info')}<span>${esc(name)} already has a ${f.label}. Saving will ask before replacing it.</span>`; }
+      else {
+        const have = framesFor(name);
+        html = have.length ? `<span>${esc(name)} has ${have.map(k => FRAMES[k].label).join(', ')} so far.</span>` : `<span>New folder name.</span>`;
+      }
+      C.nameHint.className = cls; C.nameHint.innerHTML = html;
+    }
+
+    function renderConflict() {
+      const show = ed.phase === 'conflict';
+      C.conflict.hidden = !show;
+      if (!show) return;
+      const a = findArt(ed.name, S.f); if (!a) { C.conflict.hidden = true; return; }
+      C.conflict.innerHTML = `${thumbHTML(a)}<div><p><b>${esc(a.name)} already has a ${FRAMES[a.frame].label}. Replace it?</b></p>
+        <p>It keeps its URL, so Nuvio updates by itself.</p>
+        <div class="conflict-actions"><button type="button" class="btn btn-replace sm" data-cf="yes">Replace it</button><button type="button" class="btn btn-ghost sm" data-cf="no">Use another name</button></div></div>`;
+    }
+
+    function renderReceipt() {
+      const a = ed.lastSaved && artById(ed.lastSaved);
+      const show = !!a && (ed.phase === 'saved' || ed.phase === 'replaced');
+      C.receiptInner.hidden = !show;
+      if (!show) return;
+      const f = FRAMES[a.frame];
+      const title = ed.savedKind === 'new' ? `${f.label} saved for <b>${esc(a.name)}</b>` : `${f.label} replaced for <b>${esc(a.name)}</b>`;
+      const sub = ed.savedKind === 'new' ? 'Paste this URL into the folder\'s ' + f.label + ' slot in Nuvio.' : 'Same URL as before. Nuvio will show the new image within a few minutes.';
+      const missing = ORDER.filter(k => !findArt(a.name, k));
+      const next = ed.phase === 'replaced'
+        ? `<div class="next"><div class="chips"><button type="button" class="chip" data-go="library">Back to Library</button></div></div>`
+        : `<div class="next"><span class="eyebrow">Next for ${esc(a.name)}</span><div class="chips">${missing.length
+          ? missing.map(k => `<button type="button" class="chip" data-next="${k}">${glyph(k, 12)} ${FRAMES[k].label}</button>`).join('')
+          : `<span class="text-success" style="font-size:.8rem">All four Frames done for this folder.</span>`}</div></div>`;
+      C.receiptInner.innerHTML = `<div><p class="receipt-title">${ico('check')}<span>${title}</span></p><p class="receipt-sub">${sub}</p><p class="url">${urlHTML(a)}</p></div>
+        <div class="receipt-actions"><button type="button" class="btn sm btn-copy" data-copy="${a.id}">${ico('copy')} Copy ${f.label} URL</button><a class="btn btn-ghost sm" href="${esc(a.src)}" target="_blank" rel="noopener">Open ${ico('ext')}</a></div>${next}`;
+    }
+
+    function renderPicker(rep) {
+      const name = ed.name.trim();
+      C.pickLegend.innerHTML = rep ? `Frame <span class="text-warning" style="display:inline-flex;gap:.3rem;align-items:center">${ico('lock').replace('<svg', '<svg style="width:.8rem;height:.8rem"')} locked</span>` : 'Frame';
+      C.fpick.innerHTML = ORDER.map(k => {
+        const fr = FRAMES[k], a = name && findArt(name, k), locked = rep && k !== S.f;
+        return `<label class="fopt"><input type="radio" name="frameA" value="${k}" ${k === S.f ? 'checked' : ''} ${locked ? 'disabled' : ''}>
+          <span class="fshape">${glyph(k, 20)}</span><span class="fname">${fr.label}</span><span class="fsize">${frameSizeLabel(k)}</span>
+          ${a ? `<span class="fstat" title="${esc(a.name)} has a ${fr.label}">${ico('check')}</span>` : ''}</label>`;
+      }).join('');
+    }
+
+    function slotInfo(k, rep) {
+      const name = ed.name.trim(), a = name ? findArt(name, k) : null, cur = k === S.f, f = FRAMES[k];
+      let thumb, stat, ok = false;
+      if (cur && hasImg()) thumb = thumbHTML({ src: ed.src, iw: ed.iw, ih: ed.ih, file: ed.file, frame: k, rel: ed.rel, ox: ed.ox, oy: ed.oy }, '', true);
+      else if (a) thumb = thumbHTML(a);
+      else if (hasImg()) thumb = thumbHTML({ src: ed.src, iw: ed.iw, ih: ed.ih, file: ed.file, frame: k, rel: 1, ox: 0, oy: 0 });
+      else thumb = emptyThumb(k);
+      if (cur) stat = rep ? 'Replacing' : a ? (ed.session.has(a.id) ? 'Editing · saved' : 'Editing · already exists') : 'Editing';
+      else if (a) { ok = true; stat = ed.session.has(a.id) ? (ed.lastSaved === a.id ? 'Saved just now' : 'Saved this visit') : 'In Library'; }
+      else stat = hasImg() ? 'Not made · Cover preview' : 'Not made';
+      return { a, cur, f, thumb, stat, ok, locked: !!rep && !cur };
+    }
+
+    function renderTiles(rep) {
+      C.tilesInner.innerHTML = ORDER.map(k => {
+        const s = slotInfo(k, rep);
+        return `<button type="button" class="tile" data-frame="${k}" aria-pressed="${s.cur}" ${s.locked ? 'disabled' : ''}>${s.thumb}
+          <span class="tile-meta"><span class="tile-name">${glyph(k, 12)} ${s.f.label}${s.locked ? ico('lock') : ''}</span><span class="mono">${frameSizeLabel(k)}</span>
+          <span class="tile-stat ${s.cur ? 'cur' : s.ok ? 'ok' : ''}">${s.ok ? ico('check') : ''}${s.stat}</span></span></button>`;
+      }).join('') + `<p class="tiles-note">Each tile previews the Original in that Frame. Saved ones show what's in Nuvio now.</p>`;
+    }
+
+    function renderSet(rep) {
+      const name = ed.name.trim();
+      const have = name ? framesFor(name).length : 0;
+      C.setHead.innerHTML = name
+        ? `<span class="eyebrow">Folder set</span><b>${esc(name)}</b><span class="text-muted">${have} of 4 Frames</span>`
+        : `<span class="eyebrow">Folder set</span><span class="text-muted">Type a Name to see which Frames that folder already has.</span>`;
+      C.setSlots.innerHTML = ORDER.map(k => {
+        const s = slotInfo(k, rep);
+        const action = s.a && !s.cur ? `<button type="button" class="btn xs btn-copy" data-copy="${s.a.id}">${ico('copy')} Copy ${s.f.label} URL</button>`
+          : s.a && s.cur ? `<button type="button" class="btn btn-ghost xs btn-copy" data-copy="${s.a.id}">${ico('copy')} Copy ${s.f.label} URL</button>` : '';
+        return `<div class="slot ${s.cur ? 'cur' : ''}"><button type="button" class="slot-hit" data-frame="${k}" ${s.locked ? 'disabled' : ''} aria-label="Edit ${s.f.label}">${s.thumb}
+          <span class="slot-name">${glyph(k, 11)} ${s.f.label}</span><span class="slot-stat ${s.ok ? 'ok' : ''}">${s.stat}</span></button>${action}</div>`;
+      }).join('');
+    }
+
+    function renderSize() {
+      const has = hasImg();
+      if (S.f !== 'hero') {
+        const f = FR();
+        C.sizeBody.innerHTML = `<p class="size-fixed"><span class="mono">${f.w}×${f.h}</span><span class="text-muted">about ${f.mb}</span></p><p class="ctl-hint">Every ${f.label} saves at this size.</p>`;
+        return;
+      }
+      if (has && !heroOk(ed.iw, ed.ih)) {
+        C.sizeBody.innerHTML = `<p class="size-fixed"><span class="mono">1920×1080</span><span class="text-muted">0.5 MB</span></p>
+          <p class="ctl-hint">Your Original is ${ed.iw}×${ed.ih}. 3840×2160 needs one at least that big, so this Hero saves at 1920×1080.</p>`;
+        return;
+      }
+      const opt = (v) => { const s = HERO_SIZES[v]; return `<label class="size-opt"><input type="radio" name="heroSize" value="${v}" ${ed.heroSize === v ? 'checked' : ''} ${has ? '' : 'disabled'}><span class="mono">${s.w}×${s.h}</span><span class="text-muted">${s.mb}</span></label>`; };
+      C.sizeBody.innerHTML = `<div role="radiogroup" aria-label="Hero size">${opt('4k')}${opt('1080')}</div>${has ? '' : '<p class="ctl-hint">3840×2160 is offered when the Original is big enough.</p>'}`;
+    }
+
+    /* ---------- Editor events ---------- */
+    C.urlForm.addEventListener('submit', e => { e.preventDefault(); loadFromUrl(C.urlIn.value); });
+    C.fileBtn.addEventListener('click', () => $('#fileIn').click());
+    $('#fileIn').addEventListener('change', e => { const f = e.target.files[0]; if (f) loadFile(f); e.target.value = ''; });
+    C.drop.addEventListener('click', e => { const b = e.target.closest('[data-sample]'); if (b) { ed.token++; useOriginal(IMAGES[b.dataset.sample].src, IMAGES[b.dataset.sample].w, IMAGES[b.dataset.sample].h, fileOf(IMAGES[b.dataset.sample].src), false, b.dataset.sample); } });
+    C.loadCancel.addEventListener('click', () => { ed.token++; ed.phase = 'empty'; renderAll(); C.urlIn.value = ed.url; C.urlIn.focus(); });
+    C.newOrig.addEventListener('click', () => { clearOriginal(); ed.phase = 'empty'; ed.lastSaved = null; renderAll(); C.urlIn.focus(); });
+    C.ghostChk.addEventListener('change', () => { S.ghost = C.ghostChk.checked ? '1' : '0'; C.stage.classList.toggle('show-ghost', S.ghost === '1'); sync(); });
+    C.rbCancel.addEventListener('click', () => { ed.replaceId = null; ed.phase = hasImg() ? 'loaded' : 'empty'; ed.lastSaved = null; S.s = 'library'; renderAll(); });
+
+    C.modeSeg.addEventListener('click', e => { const r = e.target.closest('input[name=mode]'); if (r) setMode(r.value); }); // click: re-snaps even if already checked
+    C.modeSeg.addEventListener('change', e => { if (e.target.name === 'mode') setMode(e.target.value); }); // keyboard arrows
+    C.scaleIn.addEventListener('input', () => { if (!canFrame()) return; setRel(sliderToRel(+C.scaleIn.value)); ed.mode = null; paint(); });
+    C.markFit.addEventListener('click', () => setMode('fit'));
+    C.markCover.addEventListener('click', () => setMode('cover'));
+    C.sizeBody.addEventListener('change', e => {
+      if (e.target.name !== 'heroSize') return;
+      ed.heroSize = e.target.value; renderEditor();
+      C.sizeBody.querySelector(`input[value="${ed.heroSize}"]`)?.focus();
+    });
+    C.fpick.addEventListener('change', e => { if (e.target.name === 'frameA') setFrame(e.target.value); });
+    C.tilesInner.addEventListener('click', e => { const t = e.target.closest('.tile'); if (t && !t.disabled) setFrame(t.dataset.frame); });
+    C.setSlots.addEventListener('click', e => {
+      const c = e.target.closest('[data-copy]'); if (c) return copyArt(artById(c.dataset.copy), c);
+      const s = e.target.closest('.slot-hit'); if (s && !s.disabled) setFrame(s.dataset.frame);
+    });
+
+    C.nameIn.addEventListener('input', () => {
+      ed.name = C.nameIn.value;
+      if (ed.phase === 'conflict') { ed.phase = 'loaded'; renderConflict(); }
+      if (ed.phase === 'saved') { ed.phase = 'loaded'; renderReceipt(); }
+      renderNameHint(null); renderPicker(null); renderTiles(null); renderSet(null); paint();
+    });
+    C.nameIn.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); onSave(); } });
+    C.saveBtn.addEventListener('click', onSave);
+    C.conflict.addEventListener('click', e => {
+      const b = e.target.closest('[data-cf]'); if (!b) return;
+      if (b.dataset.cf === 'no') { ed.phase = 'loaded'; renderAll(); C.nameIn.select(); return; }
+      const a = findArt(ed.name, S.f);
+      fakeAsync(() => { commitReplace(a, 'replaced-existing'); toast(`${glyph(a.frame, 14)}<span>${FRAMES[a.frame].label} replaced for ${esc(a.name)}<small>Same URL. Nuvio updates within a few minutes.</small></span>`); });
+    });
+    C.receiptInner.addEventListener('click', e => {
+      const c = e.target.closest('[data-copy]'); if (c) return copyArt(artById(c.dataset.copy), c);
+      const n = e.target.closest('[data-next]'); if (n) return setFrame(n.dataset.next);
+      if (e.target.closest('[data-go=library]')) { ed.replaceId = null; ed.phase = 'loaded'; ed.lastSaved = null; S.s = 'library'; renderAll(); }
+    });
+
+    // Drag inside the Frame (pointer events, so mouse, pen and touch all work)
+    let drag = null;
+    C.frame.addEventListener('pointerdown', e => {
+      if (!canFrame() || e.button > 0) return;
+      e.preventDefault(); C.frame.focus({ preventScroll: true });
+      C.frame.setPointerCapture(e.pointerId);
+      drag = { id: e.pointerId, x: e.clientX, y: e.clientY, ox: ed.ox, oy: ed.oy, fh: C.frame.getBoundingClientRect().height };
+      C.stage.classList.add('dragging');
+    });
+    C.frame.addEventListener('pointermove', e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      ed.ox = drag.ox + (e.clientX - drag.x) / drag.fh / FR().ar;
+      ed.oy = drag.oy + (e.clientY - drag.y) / drag.fh;
+      clampEd(); paint();
+    });
+    const endDrag = e => { if (drag && e.pointerId === drag.id) { drag = null; C.stage.classList.remove('dragging'); } };
+    C.frame.addEventListener('pointerup', endDrag);
+    C.frame.addEventListener('pointercancel', endDrag);
+    C.frame.addEventListener('keydown', e => {
+      if (!canFrame()) return;
+      const step = e.shiftKey ? .1 : .015, d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+      if (!d) return;
+      e.preventDefault(); ed.ox += d[0] * step; ed.oy += d[1] * step; clampEd(); paint();
+    });
+
+    /* ======================================================================
+       Library
+       ====================================================================== */
+    const libBody = $('#libBody');
+    function renderLibrary() {
+      const q = norm(S.q), lf = S.lf;
+      if ($('#libQ').value !== S.q) $('#libQ').value = S.q;
+      $$('input[name=lf]').forEach(r => { r.checked = r.value === lf; });
+      const all = groups(), gs = q ? all.filter(g => norm(g.name).includes(q)) : all;
+      $('#libSummary').innerHTML = `<span>${LIB.length} Artworks in ${all.length} folders</span>${copied.size ? `<span class="copied-tick">${ico('check')} ${copied.size} URL${copied.size > 1 ? 's' : ''} copied this visit <button type="button" class="link" data-act="clear-copied">Clear ticks</button></span>` : ''}`;
+      $('#libHint').innerHTML = lf === 'all'
+        ? `${ico('info')}<span>Filling Nuvio slots? Pick one Frame above so only those URLs are in play.</span>`
+        : `${glyph(lf, 13)}<span>Showing ${FRAMES[lf].label} URLs only. Every copy button here pastes into a ${FRAMES[lf].label} slot.</span>`;
+      if (!LIB.length) { libBody.innerHTML = `<p class="lib-empty">No Artwork yet. Make your first one in the Editor.</p>`; return; }
+      if (!gs.length) { libBody.innerHTML = `<p class="lib-empty">No folder matches “${esc(S.q)}”.</p>`; return; }
+      libBody.innerHTML = S.ll === 'shelf' ? shelfHTML(gs, lf) : listHTML(gs, lf);
+    }
+
+    const actIcons = a => {
+      const n = `${esc(a.name)} ${FRAMES[a.frame].label}`;
+      return `<div class="icon-row">
+        <a class="icon-btn" href="${esc(a.src)}" target="_blank" rel="noopener" title="Open" aria-label="Open ${n}">${ico('ext')}</a>
+        <button type="button" class="icon-btn" data-act="rename" data-id="${a.id}" title="Rename" aria-label="Rename ${n}">${ico('pencil')}</button>
+        <button type="button" class="icon-btn" data-act="replace" data-id="${a.id}" title="Replace" aria-label="Replace ${n}">${ico('swap')}</button>
+        <button type="button" class="icon-btn danger" data-act="delete" data-id="${a.id}" title="Delete" aria-label="Delete ${n}">${ico('trash')}</button></div>`;
+    };
+    const copyBtn = (a, cls = 'sm') => `<button type="button" class="btn ${cls} btn-copy" data-act="copy" data-id="${a.id}">${ico('copy')} Copy ${FRAMES[a.frame].label} URL</button>`;
+    const tick = a => copied.has(a.id) ? `<span class="copied-tick">${ico('check')} Copied</span>` : '';
+    const replacedBadge = a => a.replaced ? `<span class="badge">Replaced</span>` : '';
+
+    function shelfHTML(gs, lf) {
+      const head = `<div class="shelf-head" role="row"><span class="sh-name" role="columnheader">Folder</span>${ORDER.map(k => {
+        const f = FRAMES[k];
+        return `<span class="sh-col ${lf === k ? 'lf-on' : ''}" role="columnheader"><span>${glyph(k, 13)} ${f.label}</span><small>${f.shape} · ${k === 'hero' ? '3840 or 1920' : f.w + '×' + f.h}</small></span>`;
+      }).join('')}</div>`;
+      const rows = gs.map(g => {
+        const n = ORDER.filter(k => g.items[k]).length;
+        return `<div class="shelf-row" role="row"><div class="shelf-name" role="rowheader"><h3>${esc(g.name)}</h3><span class="mono">${n} of 4 Frames</span></div>${ORDER.map(k => {
+          const a = g.items[k], on = lf === k ? 'lf-on' : '';
+          if (!a) return `<div class="cell ${on}" role="cell"><div class="cell-thumb"><button type="button" class="empty-slot" style="aspect-ratio:${FRAMES[k].css}" data-act="add" data-name="${esc(g.name)}" data-frame="${k}" aria-label="Make a ${FRAMES[k].label} for ${esc(g.name)}"><span>${ico('plus')}${FRAMES[k].label}</span></button></div><span class="cell-meta"><span class="mono">Not made</span></span></div>`;
+          return `<div class="cell ${on}" role="cell"><div class="cell-thumb">${thumbHTML(a)}</div><div class="cell-meta"><span class="mono">${a.w}×${a.h}</span>${replacedBadge(a)}${tick(a)}</div>${copyBtn(a, 'xs')}${actIcons(a)}</div>`;
+        }).join('')}</div>`;
+      }).join('');
+      return `<div class="shelf" role="table" aria-label="Library by folder and Frame" data-lf="${lf}">${head}${rows}</div>`;
+    }
+
+    function listHTML(gs, lf) {
+      const out = gs.map(g => {
+        const items = ORDER.map(k => g.items[k]).filter(a => a && (lf === 'all' || a.frame === lf));
+        if (!items.length) return '';
+        const missing = ORDER.filter(k => !g.items[k]);
+        return `<section class="lgroup"><header class="lg-head"><h3>${esc(g.name)}</h3>
+          <span class="lg-frames" aria-label="Has ${ORDER.filter(k => g.items[k]).map(k => FRAMES[k].label).join(', ')}">${ORDER.map(k => `<span class="${g.items[k] ? 'on' : ''}" title="${FRAMES[k].label}${g.items[k] ? '' : ' (not made)'}">${glyph(k, 13)}</span>`).join('')}</span>
+          ${missing.length && lf === 'all' ? `<span class="lg-add">Add ${missing.map(k => `<button type="button" class="link" data-act="add" data-name="${esc(g.name)}" data-frame="${k}">${ico('plus')}${FRAMES[k].label}</button>`).join('')}</span>` : ''}</header>
+          <ul>${items.map(a => `<li class="lrow ${copied.has(a.id) ? 'is-copied' : ''}">
+            <span class="tbox">${thumbHTML(a)}</span>
+            <div class="lmeta"><div class="lmeta-top"><span class="pill">${glyph(a.frame, 11)} ${FRAMES[a.frame].label}</span><span class="mono">${a.w}×${a.h}</span>${replacedBadge(a)}${tick(a)}</div><p class="url">${urlHTML(a)}</p></div>
+            <div class="lcopy">${copyBtn(a)}</div>
+            <div class="lacts"><a class="btn btn-ghost xs" href="${esc(a.src)}" target="_blank" rel="noopener">Open ${ico('ext')}</a><button type="button" class="btn btn-ghost xs" data-act="rename" data-id="${a.id}">Rename</button><button type="button" class="btn btn-ghost xs" data-act="replace" data-id="${a.id}">Replace</button><button type="button" class="btn btn-danger xs" data-act="delete" data-id="${a.id}">Delete</button></div>
+          </li>`).join('')}</ul></section>`;
+      }).join('');
+      return out || `<p class="lib-empty">No ${FRAMES[lf].label} Artwork${S.q ? ` matches “${esc(S.q)}”` : ' yet'}.</p>`;
+    }
+
+    $('#libraryScreen').addEventListener('click', e => {
+      const b = e.target.closest('[data-act]'); if (!b) return;
+      const a = b.dataset.id && artById(b.dataset.id);
+      switch (b.dataset.act) {
+        case 'copy': return copyArt(a, b);
+        case 'rename': return openDialog('rename', a.id);
+        case 'delete': return openDialog('delete', a.id);
+        case 'replace': ed.token++; startReplace(a.id, false); S.s = 'editor'; renderAll(); window.scrollTo({ top: 0 }); C.urlIn.focus({ preventScroll: true }); return;
+        case 'add':
+          ed.token++; ed.replaceId = null; ed.name = b.dataset.name; S.f = b.dataset.frame; resetFraming();
+          ed.phase = hasImg() ? 'loaded' : 'empty'; ed.lastSaved = null; S.s = 'editor'; renderAll(); window.scrollTo({ top: 0 }); return;
+        case 'clear-copied': copied.clear(); renderLibrary(); return;
+      }
+    });
+    $('#libQ').addEventListener('input', e => { S.q = e.target.value; renderLibrary(); sync(); });
+    $('#lfSeg').addEventListener('change', e => { S.lf = e.target.value; renderLibrary(); sync(); });
+
+    /* ---------- Copy ---------- */
+    async function copyText(t) {
+      try { await navigator.clipboard.writeText(t); return true; }
+      catch (err) {
+        const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.append(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e2) { /* ignore */ } ta.remove(); return ok;
+      }
+    }
+    function copyArt(a, btn) {
+      if (!a) return;
+      copyText('https://' + a.url);
+      copied.add(a.id);
+      const f = FRAMES[a.frame];
+      toast(`${glyph(a.frame, 14)}<span>${f.label} URL copied · ${esc(a.name)}<small>Paste it into the ${f.label} slot in Nuvio.</small></span>`);
+      if (S.s === 'library') { renderLibrary(); btn = $(`[data-act=copy][data-id="${a.id}"]`); btn?.focus(); }
+      if (btn) {
+        const html = btn.innerHTML;
+        btn.classList.add('flash'); btn.innerHTML = `${ico('check')} Copied ${f.label} URL`;
+        setTimeout(() => { btn.classList.remove('flash'); btn.innerHTML = html; }, 1500);
+      }
+    }
+
+    /* ---------- Toasts ---------- */
+    function toast(html) {
+      const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.innerHTML = html;
+      $('#toasts').append(t);
+      while ($('#toasts').children.length > 3) $('#toasts').firstElementChild.remove();
+      setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, 3400);
+    }
+
+    /* ======================================================================
+       Dialogs
+       ====================================================================== */
+    let dlgTarget = null, pendingRename = null;
+    fillIcons(document.body);
+    function openDialog(kind, id) {
+      $$('dialog[open]').forEach(d => d.close('cancel'));
+      if (kind === 'none') return;
+      const a = artById(id || (kind === 'replace' && ed.replaceId) || SK_POSTER().id);
+      if (!a) return;
+      dlgTarget = a.id; S.d = kind;
+      const f = FRAMES[a.frame], label = `${esc(a.name)} (${f.label})`;
+      if (kind === 'replace') {
+        if (!ed.replaceId || !hasImg()) { startReplace(a.id, true); S.s = 'editor'; renderAll(); }
+        $('#dlgReplaceT').innerHTML = `Replace the ${f.label} for ${esc(a.name)}?`;
+        $('#dlgRepNow').innerHTML = thumbHTML(a);
+        $('#dlgRepNew').innerHTML = thumbHTML({ src: ed.src, iw: ed.iw, ih: ed.ih, file: ed.file, frame: a.frame, rel: ed.rel, ox: ed.ox, oy: ed.oy });
+        $('#dlgReplaceMsg').innerHTML = `This will replace the current image for ${label}. Nuvio will show the new one within a few minutes. Are you sure?`;
+        $('#dlgReplaceUrl').innerHTML = `Keeps its URL: ${urlHTML(a)}`;
+        $('#dlgReplace').showModal();
+      } else if (kind === 'delete') {
+        $('#dlgDeleteT').innerHTML = `Delete ${label}?`;
+        $('#dlgDelThumb').innerHTML = `<figure>${thumbHTML(a)}<figcaption>${f.label} · ${a.w}×${a.h}</figcaption></figure>`;
+        $('#dlgDeleteMsg').textContent = `Any Nuvio folder using this URL will lose its image. This can't be undone.`;
+        $('#dlgDeleteUrl').innerHTML = urlHTML(a);
+        $('#dlgDelete').showModal();
+      } else if (kind === 'rename') {
+        $('#renameIn').value = a.name; $('#renameErr').hidden = true; $('#renameUrl').innerHTML = urlHTML(a);
+        $('#dlgRenameT').innerHTML = `Rename ${label}`;
+        $('#nameListDlg').innerHTML = groups().map(g => `<option value="${esc(g.name)}">`).join('');
+        pendingRename = null;
+        $('#dlgRename').showModal(); $('#renameIn').select();
+      }
+      sync();
+    }
+    $$('dialog [data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close('cancel')));
+    $$('dialog').forEach(d => d.addEventListener('close', () => {
+      const ok = d.returnValue === 'ok', a = artById(dlgTarget);
+      if (!$('dialog[open]')) S.d = 'none';
+      if (ok && a) {
+        if (d.id === 'dlgReplace') {
+          fakeAsync(() => { commitReplace(a, 'replaced'); toast(`${glyph(a.frame, 14)}<span>${FRAMES[a.frame].label} replaced for ${esc(a.name)}<small>Same URL. Nuvio will show it within a few minutes.</small></span>`); });
+        } else if (d.id === 'dlgDelete') {
+          LIB = LIB.filter(x => x.id !== a.id); copied.delete(a.id);
+          if (ed.replaceId === a.id) { ed.replaceId = null; ed.phase = hasImg() ? 'loaded' : 'empty'; }
+          toast(`${ico('trash')}<span>Deleted ${esc(a.name)} (${FRAMES[a.frame].label})</span>`);
+          renderAll();
+        } else if (d.id === 'dlgRename' && pendingRename) {
+          a.name = pendingRename; toast(`${ico('check')}<span>Renamed to ${esc(a.name)}<small>Same URL, nothing to change in Nuvio.</small></span>`); renderAll();
+        }
+      }
+      d.returnValue = '';
+      sync();
+    }));
+    $('#renameForm').addEventListener('submit', e => {
+      if (e.submitter && e.submitter.value !== 'ok') return;
+      const v = $('#renameIn').value.trim(), a = artById(dlgTarget), err = $('#renameErr');
+      const clash = v && findArt(v, a.frame);
+      if (!v) { e.preventDefault(); err.hidden = false; err.textContent = 'Type a name.'; return; }
+      if (clash && clash.id !== a.id) { e.preventDefault(); err.hidden = false; err.textContent = `${clash.name} already has a ${FRAMES[a.frame].label}. Pick another name, or delete that one first.`; return; }
+      pendingRename = v;
+    });
+
+    /* ======================================================================
+       Paste anywhere + drop anywhere
+       ====================================================================== */
+    document.addEventListener('paste', e => {
+      if ($('dialog[open]')) return;
+      const t = e.target;
+      const inOtherField = t && t.matches && t.matches('input, textarea') && t !== C.urlIn;
+      if (inOtherField) return;
+      const dt = e.clipboardData; if (!dt) return;
+      if (ed.phase === 'saving') return;
+      const item = [...dt.items].find(i => i.kind === 'file' && i.type.startsWith('image/'));
+      if (item) { e.preventDefault(); loadFile(item.getAsFile(), 'Pasted image'); return; }
+      const text = (dt.getData('text/plain') || '').trim();
+      if (text && (t === C.urlIn || /^https?:\/\//i.test(text))) { e.preventDefault(); C.urlIn.value = text; loadFromUrl(text); }
+    });
+    const overlay = $('#dropOverlay');
+    let dragDepth = 0;
+    const isExternalDrag = e => e.dataTransfer && [...e.dataTransfer.types].some(t => t === 'Files' || t === 'text/uri-list');
+    window.addEventListener('dragenter', e => {
+      if (!isExternalDrag(e) || $('dialog[open]')) return;
+      e.preventDefault(); dragDepth++;
+      const rep = ed.replaceId && artById(ed.replaceId);
+      $('#dropOverlayLead').textContent = rep ? `It becomes the new image for ${rep.name} (${FRAMES[rep.frame].label}).` : 'Any image file, or an image dragged from another tab.';
+      overlay.hidden = false;
+    });
+    window.addEventListener('dragover', e => { if (isExternalDrag(e)) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; } });
+    window.addEventListener('dragleave', e => { if (!isExternalDrag(e)) return; dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) overlay.hidden = true; });
+    window.addEventListener('drop', e => {
+      if (!isExternalDrag(e)) return;
+      e.preventDefault(); dragDepth = 0; overlay.hidden = true;
+      const dt = e.dataTransfer, file = [...dt.files].find(f => f.type.startsWith('image/'));
+      if (file) return loadFile(file);
+      if (dt.files.length) return fail('file');
+      const url = (dt.getData('text/uri-list') || dt.getData('text/plain') || '').split('\n')[0].trim();
+      if (url) { C.urlIn.value = url; loadFromUrl(url); }
+    });
+
+    /* ======================================================================
+       Simulated viewport width + render + hash sync
+       ====================================================================== */
+    const vp = $('#viewport'), vpOuter = $('#vpOuter');
+    function applyWidth() {
+      if (S.w === 'full') { vp.style.width = '100%'; vp.style.transform = ''; vpOuter.style.height = ''; vpOuter.className = ''; return; }
+      const w = +S.w, avail = document.documentElement.clientWidth;
+      const scale = S.fit === '1' && w > avail ? avail / w : 1;
+      vp.style.width = w + 'px';
+      vp.style.transform = scale < 1 ? `scale(${scale})` : '';
+      vpOuter.className = 'framed' + (scale < 1 ? ' scaled' : '');
+      vpOuter.style.height = scale < 1 ? (vp.offsetHeight * scale) + 'px' : '';
+    }
+    new ResizeObserver(() => {
+      if (vpOuter.classList.contains('scaled')) applyWidth();
+      if (S.s === 'editor' && mounted && mounted !== layoutKey()) renderEditor();
+    }).observe(vp);
+    window.addEventListener('resize', applyWidth);
+
+    function renderAll() {
+      applyWidth();
+      $('#editorScreen').hidden = S.s !== 'editor';
+      $('#libraryScreen').hidden = S.s !== 'library';
+      $$('.tool-tabs [data-screen]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.screen === S.s)));
+      $('#libCount').textContent = LIB.length;
+      if (S.s === 'editor') renderEditor(); else renderLibrary();
+      sync();
+    }
+
+    function writeHash() {
+      const p = new URLSearchParams();
+      S.st = phaseToSt();
+      for (const k of Object.keys(DEFAULTS)) if (S[k] !== '' && S[k] != null) p.set(k, S[k]);
+      if (S.img === 'user') p.set('img', 'hero');
+      history.replaceState(null, '', '#' + p.toString());
+    }
+    function syncPanel() {
+      $('#mpScreen').value = S.s; $('#mpState').value = phaseToSt(); $('#mpFrame').value = S.f;
+      $('#mpImg').value = ed.isUser ? 'user' : S.img; $('#mpEl').value = S.el; $('#mpLl').value = S.ll; $('#mpDlg').value = S.d;
+      $$('input[name=mpw]').forEach(r => { r.checked = r.value === S.w; });
+      $('#mpFit').checked = S.fit === '1';
+      const collapsed = S.cp === '1';
+      $('#mockPanel').classList.toggle('collapsed', collapsed); $('#mpToggle').setAttribute('aria-expanded', String(!collapsed));
+    }
+    function sync() { writeHash(); syncPanel(); }
+
+    function readHash() {
+      const p = new URLSearchParams(location.hash.slice(1));
+      Object.assign(S, DEFAULTS);
+      for (const k of Object.keys(DEFAULTS)) {
+        const v = p.get(k);
+        if (v == null) continue;
+        if (k === 'q' || (ALLOWED[k] && ALLOWED[k].includes(v))) S[k] = v;
+      }
+      if (S.st === 'saved' || S.st === 'replaced') LIB = seedLibrary(); // keep canned saves from piling up
+      applyState(S.st);
+      renderAll();
+      if (S.d !== 'none') openDialog(S.d);
+    }
+
+    /* ---------- Top-level wiring ---------- */
+    $$('.tool-tabs [data-screen]').forEach(b => b.addEventListener('click', () => { S.s = b.dataset.screen; renderAll(); }));
+    $$('a[data-noop]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+
+    $('#mpToggle').addEventListener('click', () => { S.cp = S.cp === '1' ? '0' : '1'; sync(); });
+    $('#mpScreen').addEventListener('change', e => { S.s = e.target.value; renderAll(); });
+    $('#mpState').addEventListener('change', e => { applyState(e.target.value); S.s = 'editor'; renderAll(); });
+    $('#mpFrame').addEventListener('change', e => { S.s = 'editor'; setFrame(e.target.value); renderAll(); });
+    $('#mpImg').addEventListener('change', e => {
+      S.img = e.target.value;
+      if (hasImg() || ['loaded', 'saved', 'conflict'].includes(ed.phase)) { ed.token++; loadSample(S.img); if (ed.phase === 'saved') ed.phase = 'loaded'; }
+      renderAll();
+    });
+    $('#mpEl').addEventListener('change', e => { S.el = e.target.value; S.s = 'editor'; renderAll(); });
+    $('#mpLl').addEventListener('change', e => { S.ll = e.target.value; S.s = 'library'; renderAll(); });
+    $('#mpDlg').addEventListener('change', e => {
+      const v = e.target.value;
+      if (v === 'delete' || v === 'rename') { S.s = 'library'; renderAll(); }
+      openDialog(v);
+    });
+    $('#mpW').addEventListener('change', e => { S.w = e.target.value; renderAll(); });
+    $('#mpFit').addEventListener('change', e => { S.fit = e.target.checked ? '1' : '0'; renderAll(); });
+    $('#mpCopy').addEventListener('click', () => { writeHash(); copyText(location.href); toast(`${ico('check')}<span>Link to this view copied</span>`); });
+    $('#mpReset').addEventListener('click', () => {
+      LIB = seedLibrary(); copied.clear(); ed.session.clear(); ed.name = '';
+      history.replaceState(null, '', location.pathname + location.search); readHash();
+    });
+    window.addEventListener('hashchange', readHash);
+
+    readHash();
+  </script>
+</body>
+
+</html>

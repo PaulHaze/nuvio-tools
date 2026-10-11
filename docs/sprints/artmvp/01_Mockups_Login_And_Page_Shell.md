@@ -83,4 +83,16 @@ Read first: [epic README](./README.md), the ArtNuvio section of [`CONTEXT.md`](.
 
 ## Chosen layout
 
-_To be filled in after the mockup rounds._
+The accepted design is [`html_UI_mocks/artnuvio-opus-v2.html`](./html_UI_mocks/artnuvio-opus-v2.html)
+(build notes in [`artnuvio-opus-v2.md`](./html_UI_mocks/artnuvio-opus-v2.md)). It is the basis
+for the build tasks above. Phase 2 builds to this file, not to the other mocks.
+
+- **Editor layout:** layout A (Stage + rail). The control panel is on the **right**. Below 1024px
+  it becomes a single column, in this order: Frame sizes (row of four), the image, the Original
+  bar, the Fit/Cover + slider box with its hint line, the Name and Save card with the folder's
+  four Frames, then the save result.
+- **Width:** the page reflows at real window width (no shrink-to-fit). Width presets include 390.
+- **Phone (below 600px):** Frame buttons become stacked tiles, the Folder set is 2×2, the control
+  panel starts collapsed, and secondary hint text is hidden.
+- **Library:** desktop unchanged. Below 600px, Shelf folders show as a 2×2 grid and the list
+  view's Copy button is full width.
