@@ -29,9 +29,10 @@
   is the canonical implementation brief. An epic is a body of work made of
   numbered sprints; each epic numbers its sprints from 01.
 - Branch convention: `{epic}-{nn}` (for example, `restructure-01`; the
-  ArtNuvio MVP is `artmvp-{nn}`, later ArtNuvio epics `artnv-{feature}-01`). The user creates
-  and manages sprint branches; the skill must not create, switch, rename, merge,
-  or delete branches.
+  ArtNuvio MVP is `artmvp-{nn}`, later ArtNuvio epics `artnv-{feature}-01`).
+  `start-sprint` must not create, switch, rename, merge, or delete branches; the
+  user manages sprint branches. (`/new-task` is the exception: it owns branch
+  creation, merging and deletion between sprints.)
 - Implementation agent: `gpt-6.1-sol` at medium reasoning effort.
 - Audit agent: `gpt-6-astra` at high reasoning effort, run manually by the
   owner in a fresh context after the implementation commit is complete. Write
@@ -90,9 +91,12 @@ Opus's.
 
 - Parent branch: `main`
 - Push flag: `true`
-- Branch naming: `{epic}-{nn}`. The next branch increments `{nn}` within the
-  same epic (`restructure-01` → `restructure-02`). Starting a new epic is the
-  owner's call.
+- Branch convention: `{epic}-{nn}` (two-digit `{nn}`, e.g. `restructure-01`; the
+  ArtNuvio MVP epic uses `artmvp-{nn}`, later ArtNuvio epics `artnv-{feature}-01`).
+  `{nn}` is the sprint number within the epic. The epic is everything before the
+  trailing `-{nn}`, so it may contain hyphens.
+- The next branch increments `{nn}` within the same epic, keeping two digits
+  (`restructure-01` → `restructure-02`). Starting a new epic is the owner's call.
 
 ### Work tracking
 
