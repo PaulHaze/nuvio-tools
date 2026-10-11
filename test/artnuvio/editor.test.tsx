@@ -20,7 +20,10 @@ beforeEach(async () => {
 	vi.stubGlobal(
 		'ResizeObserver',
 		class {
-			observe() {}
+			constructor(private callback: () => void) {}
+			observe() {
+				this.callback();
+			}
 			disconnect() {}
 		}
 	);
@@ -129,9 +132,10 @@ it('drops onto the preview and pastes outside text fields, remembering their ori
 it('preserves the previous Original after a rejected file and shows its message', async () => {
 	await choose();
 	await choose(new File(['text'], 'bad.txt', { type: 'text/plain' }));
-	expect(host.querySelector('[role="status"]')!.textContent).toBe(
+	expect(host.querySelector('[role="alert"]')!.textContent).toBe(
 		"That isn't an image"
 	);
+	expect(host.querySelector('[role="status"]')).not.toBeNull();
 	expect(host.textContent).toContain('art.png');
 	expect(bitmap.close).not.toHaveBeenCalled();
 });
@@ -153,4 +157,34 @@ it('discards a late decode after a newer Original and frees it', async () => {
 	expect(next.close).not.toHaveBeenCalled();
 	await act(async () => root.unmount());
 	expect(next.close).toHaveBeenCalledOnce();
+});
+
+it('ignores files dropped outside the preview and reports non-image pastes', async () => {
+	const drop = new Event('drop', { bubbles: true, cancelable: true });
+	Object.defineProperty(drop, 'dataTransfer', {
+		value: {
+			types: ['Files'],
+			files: [new File(['x'], 'x.png', { type: 'image/png' })],
+		},
+	});
+	await act(async () => document.body.dispatchEvent(drop));
+	expect(drop.defaultPrevented).toBe(true);
+	expect(decode).not.toHaveBeenCalled();
+	const event = new Event('paste', { bubbles: true, cancelable: true });
+	Object.defineProperty(event, 'clipboardData', {
+		value: {
+			items: [
+				{
+					kind: 'file',
+					type: 'application/pdf',
+					getAsFile: () =>
+						new File(['x'], 'a.pdf', { type: 'application/pdf' }),
+				},
+			],
+		},
+	});
+	await act(async () => document.dispatchEvent(event));
+	expect(host.querySelector('[role="alert"]')!.textContent).toBe(
+		"That isn't an image"
+	);
 });

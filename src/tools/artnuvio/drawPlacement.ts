@@ -10,6 +10,8 @@ export function drawPlacement(
 	size: Aspect
 ): void {
 	ctx.save();
+	ctx.imageSmoothingEnabled = true;
+	ctx.imageSmoothingQuality = 'high';
 	ctx.setTransform(
 		size.width / frame.width,
 		0,

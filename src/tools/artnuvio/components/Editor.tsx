@@ -8,7 +8,12 @@ import {
 import { FRAME_IDS, FRAMES, type FrameId } from '../frames';
 import { placeMode, type Placement } from '../framing';
 import { drawPlacement } from '../drawPlacement';
-import { loadOriginal, type Original, type OriginalSource } from '../original';
+import {
+	loadOriginal,
+	ORIGINAL_TYPES,
+	type Original,
+	type OriginalSource,
+} from '../original';
 
 type EditorState = {
 	original: Original | null;
@@ -108,17 +113,28 @@ export default function Editor() {
 	useEffect(() => {
 		const paste = (event: ClipboardEvent) => {
 			if (isTyping(event.target)) return;
-			const item = Array.from(event.clipboardData?.items ?? []).find(
-				(item) => item.kind === 'file' && item.type.startsWith('image/')
-			);
+			const items = Array.from(event.clipboardData?.items ?? []);
+			const item =
+				items.find(
+					(item) => item.kind === 'file' && item.type.startsWith('image/')
+				) ?? items.find((item) => item.kind === 'file');
 			const blob = item?.getAsFile();
 			if (!blob) return;
 			event.preventDefault();
 			void load(blob, { kind: 'paste' });
 		};
+		const hasFiles = (event: DragEvent) =>
+			Array.from(event.dataTransfer?.types ?? []).includes('Files');
+		const stop = (event: DragEvent) => {
+			if (hasFiles(event)) event.preventDefault();
+		};
 		document.addEventListener('paste', paste);
+		document.addEventListener('dragover', stop);
+		document.addEventListener('drop', stop);
 		return () => {
 			document.removeEventListener('paste', paste);
+			document.removeEventListener('dragover', stop);
+			document.removeEventListener('drop', stop);
 			++requestRef.current;
 			originalRef.current?.bitmap.close();
 			originalRef.current = null;
@@ -141,15 +157,17 @@ export default function Editor() {
 			canvas.style.width = `${width}px`;
 			canvas.style.height = `${height}px`;
 			const ratio = window.devicePixelRatio || 1;
-			canvas.width = Math.max(1, Math.round(width * ratio));
-			canvas.height = Math.max(1, Math.round(height * ratio));
+			const pixelWidth = Math.max(1, Math.round(width * ratio));
+			const pixelHeight = Math.max(1, Math.round(height * ratio));
+			if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+			if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
 			const ctx = canvas.getContext('2d');
 			if (ctx)
 				drawPlacement(ctx, original.bitmap, frameSize, placement, canvas);
 		};
+		// ResizeObserver fires once on observe, which performs the first draw.
 		const observer = new ResizeObserver(draw);
 		observer.observe(area);
-		draw();
 		return () => observer.disconnect();
 	}, [original, placement, frameSize]);
 
@@ -168,7 +186,7 @@ export default function Editor() {
 			<input
 				ref={inputRef}
 				type="file"
-				accept="image/jpeg,image/png,image/webp,image/avif"
+				accept={ORIGINAL_TYPES.join(',')}
 				hidden
 				aria-label="Choose Original file"
 				onChange={(event) => {
@@ -245,7 +263,7 @@ export default function Editor() {
 										>
 											Choose file…
 										</button>
-										<span className="drop-anywhere text-muted">
+										<span className="drop-limit text-muted">
 											Images up to 25 MB
 										</span>
 									</div>
@@ -271,7 +289,10 @@ export default function Editor() {
 									: 'Drop a file or paste an image (⌘/Ctrl+V)'}
 							</span>
 							<span className="original-message" role="status">
-								{message || (loading ? 'Loading Original…' : '')}
+								{loading ? 'Loading Original…' : ''}
+							</span>
+							<span className="original-error text-danger" role="alert">
+								{message}
 							</span>
 						</div>
 						<label className="check">

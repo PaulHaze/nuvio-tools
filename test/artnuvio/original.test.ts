@@ -60,4 +60,21 @@ describe('local Originals', () => {
 			expect(bitmap.close).toHaveBeenCalledOnce();
 		}
 	);
+	it('rejects unsupported image types and oversized pixel counts', async () => {
+		const decode = vi.fn();
+		vi.stubGlobal('createImageBitmap', decode);
+		await expect(
+			loadOriginal(new Blob([], { type: 'image/gif' }), { kind: 'paste' })
+		).rejects.toThrow("That image type isn't supported");
+		expect(decode).not.toHaveBeenCalled();
+		const bitmap = { width: 20000, height: 20000, close: vi.fn() };
+		decode.mockResolvedValue(bitmap);
+		await expect(
+			loadOriginal(new Blob([], { type: 'image/png' }), { kind: 'paste' })
+		).rejects.toThrow('too large');
+		expect(bitmap.close).toHaveBeenCalledOnce();
+		expect(decode).toHaveBeenCalledWith(expect.anything(), {
+			imageOrientation: 'from-image',
+		});
+	});
 });
