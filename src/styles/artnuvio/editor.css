@@ -1,0 +1,225 @@
+/* ArtNuvio editor layout (empty shell). Layout A: control panel on the right from 1024px,
+   one column below it. Phone (below 600px) tightens the Frame row, Folder set and hints. */
+
+@layer components {
+	/* Below 1024px: one column, in the order the markup gives. */
+	.ed-editor {
+		@apply mt-8 grid min-w-0 gap-5;
+	}
+	.ed-editor > * {
+		@apply min-w-0;
+	}
+	.ed-editor :disabled {
+		@apply cursor-not-allowed opacity-50;
+	}
+
+	.ed-hint {
+		@apply mt-2 text-[0.85rem] text-muted;
+	}
+	.ed-editor input[type='text'] {
+		@apply min-w-0 rounded-(--radius) border border-border bg-surface-2 px-3 py-2 text-fg placeholder:text-muted;
+	}
+	.ed-editor fieldset {
+		@apply m-0 min-w-0 border-0 p-0;
+	}
+	.ed-editor legend {
+		@apply mb-2;
+	}
+
+	/* Frame picker: one option per Frame. */
+	.frame-options {
+		@apply grid grid-cols-4 gap-2;
+	}
+	.frame-option {
+		@apply relative flex cursor-pointer flex-col items-center gap-1 rounded-(--radius) border border-border px-2 py-3 text-center;
+	}
+	.frame-option:has(input:checked) {
+		@apply border-accent bg-accent-tint;
+	}
+	.frame-option:has(input:focus-visible) {
+		@apply outline-2 outline-offset-2 outline-accent;
+	}
+	.frame-option input {
+		@apply absolute opacity-0;
+	}
+	.frame-shape {
+		@apply block h-8 rounded-[2px] border-2 border-current text-muted;
+	}
+	.frame-option:has(input:checked) .frame-shape {
+		@apply text-accent-ink;
+	}
+	.frame-name {
+		@apply font-semibold;
+	}
+
+	/* Preview. */
+	.ed-stage {
+		@apply relative overflow-hidden rounded-(--radius) border border-border bg-surface-1;
+		height: clamp(20rem, 40vw, 30rem);
+	}
+	.stage-empty {
+		@apply grid h-full content-center justify-items-center gap-3 p-6 text-center;
+	}
+	.stage-empty h2 {
+		@apply text-[1.4rem];
+	}
+	.stage-empty p {
+		@apply text-muted;
+	}
+	.stage-empty .paste-row {
+		@apply flex w-full max-w-[32rem] gap-2;
+	}
+	.stage-empty .paste-row input {
+		@apply flex-1;
+	}
+
+	/* Original bar. */
+	.ed-orig {
+		@apply flex flex-wrap items-center gap-3 rounded-(--radius) border border-border bg-surface-1 px-4 py-3;
+	}
+	.orig-thumb {
+		@apply block size-12 rounded-[2px] bg-surface-2;
+	}
+	.orig-meta {
+		@apply mr-auto flex min-w-0 flex-col;
+	}
+	.orig-name {
+		@apply font-semibold;
+	}
+	.orig-check {
+		@apply inline-flex items-center gap-2 text-[0.85rem] text-muted;
+	}
+
+	/* Fill, scale and Saved size. */
+	.ed-adjust {
+		@apply flex flex-col gap-4 glass-card p-5;
+	}
+	.seg {
+		@apply flex flex-wrap gap-1;
+	}
+	.seg label {
+		@apply inline-flex cursor-pointer items-center gap-1.5 rounded-(--radius) border border-border px-3 py-1.5 text-[0.85rem];
+	}
+	.seg label:has(input:checked) {
+		@apply border-accent bg-accent-tint text-fg;
+	}
+	.scale {
+		@apply flex flex-col gap-2;
+	}
+	.range {
+		@apply w-full accent-accent;
+	}
+
+	/* Name, Save and the folder set. */
+	.ed-setsave {
+		@apply flex flex-col gap-4 glass-card p-5;
+	}
+	.ed-save {
+		@apply flex flex-col gap-2;
+	}
+	.save-row {
+		@apply flex flex-wrap gap-3;
+	}
+	.save-row input {
+		@apply flex-[1_1_12rem];
+	}
+	.ed-set {
+		@apply border-t border-border pt-4;
+	}
+	.set-head {
+		@apply mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1;
+	}
+	.set-slots {
+		@apply mt-2 grid list-none grid-cols-4 gap-2 p-0;
+	}
+	.set-slot {
+		@apply flex flex-col gap-0.5 rounded-(--radius) border border-border bg-surface-2 px-3 py-2 text-[0.85rem];
+	}
+	.set-slot-name {
+		@apply font-semibold;
+	}
+	.set-slot-state {
+		@apply text-[0.75rem] text-muted;
+	}
+
+	/* Result of a save: hidden until there is one. */
+	.ed-receipt {
+		@apply rounded-(--radius) border border-success/40 px-4 py-3;
+	}
+}
+
+/* 1024px and up: the preview, Original bar and folder set on the left; the control panel on the right. */
+@media (min-width: 1024px) {
+	.ed-editor {
+		grid-template-columns: minmax(0, 1fr) 21rem;
+		grid-template-areas:
+			'stage pick'
+			'orig adjust'
+			'set save'
+			'set receipt';
+		align-items: start;
+	}
+	.ed-editor .ed-stage {
+		grid-area: stage;
+		height: clamp(24rem, 40vw, 40rem);
+	}
+	.ed-editor .ed-pick {
+		grid-area: pick;
+	}
+	.ed-orig {
+		grid-area: orig;
+	}
+	.ed-adjust {
+		grid-area: adjust;
+	}
+	/* Contents of the card become grid items of the editor, so each lands in its own area. */
+	.ed-setsave {
+		display: contents;
+	}
+	.ed-save {
+		grid-area: save;
+	}
+	.ed-set {
+		grid-area: set;
+	}
+	.ed-receipt {
+		grid-area: receipt;
+	}
+	.ed-editor .ed-pick,
+	.ed-save,
+	.ed-set {
+		@apply glass-card p-5;
+	}
+	.ed-set {
+		@apply border-t-0 pt-5;
+	}
+	.ed-save,
+	.ed-set {
+		@apply flex flex-col gap-2;
+	}
+}
+
+/* Phone: stacked Frame tiles, a 2x2 Folder set and no secondary hints. */
+@media (max-width: 599px) {
+	.frame-options {
+		@apply gap-1.5;
+	}
+	.frame-option {
+		@apply px-1 py-2;
+	}
+	.frame-option .frame-shape {
+		@apply h-6;
+	}
+	.frame-option .frame-size {
+		@apply hidden;
+	}
+	.set-slots {
+		@apply grid-cols-2;
+	}
+	.hint-optional {
+		@apply hidden;
+	}
+	.ed-stage {
+		height: 20rem;
+	}
+}

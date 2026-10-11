@@ -1,0 +1,33 @@
+---
+// The preview area. Empty shell: the Original can't be loaded yet, so the controls are disabled.
+---
+
+<div class="ed-stage">
+	<div class="stage-empty">
+		<h2>Start with an Original</h2>
+		<p>Paste an image, or a link to one. Either works in the same box.</p>
+		<form class="paste-row" onsubmit="return false">
+			<label class="sr-only" for="original-url">
+				Image URL, or paste an image
+			</label>
+			<input
+				id="original-url"
+				type="text"
+				inputmode="url"
+				autocomplete="off"
+				spellcheck="false"
+				placeholder="https://…"
+				disabled
+			/>
+			<button type="submit" class="btn" disabled>
+				Load
+			</button>
+		</form>
+		<p class="ed-hint">
+			<button type="button" class="btn btn-ghost" disabled>
+				Choose a file
+			</button>
+			<span class="hint-optional">or drop one anywhere on this page</span>
+		</p>
+	</div>
+</div>

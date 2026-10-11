@@ -1,0 +1,51 @@
+---
+// Fill, scale and the Saved size. Empty shell: the controls are disabled.
+// The Saved size lists Hero's two sizes because Hero is the Frame picked by default.
+import { FRAMES } from '../frames';
+
+const heroSizes = FRAMES.hero.sizes;
+---
+
+<section class="ed-adjust" aria-label="Fill and scale">
+	<fieldset>
+		<legend class="eyebrow">Fill</legend>
+		<div class="seg">
+			<label>
+				<input type="radio" name="mode" value="fit" disabled />
+				Fit
+			</label>
+			<label>
+				<input type="radio" name="mode" value="cover" disabled />
+				Cover
+			</label>
+		</div>
+	</fieldset>
+	<div class="scale">
+		<label class="eyebrow" for="scale-input">
+			Scale
+		</label>
+		<input
+			id="scale-input"
+			class="range"
+			type="range"
+			min="0"
+			max="1000"
+			value="0"
+			disabled
+		/>
+	</div>
+	<p class="ed-hint hint-optional">
+		Cover fills the Frame. Fit shows the whole Original.
+	</p>
+	<fieldset class="saved-size">
+		<legend class="eyebrow">Saved size</legend>
+		<div class="seg">
+			{heroSizes.map((size) => (
+				<label>
+					<input type="radio" name="size" value={size.key} disabled />
+					{size.width}×{size.height}
+				</label>
+			))}
+		</div>
+	</fieldset>
+</section>

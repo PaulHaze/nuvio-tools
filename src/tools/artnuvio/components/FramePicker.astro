@@ -1,0 +1,39 @@
+---
+// The Frame picker: one option per Frame, driven from the FRAMES table.
+// Empty shell for now: the radios select visually only, nothing else reacts.
+import { FRAME_IDS, FRAMES, outputSize } from '../frames';
+
+const firstFrame = FRAME_IDS[0];
+---
+
+<fieldset class="ed-pick" aria-describedby="pick-hint">
+	<legend class="eyebrow">Frame</legend>
+	<div class="frame-options">
+		{FRAME_IDS.map((id) => {
+			const frame = FRAMES[id];
+			const size = outputSize(id);
+			return (
+				<label class="frame-option">
+					<input
+						type="radio"
+						name="frame"
+						value={id}
+						checked={id === firstFrame}
+					/>
+					<span
+						class="frame-shape"
+						style={`aspect-ratio: ${frame.aspect.width} / ${frame.aspect.height}`}
+						aria-hidden="true"
+					/>
+					<span class="frame-name">{frame.label}</span>
+					<span class="frame-size eyebrow">
+						{size.width}×{size.height}
+					</span>
+				</label>
+			);
+		})}
+	</div>
+	<p id="pick-hint" class="ed-hint hint-optional">
+		Pick the Nuvio slot this Artwork is made for.
+	</p>
+</fieldset>

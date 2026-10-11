@@ -1,0 +1,22 @@
+---
+// The ArtNuvio editor layout (layout A, chosen in docs/sprints/artmvp/html_UI_mocks).
+// Desktop (1024px and up): preview, Original bar and folder set on the left; the control
+// panel on the right. Below 1024px it becomes one column in this order: Frame picker,
+// preview, Original bar, Fill and scale, Name and Save with the folder set, then the result.
+import FramePicker from './FramePicker.astro';
+import Stage from './Stage.astro';
+import OriginalBar from './OriginalBar.astro';
+import Adjust from './Adjust.astro';
+import SaveCard from './SaveCard.astro';
+---
+
+<div class="ed-editor">
+	<FramePicker />
+	<Stage />
+	<OriginalBar />
+	<Adjust />
+	<div class="ed-setsave">
+		<SaveCard />
+	</div>
+	<div class="ed-receipt" hidden></div>
+</div>

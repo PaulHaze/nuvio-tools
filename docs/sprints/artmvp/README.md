@@ -50,6 +50,13 @@ database, going public (Turnstile, rate limits, takedowns). See "After the MVP" 
   Dragging works with touch as well as a mouse.
 - **Private:** `/artnuvio` is behind the site's Basic Auth from sprint 01. Every sprint can be
   deployed safely. Only `img.nuvio-tools.com` is public.
+- **Layout (chosen in sprint 01, mock `artnuvio-opus-v2`):** the Frame picker, preview, Original
+  bar, Fill/Scale, Name and Save, and the folder's four Frames sit in layout A. From 1024px the
+  control panel (Frame, Fill and scale, Saved size, Name and Save) is on the right and the
+  preview with the Original bar and folder set on the left. Below 1024px it is one column in that
+  order, with the result after Save. The page reflows at the real window width and works from
+  768px. Below 600px, the Frame buttons are stacked tiles, the Folder set is 2×2, and secondary
+  hints are hidden. Sprints after 01 build into this layout; they don't redesign it.
 
 ## Sprints
 
