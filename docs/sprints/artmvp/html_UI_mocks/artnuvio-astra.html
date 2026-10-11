@@ -1,0 +1,5378 @@
+<!doctype html>
+<!--
+  ArtNuvio layout exploration by Astra. Open this file directly in a browser.
+  The reference site's stylesheet is copied below; mockup-specific styles follow it.
+  No server or real saving. Sample assets are relative to this file.
+  View controls write a shareable URL hash; uploads and Library edits stay in this tab.
+-->
+<html lang="en" data-page="artnuvio">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="color-scheme" content="dark" />
+		<title>ArtNuvio · Astra layout exploration</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/* ==== Site CSS: dist/client/_astro/Layout.*.css ==== */
+			.astro-route-announcer {
+				clip: rect(0 0 0 0);
+				clip-path: inset(50%);
+				white-space: nowrap;
+				width: 1px;
+				height: 1px;
+				position: absolute;
+				top: 0;
+				left: 0;
+				overflow: hidden;
+			}
+
+			@layer properties {
+				@supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or
+					((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
+					*,
+					:before,
+					:after,
+					::backdrop {
+						--tw-rotate-x: initial;
+						--tw-rotate-y: initial;
+						--tw-rotate-z: initial;
+						--tw-skew-x: initial;
+						--tw-skew-y: initial;
+						--tw-border-style: solid;
+						--tw-gradient-position: initial;
+						--tw-gradient-from: #0000;
+						--tw-gradient-via: #0000;
+						--tw-gradient-to: #0000;
+						--tw-gradient-stops: initial;
+						--tw-gradient-via-stops: initial;
+						--tw-gradient-from-position: 0%;
+						--tw-gradient-via-position: 50%;
+						--tw-gradient-to-position: 100%;
+						--tw-shadow: 0 0 #0000;
+						--tw-shadow-color: initial;
+						--tw-shadow-alpha: 100%;
+						--tw-inset-shadow: 0 0 #0000;
+						--tw-inset-shadow-color: initial;
+						--tw-inset-shadow-alpha: 100%;
+						--tw-ring-color: initial;
+						--tw-ring-shadow: 0 0 #0000;
+						--tw-inset-ring-color: initial;
+						--tw-inset-ring-shadow: 0 0 #0000;
+						--tw-ring-inset: initial;
+						--tw-ring-offset-width: 0px;
+						--tw-ring-offset-color: #fff;
+						--tw-ring-offset-shadow: 0 0 #0000;
+						--tw-outline-style: solid;
+						--tw-blur: initial;
+						--tw-brightness: initial;
+						--tw-contrast: initial;
+						--tw-grayscale: initial;
+						--tw-hue-rotate: initial;
+						--tw-invert: initial;
+						--tw-opacity: initial;
+						--tw-saturate: initial;
+						--tw-sepia: initial;
+						--tw-drop-shadow: initial;
+						--tw-drop-shadow-color: initial;
+						--tw-drop-shadow-alpha: 100%;
+						--tw-drop-shadow-size: initial;
+						--tw-backdrop-blur: initial;
+						--tw-backdrop-brightness: initial;
+						--tw-backdrop-contrast: initial;
+						--tw-backdrop-grayscale: initial;
+						--tw-backdrop-hue-rotate: initial;
+						--tw-backdrop-invert: initial;
+						--tw-backdrop-opacity: initial;
+						--tw-backdrop-saturate: initial;
+						--tw-backdrop-sepia: initial;
+						--tw-ease: initial;
+						--tw-animation-delay: 0s;
+						--tw-animation-direction: normal;
+						--tw-animation-duration: initial;
+						--tw-animation-fill-mode: none;
+						--tw-animation-iteration-count: 1;
+						--tw-enter-blur: 0;
+						--tw-enter-opacity: 1;
+						--tw-enter-rotate: 0;
+						--tw-enter-scale: 1;
+						--tw-enter-translate-x: 0;
+						--tw-enter-translate-y: 0;
+						--tw-exit-blur: 0;
+						--tw-exit-opacity: 1;
+						--tw-exit-rotate: 0;
+						--tw-exit-scale: 1;
+						--tw-exit-translate-x: 0;
+						--tw-exit-translate-y: 0;
+						--tw-leading: initial;
+						--tw-font-weight: initial;
+						--tw-tracking: initial;
+						--tw-content: '';
+					}
+				}
+			}
+
+			@layer theme {
+				:root,
+				:host {
+					--font-sans: var(--font-inter);
+					--font-mono: var(--font-geist-mono);
+					--color-red-600: oklch(57.7% 0.245 27.325);
+					--color-green-600: oklch(62.7% 0.194 149.214);
+					--color-blue-600: oklch(54.6% 0.245 262.881);
+					--color-indigo-600: oklch(51.1% 0.262 276.966);
+					--color-pink-600: oklch(59.2% 0.249 0.584);
+					--color-white: #fff;
+					--spacing: 0.25rem;
+					--container-5xl: 64rem;
+					--font-weight-normal: 400;
+					--font-weight-medium: 500;
+					--font-weight-semibold: 600;
+					--font-weight-bold: 700;
+					--leading-normal: 1.5;
+					--radius-sm: 0.25rem;
+					--ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+					--default-transition-duration: 0.15s;
+					--default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+					--default-font-family: var(--font-inter);
+					--default-mono-font-family: var(--font-geist-mono);
+					--color-bg: var(--bg);
+					--color-border: var(--border);
+					--color-fg: var(--text);
+					--font-display: var(--font-outfit);
+					--shadow-glow: 0 0 var(--glow-size) var(--accent-glow);
+				}
+			}
+
+			@layer base {
+				*,
+				:after,
+				:before,
+				::backdrop {
+					box-sizing: border-box;
+					border: 0 solid;
+					margin: 0;
+					padding: 0;
+				}
+
+				::file-selector-button {
+					box-sizing: border-box;
+					border: 0 solid;
+					margin: 0;
+					padding: 0;
+				}
+
+				html,
+				:host {
+					-webkit-text-size-adjust: 100%;
+					tab-size: 4;
+					line-height: 1.5;
+					font-family: var(
+						--default-font-family,
+						-apple-system,
+						BlinkMacSystemFont,
+						'Segoe UI',
+						Roboto,
+						'Helvetica Neue',
+						'Noto Sans',
+						Arial,
+						sans-serif,
+						'Apple Color Emoji',
+						'Segoe UI Emoji',
+						'Segoe UI Symbol',
+						'Noto Color Emoji'
+					);
+					font-feature-settings: var(--default-font-feature-settings, normal);
+					font-variation-settings: var(
+						--default-font-variation-settings,
+						normal
+					);
+					-webkit-tap-highlight-color: transparent;
+				}
+
+				hr {
+					height: 0;
+					color: inherit;
+					border-top-width: 1px;
+				}
+
+				abbr:where([title]) {
+					-webkit-text-decoration: underline dotted;
+					text-decoration: underline dotted;
+				}
+
+				h1,
+				h2,
+				h3,
+				h4,
+				h5,
+				h6 {
+					font-size: inherit;
+					font-weight: inherit;
+				}
+
+				a {
+					color: inherit;
+					-webkit-text-decoration: inherit;
+					-webkit-text-decoration: inherit;
+					-webkit-text-decoration: inherit;
+					-webkit-text-decoration: inherit;
+					text-decoration: inherit;
+				}
+
+				b,
+				strong {
+					font-weight: bolder;
+				}
+
+				code,
+				kbd,
+				samp,
+				pre {
+					font-family: var(
+						--default-mono-font-family,
+						ui-monospace,
+						SFMono-Regular,
+						Menlo,
+						Monaco,
+						Consolas,
+						'Liberation Mono',
+						'Courier New',
+						monospace
+					);
+					font-feature-settings: var(
+						--default-mono-font-feature-settings,
+						normal
+					);
+					font-variation-settings: var(
+						--default-mono-font-variation-settings,
+						normal
+					);
+					font-size: 1em;
+				}
+
+				small {
+					font-size: 80%;
+				}
+
+				sub,
+				sup {
+					vertical-align: baseline;
+					font-size: 75%;
+					line-height: 0;
+					position: relative;
+				}
+
+				sub {
+					bottom: -0.25em;
+				}
+
+				sup {
+					top: -0.5em;
+				}
+
+				table {
+					text-indent: 0;
+					border-color: inherit;
+					border-collapse: collapse;
+				}
+
+				:-moz-focusring:where(:not(iframe)) {
+					outline: auto;
+				}
+
+				progress {
+					vertical-align: baseline;
+				}
+
+				summary {
+					display: list-item;
+				}
+
+				ol,
+				ul,
+				menu {
+					list-style: none;
+				}
+
+				img,
+				svg,
+				video,
+				canvas,
+				audio,
+				iframe,
+				embed,
+				object {
+					vertical-align: middle;
+					display: block;
+				}
+
+				img,
+				video {
+					max-width: 100%;
+					height: auto;
+				}
+
+				button,
+				input,
+				select,
+				optgroup,
+				textarea {
+					font: inherit;
+					font-feature-settings: inherit;
+					font-variation-settings: inherit;
+					letter-spacing: inherit;
+					color: inherit;
+					opacity: 1;
+					background-color: #0000;
+					border-radius: 0;
+				}
+
+				::file-selector-button {
+					font: inherit;
+					font-feature-settings: inherit;
+					font-variation-settings: inherit;
+					letter-spacing: inherit;
+					color: inherit;
+					opacity: 1;
+					background-color: #0000;
+					border-radius: 0;
+				}
+
+				:where(select:is([multiple], [size])) optgroup {
+					font-weight: bolder;
+				}
+
+				:where(select:is([multiple], [size])) optgroup option {
+					padding-inline-start: 20px;
+				}
+
+				::file-selector-button {
+					margin-inline-end: 4px;
+				}
+
+				::placeholder {
+					opacity: 1;
+				}
+
+				@supports (not ((-webkit-appearance: -apple-pay-button))) or
+					(contain-intrinsic-size: 1px) {
+					::placeholder {
+						color: currentColor;
+					}
+
+					@supports (color: color-mix(in lab, red, red)) {
+						::placeholder {
+							color: color-mix(in oklab, currentcolor 50%, transparent);
+						}
+					}
+				}
+
+				textarea {
+					resize: vertical;
+				}
+
+				::-webkit-search-decoration {
+					-webkit-appearance: none;
+				}
+
+				::-webkit-date-and-time-value {
+					min-height: 1lh;
+					text-align: inherit;
+				}
+
+				::-webkit-datetime-edit {
+					display: inline-flex;
+				}
+
+				::-webkit-datetime-edit-fields-wrapper {
+					padding: 0;
+				}
+
+				::-webkit-datetime-edit {
+					padding-block: 0;
+				}
+
+				::-webkit-datetime-edit-year-field {
+					padding-block: 0;
+				}
+
+				::-webkit-datetime-edit-month-field {
+					padding-block: 0;
+				}
+
+				::-webkit-datetime-edit-day-field {
+					padding-block: 0;
+				}
+
+				::-webkit-datetime-edit-hour-field {
+					padding-block: 0;
+				}
+
+				::-webkit-datetime-edit-minute-field {
+					padding-block: 0;
+				}
+
+				::-webkit-datetime-edit-second-field {
+					padding-block: 0;
+				}
+
+				::-webkit-datetime-edit-millisecond-field {
+					padding-block: 0;
+				}
+
+				::-webkit-datetime-edit-meridiem-field {
+					padding-block: 0;
+				}
+
+				::-webkit-calendar-picker-indicator {
+					line-height: 1;
+				}
+
+				:-moz-ui-invalid {
+					box-shadow: none;
+				}
+
+				button,
+				input:where([type='button'], [type='reset'], [type='submit']) {
+					appearance: button;
+				}
+
+				::file-selector-button {
+					appearance: button;
+				}
+
+				::-webkit-inner-spin-button {
+					height: auto;
+				}
+
+				::-webkit-outer-spin-button {
+					height: auto;
+				}
+
+				[hidden]:where(:not([hidden='until-found'])) {
+					display: none !important;
+				}
+
+				html {
+					background-color: var(--bg);
+					background-image: radial-gradient(
+						var(--pattern-dot) 0.7px,
+						transparent 0.9px
+					);
+					background-size: 16px 16px;
+					background-attachment: fixed;
+					font-size: 100%;
+				}
+
+				body {
+					font-family: var(--font-inter);
+					--tw-leading: 1.6;
+					color: var(--text);
+					background-color: #0000;
+					line-height: 1.6;
+				}
+
+				h1,
+				h2,
+				h3,
+				h4,
+				h5,
+				h6 {
+					font-family: var(--font-outfit);
+					--tw-leading: 1.2;
+					--tw-font-weight: var(--font-weight-semibold);
+					line-height: 1.2;
+					font-weight: var(--font-weight-semibold);
+				}
+
+				h1 {
+					--tw-leading: 1.08;
+					--tw-tracking: -0.04em;
+					letter-spacing: -0.04em;
+					font-size: clamp(2.75rem, 4.2vw, 4.15rem);
+					line-height: 1.08;
+				}
+
+				h2 {
+					--tw-tracking: -0.02em;
+					letter-spacing: -0.02em;
+					font-size: 1.95rem;
+				}
+
+				h3 {
+					font-size: 1.4rem;
+				}
+
+				h4 {
+					--tw-font-weight: var(--font-weight-medium);
+					font-size: 1.1rem;
+					font-weight: var(--font-weight-medium);
+				}
+
+				h5,
+				h6 {
+					--tw-font-weight: var(--font-weight-medium);
+					font-size: 1rem;
+					font-weight: var(--font-weight-medium);
+				}
+
+				:focus-visible {
+					outline-style: var(--tw-outline-style);
+					outline-offset: 3px;
+					outline-width: 2px;
+					outline-color: var(--accent);
+				}
+
+				input[type='checkbox'],
+				input[type='radio'] {
+					accent-color: var(--accent);
+				}
+			}
+
+			@layer components {
+				.text-gradient {
+					-webkit-background-clip: text;
+					background-clip: text;
+					background-image: linear-gradient(
+						105deg,
+						var(--brand-from),
+						var(--brand-to)
+					);
+					-webkit-text-fill-color: transparent;
+				}
+
+				[data-tool] .text-gradient {
+					background-image: linear-gradient(
+						105deg,
+						var(--accent-ink),
+						var(--accent-ink)
+					);
+				}
+
+				@supports (color: color-mix(in lab, red, red)) {
+					[data-tool] .text-gradient {
+						background-image: linear-gradient(
+							105deg,
+							var(--accent-ink),
+							color-mix(in srgb, var(--accent-ink) 60%, #fff)
+						);
+					}
+				}
+
+				.eyebrow {
+					font-family: var(--font-geist-mono);
+					--tw-leading: var(--leading-normal);
+					font-size: 0.75rem;
+					line-height: var(--leading-normal);
+					--tw-font-weight: var(--font-weight-medium);
+					font-weight: var(--font-weight-medium);
+					--tw-tracking: 0.15em;
+					letter-spacing: 0.15em;
+					color: var(--text-muted);
+					text-transform: uppercase;
+				}
+
+				.card {
+					border-radius: var(--radius);
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--card-border);
+					background-color: var(--card-bg);
+					--tw-shadow: 0 0 var(--glow-size) var(--accent-glow);
+					box-shadow:
+						var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+						var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+						var(--tw-shadow);
+					--tw-backdrop-blur: blur(var(--glass-blur));
+					-webkit-backdrop-filter: var(--tw-backdrop-blur,)
+						var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+						var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+						var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+						var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+					backdrop-filter: var(--tw-backdrop-blur,)
+						var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+						var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+						var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+						var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+				}
+
+				.card-glow {
+					position: relative;
+					overflow: hidden;
+				}
+
+				.card-glow:before {
+					pointer-events: none;
+					opacity: var(--aurora-opacity);
+					--tw-content: '';
+					content: var(--tw-content);
+					background: radial-gradient(
+						ellipse at 80% 0%,
+						var(--accent-glow),
+						transparent 70%
+					);
+					position: absolute;
+					inset: 0;
+				}
+
+				.card-glow > * {
+					position: relative;
+				}
+
+				.hero-aurora {
+					isolation: isolate;
+					position: relative;
+				}
+
+				.hero-aurora:before {
+					pointer-events: none;
+					z-index: calc(1 * -1);
+					opacity: var(--aurora-opacity);
+					--tw-content: '';
+					content: var(--tw-content);
+					background:
+						radial-gradient(
+							ellipse at 55% 30%,
+							var(--hero-aurora-1),
+							transparent 65%
+						),
+						radial-gradient(
+							ellipse at 20% 60%,
+							var(--hero-aurora-2),
+							transparent 60%
+						);
+					position: absolute;
+					inset: -30px -20px -20px;
+				}
+
+				.badge {
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--card-border);
+					background-color: var(--accent-tint);
+					padding-inline: calc(var(--spacing) * 2);
+					white-space: nowrap;
+					color: var(--accent-ink);
+					border-radius: 2147483647px;
+					padding-block: 0.15rem;
+					font-size: 0.7rem;
+				}
+
+				.btn {
+					border-radius: var(--radius);
+					border-style: var(--tw-border-style);
+					background-color: var(--accent);
+					--tw-font-weight: var(--font-weight-semibold);
+					font-size: 0.85rem;
+					font-weight: var(--font-weight-semibold);
+					color: var(--on-accent);
+					border-width: 1px;
+					border-color: #0000;
+					transition:
+						background 0.16s,
+						box-shadow 0.16s,
+						transform 0.16s;
+					display: inline-flex;
+				}
+
+				.btn:active:not(:disabled) {
+					transform: translateY(1px) scale(0.98);
+				}
+
+				.btn {
+					justify-content: center;
+					align-items: center;
+					gap: 0.6rem;
+					padding-block: 0.7rem;
+					padding-inline: 1.1rem;
+					text-decoration-line: none;
+				}
+
+				@media (hover: hover) {
+					.btn:hover {
+						background-color: var(--accent-hover);
+						--tw-shadow: 0 0 var(--glow-hover) var(--accent-glow);
+						box-shadow:
+							var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+							var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+							var(--tw-shadow);
+					}
+				}
+
+				.btn-ghost {
+					border-color: var(--border);
+					color: var(--text);
+					background-color: #0000;
+				}
+
+				@media (hover: hover) {
+					.btn-ghost:hover {
+						border-color: var(--accent);
+						background-color: var(--accent-tint);
+					}
+				}
+
+				.btn-brand {
+					color: var(--color-white);
+					background: linear-gradient(
+						110deg,
+						var(--brand-fill-from),
+						var(--brand-fill-to)
+					);
+				}
+
+				.btn-brand:hover {
+					background: linear-gradient(
+						110deg,
+						var(--brand-fill-to),
+						var(--brand-fill-from)
+					);
+				}
+
+				[data-tool] .btn-brand {
+					background-color: var(--accent);
+					color: var(--on-accent);
+					background-image: none;
+				}
+
+				[data-tool] .btn-brand:hover {
+					background-color: var(--accent-hover);
+				}
+
+				.brand-header {
+					border-top-style: var(--tw-border-style);
+					border-top-width: 2px;
+					border-bottom-style: var(--tw-border-style);
+					border-bottom-width: 1px;
+					border-top-color: var(--brand-from);
+					border-bottom-color: var(--border);
+					background: linear-gradient(
+						100deg,
+						var(--brand-fill-from),
+						var(--brand-fill-to)
+					);
+				}
+
+				@supports (color: color-mix(in lab, red, red)) {
+					.brand-header {
+						background: linear-gradient(
+							100deg,
+							color-mix(in srgb, var(--brand-fill-from) 11%, transparent),
+							color-mix(in srgb, var(--brand-fill-to) 4%, transparent)
+						);
+					}
+				}
+
+				.brand-header-inner {
+					max-width: var(--container-5xl);
+					align-items: center;
+					gap: calc(var(--spacing) * 8);
+					padding-inline: calc(var(--spacing) * 6);
+					padding-block: calc(var(--spacing) * 5);
+					flex-wrap: wrap;
+					margin-inline: auto;
+					display: flex;
+				}
+
+				.wordmark {
+					align-items: center;
+					gap: calc(var(--spacing) * 3);
+					font-family: var(--font-outfit);
+					--tw-leading: normal;
+					--tw-font-weight: var(--font-weight-bold);
+					font-size: 1.45rem;
+					line-height: normal;
+					font-weight: var(--font-weight-bold);
+					white-space: nowrap;
+					color: inherit;
+					text-decoration-line: none;
+					display: flex;
+				}
+
+				.brand-icon {
+					width: 2.3rem;
+					height: 2.3rem;
+					color: var(--color-white);
+					background: linear-gradient(
+						140deg,
+						var(--brand-fill-from),
+						var(--brand-fill-to)
+					);
+					border-radius: 8px;
+					place-items: center;
+					font-size: 1.2rem;
+					display: grid;
+				}
+
+				.brand-header nav {
+					gap: calc(var(--spacing) * 7);
+					color: var(--text-muted);
+					margin-left: auto;
+					font-size: 0.9rem;
+					display: flex;
+				}
+
+				.brand-header nav a {
+					border-bottom-style: var(--tw-border-style);
+					padding-block: var(--spacing);
+					color: inherit;
+					border-color: #0000;
+					border-bottom-width: 2px;
+					text-decoration-line: none;
+				}
+
+				.brand-header nav a:hover,
+				.brand-header nav a[aria-current='page'] {
+					color: var(--text);
+				}
+
+				.brand-header nav a[aria-current='page'] {
+					border-bottom-color: var(--brand-from);
+				}
+
+				.brand-header :focus-visible {
+					outline-color: var(--brand-from);
+				}
+
+				@media (width<=600px) {
+					.brand-icon {
+						display: none;
+					}
+
+					.wordmark {
+						font-size: 1.2rem;
+					}
+
+					.brand-header nav {
+						gap: 0.85rem;
+						font-size: 0.8rem;
+					}
+				}
+
+				.shell-main {
+					max-width: var(--container-5xl);
+					padding-inline: calc(var(--spacing) * 6);
+					padding-bottom: calc(var(--spacing) * 12);
+					margin-inline: auto;
+				}
+
+				.shell-hero {
+					padding-top: 4.5rem;
+					padding-bottom: calc(var(--spacing) * 12);
+				}
+
+				.shell-hero h1 {
+					margin-block: 1.2rem;
+				}
+
+				.hero-copy {
+					max-width: 34rem;
+					color: var(--text-muted);
+					font-size: 1.05rem;
+				}
+
+				.hero-actions {
+					margin-top: calc(var(--spacing) * 6);
+					align-items: center;
+					gap: calc(var(--spacing) * 5);
+					flex-wrap: wrap;
+					display: flex;
+				}
+
+				.section-heading {
+					margin-bottom: calc(var(--spacing) * 4);
+					justify-content: space-between;
+					align-items: baseline;
+					gap: calc(var(--spacing) * 4);
+					flex-wrap: wrap;
+					display: flex;
+				}
+
+				.section-heading h2 {
+					--tw-font-weight: var(--font-weight-medium);
+					font-size: 1.2rem;
+					font-weight: var(--font-weight-medium);
+					--tw-tracking: -0.02em;
+					letter-spacing: -0.02em;
+				}
+
+				.tool-grid {
+					gap: calc(var(--spacing) * 4);
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+					display: grid;
+				}
+
+				@media (width<=599px) {
+					.tool-grid {
+						grid-template-columns: repeat(1, minmax(0, 1fr));
+					}
+				}
+
+				.tool-card {
+					padding: calc(var(--spacing) * 6);
+					color: inherit;
+					text-decoration-line: none;
+					display: block;
+				}
+
+				@media (hover: hover) {
+					.tool-card:hover {
+						border-color: var(--accent);
+						--tw-shadow: 0 0 var(--glow-hover) var(--accent-glow);
+						box-shadow:
+							var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+							var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+							var(--tw-shadow);
+					}
+				}
+
+				.tool-card {
+					transition:
+						border-color 0.18s,
+						box-shadow 0.18s;
+				}
+
+				.tool-top {
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 1.4rem;
+					display: flex;
+				}
+
+				.tool-icon {
+					border-radius: var(--radius);
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--card-border);
+					background-color: var(--accent-tint);
+					width: 2.6rem;
+					height: 2.6rem;
+					color: var(--accent-ink);
+					place-items: center;
+					display: grid;
+				}
+
+				.tool-icon svg {
+					width: 1.3rem;
+					height: 1.3rem;
+				}
+
+				.tool-card h3 {
+					--tw-font-weight: var(--font-weight-semibold);
+					font-size: 1.45rem;
+					font-weight: var(--font-weight-semibold);
+					margin-bottom: 0.3rem;
+				}
+
+				.tool-card p {
+					color: var(--text-muted);
+					font-size: 0.85rem;
+				}
+
+				.tool-foot {
+					margin-top: calc(var(--spacing) * 5);
+					border-top-style: var(--tw-border-style);
+					border-top-width: 1px;
+					border-color: var(--border);
+					font-family: var(--font-geist-mono);
+					--tw-leading: normal;
+					--tw-font-weight: var(--font-weight-normal);
+					font-size: 0.75rem;
+					line-height: normal;
+					font-weight: var(--font-weight-normal);
+					color: var(--accent-ink);
+					justify-content: space-between;
+					align-items: center;
+					padding-top: 0.9rem;
+					display: flex;
+				}
+
+				.tool-foot .badge {
+					margin-left: auto;
+				}
+
+				.site-credits {
+					max-width: var(--container-5xl);
+					margin-inline: auto;
+					margin-top: calc(var(--spacing) * 12);
+					border-top-style: var(--tw-border-style);
+					border-top-width: 1px;
+					border-color: var(--border);
+					padding: calc(var(--spacing) * 6);
+					color: var(--text-muted);
+					font-size: 0.8rem;
+				}
+
+				.site-credits h2 {
+					margin-bottom: calc(var(--spacing) * 2);
+				}
+
+				.site-credits img {
+					margin-block: calc(var(--spacing) * 3);
+				}
+			}
+
+			@layer utilities {
+				.collapse {
+					visibility: collapse;
+				}
+
+				.invisible {
+					visibility: hidden;
+				}
+
+				.visible {
+					visibility: visible;
+				}
+
+				.sr-only {
+					clip-path: inset(50%);
+					white-space: nowrap;
+					border-width: 0;
+					width: 1px;
+					height: 1px;
+					margin: -1px;
+					padding: 0;
+					position: absolute;
+					overflow: hidden;
+				}
+
+				.absolute {
+					position: absolute;
+				}
+
+				.fixed {
+					position: fixed;
+				}
+
+				.relative {
+					position: relative;
+				}
+
+				.static {
+					position: static;
+				}
+
+				.top-1 {
+					top: var(--spacing);
+				}
+
+				.right-1 {
+					right: var(--spacing);
+				}
+
+				.isolate {
+					isolation: isolate;
+				}
+
+				.z-99 {
+					z-index: 99;
+				}
+
+				.container {
+					width: 100%;
+				}
+
+				@media (width>=29rem) {
+					.container {
+						max-width: 29rem;
+					}
+				}
+
+				@media (width>=40rem) {
+					.container {
+						max-width: 40rem;
+					}
+				}
+
+				@media (width>=48rem) {
+					.container {
+						max-width: 48rem;
+					}
+				}
+
+				@media (width>=64rem) {
+					.container {
+						max-width: 64rem;
+					}
+				}
+
+				@media (width>=80rem) {
+					.container {
+						max-width: 80rem;
+					}
+				}
+
+				@media (width>=96rem) {
+					.container {
+						max-width: 96rem;
+					}
+				}
+
+				.prose {
+					color: var(--tw-prose-body);
+					max-width: 65ch;
+				}
+
+				.prose
+					:where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					margin-top: 1.25em;
+					margin-bottom: 1.25em;
+				}
+
+				.prose
+					:where([class~='lead']):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: var(--tw-prose-lead);
+					margin-top: 1.2em;
+					margin-bottom: 1.2em;
+					font-size: 1.25em;
+					line-height: 1.6;
+				}
+
+				.prose
+					:where(a):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					color: var(--tw-prose-links);
+					font-weight: 500;
+					text-decoration: underline;
+				}
+
+				.prose
+					:where(strong):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: var(--tw-prose-bold);
+					font-weight: 600;
+				}
+
+				.prose
+					:where(a strong):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					),
+				.prose
+					:where(blockquote strong):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					),
+				.prose
+					:where(thead th strong):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: inherit;
+				}
+
+				.prose
+					:where(ol):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					margin-top: 1.25em;
+					margin-bottom: 1.25em;
+					padding-inline-start: 1.625em;
+					list-style-type: decimal;
+				}
+
+				.prose
+					:where(ol[type='A']):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					list-style-type: upper-alpha;
+				}
+
+				.prose
+					:where(ol[type='a']):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					list-style-type: lower-alpha;
+				}
+
+				.prose
+					:where(ol[type='A' s]):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					list-style-type: upper-alpha;
+				}
+
+				.prose
+					:where(ol[type='a' s]):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					list-style-type: lower-alpha;
+				}
+
+				.prose
+					:where(ol[type='I']):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					list-style-type: upper-roman;
+				}
+
+				.prose
+					:where(ol[type='i']):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					list-style-type: lower-roman;
+				}
+
+				.prose
+					:where(ol[type='I' s]):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					list-style-type: upper-roman;
+				}
+
+				.prose
+					:where(ol[type='i' s]):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					list-style-type: lower-roman;
+				}
+
+				.prose
+					:where(ol[type='1']):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					list-style-type: decimal;
+				}
+
+				.prose
+					:where(ul):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					margin-top: 1.25em;
+					margin-bottom: 1.25em;
+					padding-inline-start: 1.625em;
+					list-style-type: disc;
+				}
+
+				.prose
+					:where(ol > li):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					)::marker {
+					color: var(--tw-prose-counters);
+					font-weight: 400;
+				}
+
+				.prose
+					:where(ul > li):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					)::marker {
+					color: var(--tw-prose-bullets);
+				}
+
+				.prose
+					:where(dt):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					color: var(--tw-prose-headings);
+					margin-top: 1.25em;
+					font-weight: 600;
+				}
+
+				.prose
+					:where(hr):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					border-color: var(--tw-prose-hr);
+					border-top-width: 1px;
+					margin-top: 3em;
+					margin-bottom: 3em;
+				}
+
+				.prose
+					:where(blockquote):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: var(--tw-prose-quotes);
+					border-inline-start-width: 0.25rem;
+					border-inline-start-color: var(--tw-prose-quote-borders);
+					quotes: '“' '”' '‘' '’';
+					margin-top: 1.6em;
+					margin-bottom: 1.6em;
+					padding-inline-start: 1em;
+					font-style: italic;
+					font-weight: 500;
+				}
+
+				.prose
+					:where(blockquote p:first-of-type):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					):before {
+					content: open-quote;
+				}
+
+				.prose
+					:where(blockquote p:last-of-type):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					):after {
+					content: close-quote;
+				}
+
+				.prose
+					:where(h1):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					color: var(--tw-prose-headings);
+					margin-top: 0;
+					margin-bottom: 0.888889em;
+					font-size: 2.25em;
+					font-weight: 800;
+					line-height: 1.11111;
+				}
+
+				.prose
+					:where(h1 strong):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: inherit;
+					font-weight: 900;
+				}
+
+				.prose
+					:where(h2):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					color: var(--tw-prose-headings);
+					margin-top: 2em;
+					margin-bottom: 1em;
+					font-size: 1.5em;
+					font-weight: 700;
+					line-height: 1.33333;
+				}
+
+				.prose
+					:where(h2 strong):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: inherit;
+					font-weight: 800;
+				}
+
+				.prose
+					:where(h3):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					color: var(--tw-prose-headings);
+					margin-top: 1.6em;
+					margin-bottom: 0.6em;
+					font-size: 1.25em;
+					font-weight: 600;
+					line-height: 1.6;
+				}
+
+				.prose
+					:where(h3 strong):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: inherit;
+					font-weight: 700;
+				}
+
+				.prose
+					:where(h4):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					color: var(--tw-prose-headings);
+					margin-top: 1.5em;
+					margin-bottom: 0.5em;
+					font-weight: 600;
+					line-height: 1.5;
+				}
+
+				.prose
+					:where(h4 strong):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: inherit;
+					font-weight: 700;
+				}
+
+				.prose
+					:where(img):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 2em;
+					margin-bottom: 2em;
+				}
+
+				.prose
+					:where(picture):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 2em;
+					margin-bottom: 2em;
+					display: block;
+				}
+
+				.prose
+					:where(video):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 2em;
+					margin-bottom: 2em;
+				}
+
+				.prose
+					:where(kbd):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: var(--tw-prose-kbd);
+					box-shadow:
+						0 0 0 1px var(--tw-prose-kbd-shadows),
+						0 3px 0 var(--tw-prose-kbd-shadows);
+					padding-top: 0.1875em;
+					padding-inline-end: 0.375em;
+					padding-bottom: 0.1875em;
+					border-radius: 0.3125rem;
+					padding-inline-start: 0.375em;
+					font-family: inherit;
+					font-size: 0.875em;
+					font-weight: 500;
+				}
+
+				.prose
+					:where(code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: var(--tw-prose-code);
+					font-size: 0.875em;
+					font-weight: 600;
+				}
+
+				.prose
+					:where(code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					):before,
+				.prose
+					:where(code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					):after {
+					content: '`';
+				}
+
+				.prose
+					:where(a code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					),
+				.prose
+					:where(h1 code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: inherit;
+				}
+
+				.prose
+					:where(h2 code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: inherit;
+					font-size: 0.875em;
+				}
+
+				.prose
+					:where(h3 code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: inherit;
+					font-size: 0.9em;
+				}
+
+				.prose
+					:where(h4 code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					),
+				.prose
+					:where(blockquote code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					),
+				.prose
+					:where(thead th code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: inherit;
+				}
+
+				.prose
+					:where(pre):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: var(--tw-prose-pre-code);
+					background-color: var(--tw-prose-pre-bg);
+					padding-top: 0.857143em;
+					padding-inline-end: 1.14286em;
+					padding-bottom: 0.857143em;
+					border-radius: 0.375rem;
+					margin-top: 1.71429em;
+					margin-bottom: 1.71429em;
+					padding-inline-start: 1.14286em;
+					font-size: 0.875em;
+					font-weight: 400;
+					line-height: 1.71429;
+					overflow-x: auto;
+				}
+
+				.prose
+					:where(pre code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					font-weight: inherit;
+					color: inherit;
+					font-size: inherit;
+					font-family: inherit;
+					line-height: inherit;
+					background-color: #0000;
+					border-width: 0;
+					border-radius: 0;
+					padding: 0;
+				}
+
+				.prose
+					:where(pre code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					):before,
+				.prose
+					:where(pre code):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					):after {
+					content: none;
+				}
+
+				.prose
+					:where(table):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					table-layout: auto;
+					width: 100%;
+					margin-top: 2em;
+					margin-bottom: 2em;
+					font-size: 0.875em;
+					line-height: 1.71429;
+				}
+
+				.prose
+					:where(thead):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					border-bottom-width: 1px;
+					border-bottom-color: var(--tw-prose-th-borders);
+				}
+
+				.prose
+					:where(thead th):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: var(--tw-prose-headings);
+					vertical-align: bottom;
+					padding-inline-end: 0.571429em;
+					padding-bottom: 0.571429em;
+					padding-inline-start: 0.571429em;
+					font-weight: 600;
+				}
+
+				.prose
+					:where(tbody tr):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					border-bottom-width: 1px;
+					border-bottom-color: var(--tw-prose-td-borders);
+				}
+
+				.prose
+					:where(tbody tr:last-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					border-bottom-width: 0;
+				}
+
+				.prose
+					:where(tbody td):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					vertical-align: baseline;
+				}
+
+				.prose
+					:where(tfoot):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					border-top-width: 1px;
+					border-top-color: var(--tw-prose-th-borders);
+				}
+
+				.prose
+					:where(tfoot td):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					vertical-align: top;
+				}
+
+				.prose
+					:where(th, td):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					text-align: start;
+				}
+
+				.prose
+					:where(figure > *):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 0;
+					margin-bottom: 0;
+				}
+
+				.prose
+					:where(figcaption):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					color: var(--tw-prose-captions);
+					margin-top: 0.857143em;
+					font-size: 0.875em;
+					line-height: 1.42857;
+				}
+
+				.prose {
+					--tw-prose-body: oklch(37.3% 0.034 259.733);
+					--tw-prose-headings: oklch(21% 0.034 264.665);
+					--tw-prose-lead: oklch(44.6% 0.03 256.802);
+					--tw-prose-links: oklch(21% 0.034 264.665);
+					--tw-prose-bold: oklch(21% 0.034 264.665);
+					--tw-prose-counters: oklch(55.1% 0.027 264.364);
+					--tw-prose-bullets: oklch(87.2% 0.01 258.338);
+					--tw-prose-hr: oklch(92.8% 0.006 264.531);
+					--tw-prose-quotes: oklch(21% 0.034 264.665);
+					--tw-prose-quote-borders: oklch(92.8% 0.006 264.531);
+					--tw-prose-captions: oklch(55.1% 0.027 264.364);
+					--tw-prose-kbd: oklch(21% 0.034 264.665);
+					--tw-prose-kbd-shadows: oklab(21% -0.00316127 -0.0338527/0.1);
+					--tw-prose-code: oklch(21% 0.034 264.665);
+					--tw-prose-pre-code: oklch(92.8% 0.006 264.531);
+					--tw-prose-pre-bg: oklch(27.8% 0.033 256.848);
+					--tw-prose-th-borders: oklch(87.2% 0.01 258.338);
+					--tw-prose-td-borders: oklch(92.8% 0.006 264.531);
+					--tw-prose-invert-body: oklch(87.2% 0.01 258.338);
+					--tw-prose-invert-headings: #fff;
+					--tw-prose-invert-lead: oklch(70.7% 0.022 261.325);
+					--tw-prose-invert-links: #fff;
+					--tw-prose-invert-bold: #fff;
+					--tw-prose-invert-counters: oklch(70.7% 0.022 261.325);
+					--tw-prose-invert-bullets: oklch(44.6% 0.03 256.802);
+					--tw-prose-invert-hr: oklch(37.3% 0.034 259.733);
+					--tw-prose-invert-quotes: oklch(96.7% 0.003 264.542);
+					--tw-prose-invert-quote-borders: oklch(37.3% 0.034 259.733);
+					--tw-prose-invert-captions: oklch(70.7% 0.022 261.325);
+					--tw-prose-invert-kbd: #fff;
+					--tw-prose-invert-kbd-shadows: #ffffff1a;
+					--tw-prose-invert-code: #fff;
+					--tw-prose-invert-pre-code: oklch(87.2% 0.01 258.338);
+					--tw-prose-invert-pre-bg: #00000080;
+					--tw-prose-invert-th-borders: oklch(44.6% 0.03 256.802);
+					--tw-prose-invert-td-borders: oklch(37.3% 0.034 259.733);
+					font-size: 1rem;
+					line-height: 1.75;
+				}
+
+				.prose
+					:where(picture > img):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 0;
+					margin-bottom: 0;
+				}
+
+				.prose
+					:where(li):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					margin-top: 0.5em;
+					margin-bottom: 0.5em;
+				}
+
+				.prose
+					:where(ol > li):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					),
+				.prose
+					:where(ul > li):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					padding-inline-start: 0.375em;
+				}
+
+				.prose
+					:where(.prose > ul > li p):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 0.75em;
+					margin-bottom: 0.75em;
+				}
+
+				.prose
+					:where(.prose > ul > li > p:first-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 1.25em;
+				}
+
+				.prose
+					:where(.prose > ul > li > p:last-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-bottom: 1.25em;
+				}
+
+				.prose
+					:where(.prose > ol > li > p:first-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 1.25em;
+				}
+
+				.prose
+					:where(.prose > ol > li > p:last-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-bottom: 1.25em;
+				}
+
+				.prose
+					:where(ul ul, ul ol, ol ul, ol ol):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 0.75em;
+					margin-bottom: 0.75em;
+				}
+
+				.prose
+					:where(dl):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					margin-top: 1.25em;
+					margin-bottom: 1.25em;
+				}
+
+				.prose
+					:where(dd):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+					margin-top: 0.5em;
+					padding-inline-start: 1.625em;
+				}
+
+				.prose
+					:where(hr + *):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					),
+				.prose
+					:where(h2 + *):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					),
+				.prose
+					:where(h3 + *):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					),
+				.prose
+					:where(h4 + *):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 0;
+				}
+
+				.prose
+					:where(thead th:first-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					padding-inline-start: 0;
+				}
+
+				.prose
+					:where(thead th:last-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					padding-inline-end: 0;
+				}
+
+				.prose
+					:where(tbody td, tfoot td):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					padding-top: 0.571429em;
+					padding-inline-end: 0.571429em;
+					padding-bottom: 0.571429em;
+					padding-inline-start: 0.571429em;
+				}
+
+				.prose
+					:where(tbody td:first-child, tfoot td:first-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					padding-inline-start: 0;
+				}
+
+				.prose
+					:where(tbody td:last-child, tfoot td:last-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					padding-inline-end: 0;
+				}
+
+				.prose
+					:where(figure):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 2em;
+					margin-bottom: 2em;
+				}
+
+				.prose
+					:where(.prose > :first-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-top: 0;
+				}
+
+				.prose
+					:where(.prose > :last-child):not(
+						:where([class~='not-prose'], [class~='not-prose'] *)
+					) {
+					margin-bottom: 0;
+				}
+
+				.flex-center {
+					justify-content: center;
+					align-items: center;
+					display: flex;
+				}
+
+				.block {
+					display: block;
+				}
+
+				.contents {
+					display: contents;
+				}
+
+				.flex {
+					display: flex;
+				}
+
+				.grid {
+					display: grid;
+				}
+
+				.hidden {
+					display: none;
+				}
+
+				.inline {
+					display: inline;
+				}
+
+				.table {
+					display: table;
+				}
+
+				.min-h-screen {
+					min-height: 100vh;
+				}
+
+				.flex-shrink,
+				.shrink {
+					flex-shrink: 1;
+				}
+
+				.grow {
+					flex-grow: 1;
+				}
+
+				.border-collapse {
+					border-collapse: collapse;
+				}
+
+				.transform {
+					transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,)
+						var(--tw-skew-x,) var(--tw-skew-y,);
+				}
+
+				.resize {
+					resize: both;
+				}
+
+				.flex-wrap {
+					flex-wrap: wrap;
+				}
+
+				.pill {
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--card-border);
+					background-color: var(--accent-tint);
+					padding-inline: calc(var(--spacing) * 2);
+					white-space: nowrap;
+					color: var(--accent-ink);
+					border-radius: 2147483647px;
+					padding-block: 0.15rem;
+					font-size: 0.7rem;
+				}
+
+				.rounded {
+					border-radius: 0.25rem;
+				}
+
+				.bb {
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--color-red-600);
+				}
+
+				@media (width>=40rem) {
+					.bb {
+						border-color: var(--color-blue-600);
+					}
+				}
+
+				@media (width>=48rem) {
+					.bb {
+						border-color: var(--color-green-600);
+					}
+				}
+
+				@media (width>=64rem) {
+					.bb {
+						border-color: var(--color-indigo-600);
+					}
+				}
+
+				@media (width>=80rem) {
+					.bb {
+						border-color: var(--color-pink-600);
+					}
+				}
+
+				.bb2 {
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--color-green-600);
+				}
+
+				@media (width>=40rem) {
+					.bb2 {
+						border-color: var(--color-red-600);
+					}
+				}
+
+				@media (width>=48rem) {
+					.bb2 {
+						border-color: var(--color-blue-600);
+					}
+				}
+
+				@media (width>=64rem) {
+					.bb2 {
+						border-color: var(--color-pink-600);
+					}
+				}
+
+				@media (width>=80rem) {
+					.bb2 {
+						border-color: var(--color-indigo-600);
+					}
+				}
+
+				.border {
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+				}
+
+				.border-border {
+					border-color: var(--border);
+				}
+
+				.bg-accent {
+					background-color: var(--accent);
+				}
+
+				.bg-accent-tint {
+					background-color: var(--accent-tint);
+				}
+
+				.bg-bg {
+					background-color: var(--bg);
+				}
+
+				.bg-surface-1 {
+					background-color: var(--surface-1);
+				}
+
+				.bg-surface-2 {
+					background-color: var(--surface-2);
+				}
+
+				.from-brand-from {
+					--tw-gradient-from: var(--brand-from);
+					--tw-gradient-stops: var(
+						--tw-gradient-via-stops,
+						var(--tw-gradient-position),
+						var(--tw-gradient-from) var(--tw-gradient-from-position),
+						var(--tw-gradient-to) var(--tw-gradient-to-position)
+					);
+				}
+
+				.to-brand-to {
+					--tw-gradient-to: var(--brand-to);
+					--tw-gradient-stops: var(
+						--tw-gradient-via-stops,
+						var(--tw-gradient-position),
+						var(--tw-gradient-from) var(--tw-gradient-from-position),
+						var(--tw-gradient-to) var(--tw-gradient-to-position)
+					);
+				}
+
+				.font-display {
+					font-family: var(--font-outfit);
+				}
+
+				.font-mono {
+					font-family: var(--font-geist-mono);
+				}
+
+				.font-sans {
+					font-family: var(--font-inter);
+				}
+
+				.text-accent-ink {
+					color: var(--accent-ink);
+				}
+
+				.text-danger {
+					color: var(--danger);
+				}
+
+				.text-fg {
+					color: var(--text);
+				}
+
+				.text-muted {
+					color: var(--text-muted);
+				}
+
+				.text-on-accent {
+					color: var(--on-accent);
+				}
+
+				.text-success {
+					color: var(--success);
+				}
+
+				.text-warning {
+					color: var(--warning);
+				}
+
+				.uppercase {
+					text-transform: uppercase;
+				}
+
+				.underline {
+					text-decoration-line: underline;
+				}
+
+				.accent-border {
+					accent-color: var(--border);
+				}
+
+				.ring {
+					--tw-ring-shadow: var(--tw-ring-inset,) 0 0 0
+						calc(1px + var(--tw-ring-offset-width))
+						var(--tw-ring-color, currentcolor);
+					box-shadow:
+						var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+						var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+						var(--tw-shadow);
+				}
+
+				.outline {
+					outline-style: var(--tw-outline-style);
+					outline-width: 1px;
+				}
+
+				.blur {
+					--tw-blur: blur(8px);
+					filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,)
+						var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,)
+						var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+				}
+
+				.filter {
+					filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,)
+						var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,)
+						var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+				}
+
+				.backdrop-filter {
+					-webkit-backdrop-filter: var(--tw-backdrop-blur,)
+						var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+						var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+						var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+						var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+					backdrop-filter: var(--tw-backdrop-blur,)
+						var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+						var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+						var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+						var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+				}
+
+				.transition {
+					transition-property:
+						color,
+						background-color,
+						border-color,
+						outline-color,
+						text-decoration-color,
+						fill,
+						stroke,
+						--tw-gradient-from,
+						--tw-gradient-via,
+						--tw-gradient-to,
+						opacity,
+						box-shadow,
+						transform,
+						translate,
+						scale,
+						rotate,
+						filter,
+						-webkit-backdrop-filter,
+						backdrop-filter,
+						display,
+						content-visibility,
+						overlay,
+						pointer-events;
+					transition-timing-function: var(
+						--tw-ease,
+						var(--default-transition-timing-function)
+					);
+					transition-duration: var(
+						--tw-duration,
+						var(--default-transition-duration)
+					);
+				}
+
+				.ease-in-out {
+					--tw-ease: var(--ease-in-out);
+					transition-timing-function: var(--ease-in-out);
+				}
+
+				.prose {
+					--tw-prose-body: var(--text);
+					--tw-prose-headings: var(--text);
+					--tw-prose-bold: var(--text);
+					--tw-prose-links: var(--accent-ink);
+					--tw-prose-quotes: var(--text);
+					--tw-prose-code: var(--text);
+					--tw-prose-counters: var(--text);
+				}
+
+				@supports (color: color-mix(in lab, red, red)) {
+					.prose {
+						--tw-prose-counters: color-mix(
+							in oklch,
+							var(--text) 70%,
+							transparent
+						);
+					}
+				}
+
+				.prose {
+					--tw-prose-bullets: var(--text);
+				}
+
+				@supports (color: color-mix(in lab, red, red)) {
+					.prose {
+						--tw-prose-bullets: color-mix(
+							in oklch,
+							var(--text) 40%,
+							transparent
+						);
+					}
+				}
+
+				.prose {
+					--tw-prose-hr: var(--text);
+				}
+
+				@supports (color: color-mix(in lab, red, red)) {
+					.prose {
+						--tw-prose-hr: color-mix(in oklch, var(--text) 20%, transparent);
+					}
+				}
+
+				.prose {
+					--tw-prose-quote-borders: var(--text);
+				}
+
+				@supports (color: color-mix(in lab, red, red)) {
+					.prose {
+						--tw-prose-quote-borders: color-mix(
+							in oklch,
+							var(--text) 20%,
+							transparent
+						);
+					}
+				}
+
+				.running {
+					animation-play-state: running;
+				}
+
+				@media (hover: hover) {
+					.hover\:bg-accent-hover:hover {
+						background-color: var(--accent-hover);
+					}
+				}
+			}
+
+			@property --tw-animation-delay {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0s;
+			}
+
+			@property --tw-animation-direction {
+				syntax: '*';
+				inherits: false;
+				initial-value: normal;
+			}
+
+			@property --tw-animation-duration {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-animation-fill-mode {
+				syntax: '*';
+				inherits: false;
+				initial-value: none;
+			}
+
+			@property --tw-animation-iteration-count {
+				syntax: '*';
+				inherits: false;
+				initial-value: 1;
+			}
+
+			@property --tw-enter-blur {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0;
+			}
+
+			@property --tw-enter-opacity {
+				syntax: '*';
+				inherits: false;
+				initial-value: 1;
+			}
+
+			@property --tw-enter-rotate {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0;
+			}
+
+			@property --tw-enter-scale {
+				syntax: '*';
+				inherits: false;
+				initial-value: 1;
+			}
+
+			@property --tw-enter-translate-x {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0;
+			}
+
+			@property --tw-enter-translate-y {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0;
+			}
+
+			@property --tw-exit-blur {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0;
+			}
+
+			@property --tw-exit-opacity {
+				syntax: '*';
+				inherits: false;
+				initial-value: 1;
+			}
+
+			@property --tw-exit-rotate {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0;
+			}
+
+			@property --tw-exit-scale {
+				syntax: '*';
+				inherits: false;
+				initial-value: 1;
+			}
+
+			@property --tw-exit-translate-x {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0;
+			}
+
+			@property --tw-exit-translate-y {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				*,
+				:before,
+				:after {
+					scroll-behavior: auto !important;
+					transition-duration: 0.01ms !important;
+					animation-duration: 0.01ms !important;
+					animation-iteration-count: 1 !important;
+				}
+			}
+
+			:root {
+				--lightningcss-light: ;
+				--lightningcss-dark: initial;
+				color-scheme: dark;
+				--bg: #080b16;
+				--surface-1: #111625;
+				--surface-2: #191f31;
+				--border: #343c52;
+				--text: #eef0fa;
+				--text-muted: #a6aec5;
+				--brand-from: #8580ff;
+				--brand-to: #ba94ff;
+				--brand-fill-from: #5145c9;
+				--brand-fill-to: #7142b8;
+				--accent: #a39bff;
+				--accent-hover: #b9b3ff;
+				--accent-tint: #a39bff12;
+				--accent-glow: #8b5cf638;
+				--accent-ink: #a39bff;
+				--on-accent: #101020;
+				--danger: #f87171;
+				--warning: #fbbf24;
+				--success: #4ade80;
+				--radius: 4px;
+				--glow-size: 10px;
+				--glow-hover: 24px;
+				--aurora-opacity: 0.45;
+				--glass-blur: 18px;
+				--hero-aurora-1: #6741d43b;
+				--hero-aurora-2: #315beb18;
+				--card-bg: var(--surface-1);
+			}
+
+			@supports (color: color-mix(in lab, red, red)) {
+				:root {
+					--card-bg: color-mix(in srgb, var(--surface-1) 84%, transparent);
+				}
+			}
+
+			:root {
+				--pattern-dot: #a6aec520;
+			}
+
+			[data-page='listio'] {
+				--bg: oklab(15.2133% -0.00336971 -0.00898791);
+			}
+
+			[data-page='artnuvio'] {
+				--bg: oklab(14.7602% -0.000282128 -0.0151283);
+			}
+
+			[data-page='collectio'] {
+				--bg: oklab(14.9787% 0.00654563 -0.0125754);
+			}
+
+			[data-tool='listio'] {
+				--accent: #2dd4cf;
+				--accent-hover: #67e8e2;
+				--accent-tint: #2dd4cf12;
+				--accent-glow: #22d3ee30;
+				--accent-ink: #2dd4cf;
+				--on-accent: #052023;
+			}
+
+			[data-tool='artnuvio'] {
+				--accent: #306fe0;
+				--accent-hover: #2663cb;
+				--accent-tint: #306fe016;
+				--accent-glow: #306fe040;
+				--accent-ink: #8fb8ff;
+				--on-accent: #fff;
+			}
+
+			[data-tool='collectio'] {
+				--accent: #e275ee;
+				--accent-hover: #efa0f7;
+				--accent-tint: #e275ee12;
+				--accent-glow: #d946ef30;
+				--accent-ink: #e275ee;
+				--on-accent: #28072e;
+			}
+
+			:root,
+			[data-tool] {
+				--card-border: var(--accent);
+			}
+
+			@supports (color: color-mix(in lab, red, red)) {
+				:root,
+				[data-tool] {
+					--card-border: color-mix(in srgb, var(--accent) 30%, var(--border));
+				}
+			}
+
+			[data-tool] {
+				--hero-aurora-1: var(--accent-glow);
+				--hero-aurora-2: var(--accent-tint);
+			}
+
+			@property --tw-rotate-x {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-rotate-y {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-rotate-z {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-skew-x {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-skew-y {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-border-style {
+				syntax: '*';
+				inherits: false;
+				initial-value: solid;
+			}
+
+			@property --tw-gradient-position {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-gradient-from {
+				syntax: '<color>';
+				inherits: false;
+				initial-value: #0000;
+			}
+
+			@property --tw-gradient-via {
+				syntax: '<color>';
+				inherits: false;
+				initial-value: #0000;
+			}
+
+			@property --tw-gradient-to {
+				syntax: '<color>';
+				inherits: false;
+				initial-value: #0000;
+			}
+
+			@property --tw-gradient-stops {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-gradient-via-stops {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-gradient-from-position {
+				syntax: '<length-percentage>';
+				inherits: false;
+				initial-value: 0%;
+			}
+
+			@property --tw-gradient-via-position {
+				syntax: '<length-percentage>';
+				inherits: false;
+				initial-value: 50%;
+			}
+
+			@property --tw-gradient-to-position {
+				syntax: '<length-percentage>';
+				inherits: false;
+				initial-value: 100%;
+			}
+
+			@property --tw-shadow {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0 0 #0000;
+			}
+
+			@property --tw-shadow-color {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-shadow-alpha {
+				syntax: '<percentage>';
+				inherits: false;
+				initial-value: 100%;
+			}
+
+			@property --tw-inset-shadow {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0 0 #0000;
+			}
+
+			@property --tw-inset-shadow-color {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-inset-shadow-alpha {
+				syntax: '<percentage>';
+				inherits: false;
+				initial-value: 100%;
+			}
+
+			@property --tw-ring-color {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-ring-shadow {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0 0 #0000;
+			}
+
+			@property --tw-inset-ring-color {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-inset-ring-shadow {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0 0 #0000;
+			}
+
+			@property --tw-ring-inset {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-ring-offset-width {
+				syntax: '<length>';
+				inherits: false;
+				initial-value: 0;
+			}
+
+			@property --tw-ring-offset-color {
+				syntax: '*';
+				inherits: false;
+				initial-value: #fff;
+			}
+
+			@property --tw-ring-offset-shadow {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0 0 #0000;
+			}
+
+			@property --tw-outline-style {
+				syntax: '*';
+				inherits: false;
+				initial-value: solid;
+			}
+
+			@property --tw-blur {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-brightness {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-contrast {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-grayscale {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-hue-rotate {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-invert {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-opacity {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-saturate {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-sepia {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-drop-shadow {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-drop-shadow-color {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-drop-shadow-alpha {
+				syntax: '<percentage>';
+				inherits: false;
+				initial-value: 100%;
+			}
+
+			@property --tw-drop-shadow-size {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-blur {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-brightness {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-contrast {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-grayscale {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-hue-rotate {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-invert {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-opacity {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-saturate {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-sepia {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-ease {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-leading {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-font-weight {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-tracking {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-content {
+				syntax: '*';
+				inherits: false;
+				initial-value: '';
+			}
+
+			/* ==== Site CSS: dist/client/_astro/listio.*.css (Listio's panels, forms, buttons, dialog) ==== */
+			/*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */
+			@layer properties {
+				@supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or
+					((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
+					*,
+					:before,
+					:after,
+					::backdrop {
+						--tw-font-weight: initial;
+						--tw-tracking: initial;
+						--tw-border-style: solid;
+						--tw-shadow: 0 0 #0000;
+						--tw-shadow-color: initial;
+						--tw-shadow-alpha: 100%;
+						--tw-inset-shadow: 0 0 #0000;
+						--tw-inset-shadow-color: initial;
+						--tw-inset-shadow-alpha: 100%;
+						--tw-ring-color: initial;
+						--tw-ring-shadow: 0 0 #0000;
+						--tw-inset-ring-color: initial;
+						--tw-inset-ring-shadow: 0 0 #0000;
+						--tw-ring-inset: initial;
+						--tw-ring-offset-width: 0px;
+						--tw-ring-offset-color: #fff;
+						--tw-ring-offset-shadow: 0 0 #0000;
+						--tw-backdrop-blur: initial;
+						--tw-backdrop-brightness: initial;
+						--tw-backdrop-contrast: initial;
+						--tw-backdrop-grayscale: initial;
+						--tw-backdrop-hue-rotate: initial;
+						--tw-backdrop-invert: initial;
+						--tw-backdrop-opacity: initial;
+						--tw-backdrop-saturate: initial;
+						--tw-backdrop-sepia: initial;
+						--tw-outline-style: solid;
+					}
+				}
+			}
+
+			@layer components {
+				.listio-main {
+					max-width: var(--container-5xl, 64rem);
+					padding-inline: calc(var(--spacing, 0.25rem) * 6);
+					padding-block: calc(var(--spacing, 0.25rem) * 10);
+					margin-inline: auto;
+				}
+
+				.page-heading {
+					margin-top: calc(var(--spacing, 0.25rem) * 4);
+					margin-bottom: calc(var(--spacing, 0.25rem) * 8);
+				}
+
+				.page-heading h1 {
+					--tw-font-weight: var(--font-weight-semibold, 600);
+					font-size: clamp(2rem, 5vw, 3rem);
+					font-weight: var(--font-weight-semibold, 600);
+					--tw-tracking: -0.03em;
+					letter-spacing: -0.03em;
+					overflow-wrap: anywhere;
+				}
+
+				.page-heading p {
+					margin-top: calc(var(--spacing, 0.25rem) * 2);
+					color: var(--text-muted);
+				}
+
+				.listio-main a:not(.panel, .list-name) {
+					color: var(--accent-ink);
+					text-underline-offset: 3px;
+					text-decoration-line: none;
+				}
+
+				@media (hover: hover) {
+					.listio-main a:not(.panel, .list-name):hover {
+						text-decoration-line: underline;
+					}
+				}
+
+				.listio-main > a:first-child:not(.panel) {
+					color: var(--text-muted);
+				}
+
+				@media (hover: hover) {
+					.listio-main > a:first-child:not(.panel):hover {
+						color: var(--text);
+					}
+				}
+
+				.panel {
+					border-radius: var(--radius);
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--card-border);
+					background-color: var(--card-bg);
+					--tw-shadow: 0 0 var(--glow-size) var(--accent-glow);
+					box-shadow:
+						var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+						var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+						var(--tw-shadow);
+					--tw-backdrop-blur: blur(var(--glass-blur));
+					-webkit-backdrop-filter: var(--tw-backdrop-blur,)
+						var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+						var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+						var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+						var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+					backdrop-filter: var(--tw-backdrop-blur,)
+						var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+						var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+						var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+						var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+					padding: calc(var(--spacing, 0.25rem) * 6);
+				}
+
+				.collection-dialog {
+					background-color: var(--surface-1);
+					width: min(32rem, 100vw - 2rem);
+					max-height: calc(100vh - 2rem);
+					color: var(--text);
+					-webkit-backdrop-filter: none;
+					backdrop-filter: none;
+					margin: auto;
+				}
+
+				.collection-dialog::backdrop {
+					--tw-backdrop-blur: blur(4px);
+					-webkit-backdrop-filter: var(--tw-backdrop-blur,)
+						var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+						var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+						var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+						var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+					backdrop-filter: var(--tw-backdrop-blur,)
+						var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+						var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+						var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+						var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+					background-color: #0009;
+				}
+
+				.panel h2 {
+					font-family: var(--font-outfit);
+					--tw-font-weight: var(--font-weight-semibold, 600);
+					font-size: 1.3rem;
+					font-weight: var(--font-weight-semibold, 600);
+				}
+
+				.panel p + p {
+					margin-top: calc(var(--spacing, 0.25rem) * 3);
+				}
+
+				.list-grid {
+					margin-top: calc(var(--spacing, 0.25rem) * 6);
+					gap: calc(var(--spacing, 0.25rem) * 4);
+					grid-template-columns: repeat(1, minmax(0, 1fr));
+					padding: 0;
+					list-style-type: none;
+					display: grid;
+				}
+
+				@media (width>=40rem) {
+					.list-grid {
+						grid-template-columns: repeat(2, minmax(0, 1fr));
+					}
+				}
+
+				@media (width>=48rem) {
+					.list-grid {
+						grid-template-columns: repeat(3, minmax(0, 1fr));
+					}
+				}
+
+				@media (width>=64rem) {
+					.list-grid {
+						grid-template-columns: repeat(4, minmax(0, 1fr));
+					}
+				}
+
+				.list-grid > li.panel:focus-within {
+					border-color: var(--accent);
+				}
+
+				@media (hover: hover) {
+					.list-grid > li.panel:hover {
+						border-color: var(--accent);
+					}
+				}
+
+				.list-grid > li.panel {
+					transition: border-color 0.18s;
+				}
+
+				.list-controls {
+					margin-top: calc(var(--spacing, 0.25rem) * 6);
+					justify-content: space-between;
+					align-items: center;
+					gap: calc(var(--spacing, 0.25rem) * 3);
+					flex-wrap: wrap;
+					width: 100%;
+					display: flex;
+				}
+
+				.list-sort-control,
+				.list-filter-control {
+					align-items: center;
+					gap: calc(var(--spacing, 0.25rem) * 3);
+					flex-wrap: wrap;
+					display: flex;
+				}
+
+				.list-filter-control {
+					flex: 20rem;
+					justify-content: flex-end;
+				}
+
+				.list-sort-control label,
+				.list-filter-control label {
+					--tw-font-weight: var(--font-weight-semibold, 600);
+					font-weight: var(--font-weight-semibold, 600);
+					margin: 0;
+				}
+
+				.list-sort-control select {
+					min-width: 12rem;
+				}
+
+				.list-filter-control input {
+					flex: 12rem;
+					width: min(20rem, 100%);
+					min-width: 0;
+				}
+
+				.list-filter-empty {
+					margin-top: calc(var(--spacing, 0.25rem) * 4);
+				}
+
+				.list-name {
+					font-family: var(--font-outfit);
+					--tw-font-weight: var(--font-weight-semibold, 600);
+					font-size: 1.25rem;
+					font-weight: var(--font-weight-semibold, 600);
+					overflow-wrap: anywhere;
+					color: var(--text);
+					text-decoration-line: none;
+				}
+
+				@media (hover: hover) {
+					.list-name:hover {
+						color: var(--accent-ink);
+					}
+				}
+
+				.list-heading p {
+					margin-top: var(--spacing, 0.25rem);
+					font-family: var(--font-geist-mono);
+					color: var(--text-muted);
+					font-size: 0.75rem;
+				}
+
+				.list-actions {
+					margin-top: calc(var(--spacing, 0.25rem) * 4);
+					align-items: flex-start;
+					gap: calc(var(--spacing, 0.25rem) * 4);
+					display: flex;
+				}
+
+				.list-actions details {
+					flex: 1;
+				}
+
+				.listio-main .home-toggle {
+					margin-top: calc(var(--spacing, 0.25rem) * 3);
+					align-items: center;
+					gap: calc(var(--spacing, 0.25rem) * 2);
+					margin-bottom: 0;
+					display: flex;
+				}
+
+				.listio-main summary {
+					cursor: pointer;
+					--tw-font-weight: var(--font-weight-semibold, 600);
+					font-weight: var(--font-weight-semibold, 600);
+					color: var(--accent-ink);
+				}
+
+				.listio-main form {
+					margin-top: calc(var(--spacing, 0.25rem) * 4);
+				}
+
+				.listio-main label {
+					margin-bottom: calc(var(--spacing, 0.25rem) * 2);
+					--tw-font-weight: var(--font-weight-semibold, 600);
+					font-size: 0.85rem;
+					font-weight: var(--font-weight-semibold, 600);
+					color: var(--text-muted);
+					display: block;
+				}
+
+				.listio-main label:has(> input[type='checkbox']),
+				.listio-main .home-toggle {
+					color: var(--text);
+				}
+
+				.form-row {
+					gap: calc(var(--spacing, 0.25rem) * 3);
+					flex-wrap: wrap;
+					display: flex;
+				}
+
+				.new-entries {
+					align-items: flex-start;
+				}
+
+				.new-entries > .panel {
+					--tw-font-weight: var(--font-weight-semibold, 600);
+					font-weight: var(--font-weight-semibold, 600);
+					color: var(--accent-ink);
+					text-decoration-line: none;
+				}
+
+				@media (hover: hover) {
+					.new-entries > .panel:hover {
+						border-color: var(--accent);
+						background-color: var(--accent-tint);
+					}
+				}
+
+				.form-row input {
+					flex: 12rem;
+					min-width: 0;
+				}
+
+				.listio-main
+					:is(input:not([type='checkbox'], [type='radio']), select, textarea),
+				.collection-dialog
+					:is(input:not([type='checkbox'], [type='radio']), select, textarea) {
+					border-radius: var(--radius);
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--border);
+					background-color: var(--surface-2);
+					padding-inline: calc(var(--spacing, 0.25rem) * 3);
+					color: var(--text);
+					font: inherit;
+					padding-block: 0.6rem;
+				}
+
+				.listio-main :is(input, textarea)::placeholder,
+				.collection-dialog :is(input, textarea)::placeholder {
+					color: var(--text-muted);
+				}
+
+				.listio-main button {
+					border-radius: var(--radius);
+					border-style: var(--tw-border-style);
+					background-color: var(--accent);
+					--tw-font-weight: var(--font-weight-semibold, 600);
+					font-size: 0.85rem;
+					font-weight: var(--font-weight-semibold, 600);
+					color: var(--on-accent);
+					border-width: 1px;
+					border-color: #0000;
+					transition:
+						background 0.16s,
+						box-shadow 0.16s,
+						transform 0.16s;
+				}
+
+				.listio-main button:active:not(:disabled) {
+					transform: translateY(1px) scale(0.98);
+				}
+
+				.listio-main button {
+					cursor: pointer;
+					padding-inline: calc(var(--spacing, 0.25rem) * 4);
+					padding-block: 0.65rem;
+					font-family: inherit;
+				}
+
+				.listio-main button:hover:not(:disabled) {
+					background-color: var(--accent-hover);
+					--tw-shadow: 0 0 var(--glow-hover) var(--accent-glow);
+					box-shadow:
+						var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+						var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+						var(--tw-shadow);
+				}
+
+				.listio-main button.danger {
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--danger);
+					color: var(--danger);
+					background-color: #0000;
+				}
+
+				.listio-main button.danger:hover:not(:disabled) {
+					--tw-shadow: 0 0 #0000;
+					box-shadow:
+						var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+						var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+						var(--tw-shadow);
+					background: var(--danger);
+				}
+
+				@supports (color: color-mix(in lab, red, red)) {
+					.listio-main button.danger:hover:not(:disabled) {
+						background: color-mix(in srgb, var(--danger) 12%, transparent);
+					}
+				}
+
+				.listio-main button:disabled {
+					cursor: wait;
+					opacity: 0.6;
+				}
+
+				.listio-main
+					:is(a, button, summary, input[type='checkbox']):focus-visible {
+					outline-style: var(--tw-outline-style);
+					outline-offset: 3px;
+					outline-width: 2px;
+					outline-color: var(--accent);
+				}
+
+				.listio-main
+					:is(input:not([type='checkbox']), select, textarea):focus-visible,
+				.collection-dialog
+					:is(input:not([type='checkbox']), select, textarea):focus-visible {
+					outline-style: var(--tw-outline-style);
+					outline-offset: 2px;
+					outline-width: 2px;
+					outline-color: var(--accent);
+				}
+
+				.notice {
+					margin-bottom: calc(var(--spacing, 0.25rem) * 6);
+					border-radius: var(--radius);
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--card-border);
+					background-color: var(--accent-tint);
+					padding: calc(var(--spacing, 0.25rem) * 4);
+					color: var(--text);
+				}
+
+				.error {
+					margin-block: calc(var(--spacing, 0.25rem) * 4);
+					color: var(--danger);
+				}
+
+				.empty-state {
+					margin-top: calc(var(--spacing, 0.25rem) * 8);
+				}
+
+				list-manager,
+				list-editor {
+					display: block;
+				}
+
+				.editor-actions {
+					margin-block: calc(var(--spacing, 0.25rem) * 6);
+					align-items: center;
+					gap: calc(var(--spacing, 0.25rem) * 4);
+					flex-wrap: wrap;
+					display: flex;
+				}
+
+				.editor-actions p {
+					flex: 20rem;
+				}
+
+				.add-source {
+					margin-top: calc(var(--spacing, 0.25rem) * 4);
+				}
+
+				.source-status {
+					margin-top: calc(var(--spacing, 0.25rem) * 2);
+					min-height: calc(var(--spacing, 0.25rem) * 6);
+				}
+
+				.source-history {
+					margin-top: calc(var(--spacing, 0.25rem) * 4);
+				}
+
+				.source-history li {
+					margin-top: calc(var(--spacing, 0.25rem) * 2);
+					overflow-wrap: anywhere;
+				}
+
+				.editor {
+					padding-bottom: calc(var(--spacing, 0.25rem) * 24);
+				}
+
+				.floating-actions {
+					right: calc(var(--spacing, 0.25rem) * 6);
+					bottom: calc(var(--spacing, 0.25rem) * 6);
+					z-index: 10;
+					gap: calc(var(--spacing, 0.25rem) * 3);
+					border-radius: var(--radius);
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--card-border);
+					background-color: var(--card-bg);
+					--tw-shadow: 0 0 var(--glow-size) var(--accent-glow);
+					box-shadow:
+						var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
+						var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+						var(--tw-shadow);
+					--tw-backdrop-blur: blur(var(--glass-blur));
+					-webkit-backdrop-filter: var(--tw-backdrop-blur,)
+						var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+						var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+						var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+						var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+					backdrop-filter: var(--tw-backdrop-blur,)
+						var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,)
+						var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,)
+						var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,)
+						var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+					padding: calc(var(--spacing, 0.25rem) * 3);
+					box-shadow:
+						0 8px 30px #00000073,
+						0 0 var(--glow-size) var(--accent-glow);
+					display: flex;
+					position: fixed;
+				}
+
+				.discovery-panels {
+					align-items: flex-start;
+					gap: calc(var(--spacing, 0.25rem) * 4);
+					grid-template-columns: repeat(
+						auto-fit,
+						minmax(min(100%, 26rem), 1fr)
+					);
+					display: grid;
+				}
+
+				.discovery-panels textarea {
+					margin-block: calc(var(--spacing, 0.25rem) * 2);
+					width: 100%;
+					display: block;
+				}
+
+				.conflict {
+					align-items: center;
+					gap: calc(var(--spacing, 0.25rem) * 4);
+					flex-wrap: wrap;
+					display: flex;
+				}
+
+				.title-grid {
+					margin-top: calc(var(--spacing, 0.25rem) * 6);
+					gap: calc(var(--spacing, 0.25rem) * 4);
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+					list-style-type: none;
+					display: grid;
+				}
+
+				@media (width>=40rem) {
+					.title-grid {
+						grid-template-columns: repeat(3, minmax(0, 1fr));
+					}
+				}
+
+				@media (width>=60rem) {
+					.title-grid {
+						grid-template-columns: repeat(4, minmax(0, 1fr));
+					}
+				}
+
+				.title-card {
+					min-width: 0;
+				}
+
+				.poster {
+					position: relative;
+				}
+
+				.rating {
+					border-radius: var(--radius);
+					--tw-font-weight: var(--font-weight-semibold, 600);
+					font-size: 0.85rem;
+					font-weight: var(--font-weight-semibold, 600);
+					color: #f5c518;
+					background-color: #000000bf;
+					padding-block: 0.15rem;
+					padding-inline: 0.45rem;
+					position: absolute;
+					bottom: 0.4rem;
+					right: 0.4rem;
+				}
+
+				.title-card img,
+				.poster-placeholder {
+					aspect-ratio: 2/3;
+					border-radius: var(--radius);
+					object-fit: cover;
+					width: 100%;
+				}
+
+				.poster-placeholder {
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--border);
+					background-color: var(--surface-2);
+					color: var(--text-muted);
+					place-items: center;
+					display: grid;
+				}
+
+				.title-card h3 {
+					margin-top: calc(var(--spacing, 0.25rem) * 2);
+					font-family: var(--font-inter);
+					--tw-font-weight: var(--font-weight-semibold, 600);
+					font-size: 1rem;
+					font-weight: var(--font-weight-semibold, 600);
+				}
+
+				.title-card p {
+					margin-top: var(--spacing, 0.25rem);
+					-webkit-line-clamp: 5;
+					color: var(--text-muted);
+					-webkit-box-orient: vertical;
+					font-size: 0.9rem;
+					display: -webkit-box;
+					overflow: hidden;
+				}
+
+				.review-controls {
+					margin-top: calc(var(--spacing, 0.25rem) * 4);
+					align-items: center;
+					gap: calc(var(--spacing, 0.25rem) * 3);
+					flex-wrap: wrap;
+					display: flex;
+				}
+
+				.view-tabs {
+					gap: calc(var(--spacing, 0.25rem) * 2);
+					flex-wrap: wrap;
+					margin-right: auto;
+					display: flex;
+				}
+
+				.listio-main .view-tabs button[aria-pressed='false'] {
+					border-color: var(--border);
+					color: var(--text);
+					background-color: #0000;
+				}
+
+				.listio-main
+					.view-tabs
+					button[aria-pressed='false']:hover:not(:disabled) {
+					border-color: var(--accent);
+					background-color: var(--accent-tint);
+				}
+
+				.card-tools {
+					justify-content: space-between;
+					align-items: center;
+					margin-top: 0.4rem;
+					display: flex;
+				}
+
+				.card-tools input {
+					width: 1.1rem;
+					height: 1.1rem;
+				}
+
+				.listio-main .card-tools button {
+					padding-inline: calc(var(--spacing, 0.25rem) * 2);
+					padding-block: var(--spacing, 0.25rem);
+				}
+
+				.grid-sentinel {
+					height: 1px;
+				}
+
+				.search-grid {
+					grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+				}
+
+				.search-grid .title-card h3 {
+					font-size: 0.9rem;
+				}
+
+				.search-grid button {
+					margin: calc(var(--spacing, 0.25rem) * 2);
+				}
+
+				.media-badge {
+					border-style: var(--tw-border-style);
+					border-width: 1px;
+					border-color: var(--card-border);
+					background-color: var(--accent-tint);
+					padding-inline: calc(var(--spacing, 0.25rem) * 2);
+					white-space: nowrap;
+					color: var(--accent-ink);
+					border-radius: 2147483647px;
+					padding-block: 0.15rem;
+					font-size: 0.7rem;
+					display: inline-block;
+				}
+
+				.match-review {
+					border-top-style: var(--tw-border-style);
+					border-top-width: 1px;
+					border-color: var(--border);
+					padding-inline: 0;
+					padding-block: calc(var(--spacing, 0.25rem) * 4);
+				}
+			}
+
+			@property --tw-font-weight {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-tracking {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-border-style {
+				syntax: '*';
+				inherits: false;
+				initial-value: solid;
+			}
+
+			@property --tw-shadow {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0 0 #0000;
+			}
+
+			@property --tw-shadow-color {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-shadow-alpha {
+				syntax: '<percentage>';
+				inherits: false;
+				initial-value: 100%;
+			}
+
+			@property --tw-inset-shadow {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0 0 #0000;
+			}
+
+			@property --tw-inset-shadow-color {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-inset-shadow-alpha {
+				syntax: '<percentage>';
+				inherits: false;
+				initial-value: 100%;
+			}
+
+			@property --tw-ring-color {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-ring-shadow {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0 0 #0000;
+			}
+
+			@property --tw-inset-ring-color {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-inset-ring-shadow {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0 0 #0000;
+			}
+
+			@property --tw-ring-inset {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-ring-offset-width {
+				syntax: '<length>';
+				inherits: false;
+				initial-value: 0;
+			}
+
+			@property --tw-ring-offset-color {
+				syntax: '*';
+				inherits: false;
+				initial-value: #fff;
+			}
+
+			@property --tw-ring-offset-shadow {
+				syntax: '*';
+				inherits: false;
+				initial-value: 0 0 #0000;
+			}
+
+			@property --tw-backdrop-blur {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-brightness {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-contrast {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-grayscale {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-hue-rotate {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-invert {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-opacity {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-saturate {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-backdrop-sepia {
+				syntax: '*';
+				inherits: false;
+			}
+
+			@property --tw-outline-style {
+				syntax: '*';
+				inherits: false;
+				initial-value: solid;
+			}
+
+			/* ---- Reference-file only (not site CSS) ---------------------------------- */
+			:root {
+				--font-inter: 'Inter', sans-serif;
+				--font-outfit: 'Outfit', sans-serif;
+				--font-geist-mono: 'Geist Mono', ui-monospace, monospace;
+			}
+
+			.ref-switch {
+				position: fixed;
+				right: 1rem;
+				bottom: 1rem;
+				z-index: 100;
+				display: flex;
+				gap: 0.25rem;
+				padding: 0.35rem;
+				background: var(--surface-2);
+				border: 1px solid var(--border);
+				border-radius: var(--radius);
+				font: 600 0.8rem var(--font-inter);
+			}
+
+			.ref-switch button {
+				padding: 0.4rem 0.8rem;
+				border-radius: var(--radius);
+				color: var(--text-muted);
+				cursor: pointer;
+			}
+
+			.ref-switch button[aria-pressed='true'] {
+				background: var(--brand-fill-from);
+				color: #fff;
+			}
+
+			.ref-section {
+				margin-top: 3rem;
+			}
+
+			.ref-stack > * + * {
+				margin-top: 0.9rem;
+			}
+
+			.ref-section > .card,
+			.ref-grid > .card {
+				padding: 1.5rem;
+			}
+
+			/* the site pads cards via wrappers like .tool-card */
+			.ref-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.75rem;
+				align-items: center;
+			}
+
+			.ref-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+				gap: 1rem;
+			}
+
+			/* Proposed range slider: accent fill, 5px track, small accent thumb with a --text ring. */
+			.ref-range-label {
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.ref-range {
+				--fill: 20%;
+				appearance: none;
+				-webkit-appearance: none;
+				width: 100%;
+				height: 5px;
+				border-radius: 10px;
+				background: linear-gradient(
+					to right,
+					var(--accent) var(--fill),
+					var(--border) var(--fill)
+				);
+				margin: 12px 0;
+				cursor: pointer;
+			}
+
+			.ref-range::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 13px;
+				height: 13px;
+				background: var(--accent);
+				border: 2px solid var(--text);
+				border-radius: 50%;
+			}
+
+			.ref-range::-moz-range-track {
+				background: transparent;
+			}
+
+			.ref-range::-moz-range-thumb {
+				width: 10px;
+				height: 10px;
+				background: var(--accent);
+				border: 2px solid var(--text);
+				border-radius: 50%;
+			}
+		</style>
+
+		<style>
+			/* Mockup layout extensions. All colours, typography and surfaces come from the reference. */
+			body {
+				min-width: 768px;
+			}
+			button,
+			a,
+			input,
+			select,
+			summary {
+				touch-action: manipulation;
+			}
+			button,
+			summary {
+				cursor: pointer;
+			}
+			button:disabled {
+				opacity: 0.45;
+				cursor: not-allowed;
+			}
+			:focus-visible {
+				outline: 2px solid var(--accent-ink);
+				outline-offset: 3px;
+			}
+			#viewport {
+				width: 1440px;
+				margin: 0 auto;
+				container-type: inline-size;
+			}
+			.brand-header-inner {
+				max-width: 1440px;
+			}
+			main {
+				padding: 32px 32px 130px;
+				max-width: 1600px;
+				margin: auto;
+			}
+			.topline,
+			.row,
+			.section-bar {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+			}
+			.topline {
+				justify-content: space-between;
+				margin-bottom: 24px;
+			}
+			.topline h1 {
+				font-size: 2.75rem;
+			}
+			.intro {
+				color: var(--text-muted);
+				margin-top: 8px;
+				font-size: 0.9rem;
+			}
+			.row.wrap {
+				flex-wrap: wrap;
+			}
+			.muted {
+				color: var(--text-muted);
+			}
+			.small {
+				font-size: 0.8rem;
+			}
+			.mono {
+				font-family: var(--font-geist-mono);
+				font-size: 0.75rem;
+			}
+			.spacer {
+				flex: 1;
+			}
+			.section-bar {
+				justify-content: space-between;
+				margin-bottom: 16px;
+			}
+			.tabs {
+				display: flex;
+				gap: 6px;
+			}
+			.tabs .btn[aria-pressed='true'] {
+				background: var(--accent-tint);
+				border-color: var(--accent);
+				color: var(--accent-ink);
+			}
+			input:not([type='range'], [type='radio']),
+			select {
+				background: var(--surface-2);
+				border: 1px solid var(--border);
+				border-radius: var(--radius);
+				padding: 10px 12px;
+				min-width: 0;
+			}
+			label {
+				font-size: 0.85rem;
+			}
+			input[type='range'] {
+				accent-color: var(--accent);
+			}
+			.field {
+				display: grid;
+				gap: 7px;
+			}
+			.field + .field {
+				margin-top: 18px;
+			}
+			.btn.compact {
+				padding: 7px 10px;
+				font-size: 0.75rem;
+			}
+			.link {
+				color: var(--accent-ink);
+				text-decoration: underline;
+				text-underline-offset: 3px;
+			}
+			.danger {
+				color: var(--danger) !important;
+			}
+			.rule {
+				border-top: 1px solid var(--border);
+				margin: 20px 0;
+			}
+			.notice {
+				padding: 14px 16px;
+				border: 1px solid var(--card-border);
+				border-radius: var(--radius);
+				background: var(--accent-tint);
+				margin-bottom: 16px;
+			}
+			.notice.success {
+				border-color: var(--success);
+			}
+			.notice.warning {
+				border-color: var(--warning);
+			}
+			.notice.error {
+				border-color: var(--danger);
+			}
+			.success-text {
+				color: var(--success);
+			}
+			.workbench {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) 316px;
+				gap: 20px;
+			}
+			.controls {
+				padding: 20px;
+			}
+			.controls h3 {
+				margin-bottom: 18px;
+			}
+			.preview-card {
+				padding: 20px;
+				min-width: 0;
+			}
+			.frame-tabs {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 8px;
+			}
+			.frame-tabs button {
+				padding: 10px 6px;
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+			}
+			.frame-tabs small {
+				font: 400 0.65rem var(--font-geist-mono);
+				color: var(--text-muted);
+			}
+			.frame-tabs button[aria-pressed='true'] {
+				border-color: var(--accent);
+				background: var(--accent-tint);
+				color: var(--accent-ink);
+			}
+			.stage {
+				height: 470px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: #090b10;
+				margin-top: 16px;
+				border: 1px solid var(--border);
+				border-radius: var(--radius);
+				padding: 20px;
+				position: relative;
+			}
+			.crop {
+				background: #000;
+				position: relative;
+				overflow: hidden;
+				touch-action: none;
+				cursor: grab;
+				flex-shrink: 0;
+				outline-offset: 5px;
+			}
+			.crop:active {
+				cursor: grabbing;
+			}
+			.crop img {
+				max-width: none;
+				position: absolute;
+				user-select: none;
+				pointer-events: none;
+			}
+			.stage-caption {
+				display: flex;
+				justify-content: space-between;
+				gap: 12px;
+				padding-top: 12px;
+				font-size: 0.75rem;
+				color: var(--text-muted);
+			}
+			.crop-controls {
+				display: flex;
+				gap: 24px;
+				align-items: center;
+				margin-top: 20px;
+			}
+			.mode-radio {
+				display: flex;
+				gap: 16px;
+				white-space: nowrap;
+			}
+			.scale {
+				flex: 1;
+				min-width: 100px;
+			}
+			.scale input {
+				width: 100%;
+			}
+			.sample-row {
+				display: flex;
+				gap: 8px;
+				align-items: center;
+				flex-wrap: wrap;
+			}
+			.sample-row button {
+				font-size: 0.7rem;
+			}
+			.drop {
+				border: 1px dashed var(--accent-ink);
+				padding: 22px;
+				text-align: center;
+				border-radius: var(--radius);
+				background: var(--accent-tint);
+			}
+			.drop.dragover {
+				outline: 3px solid var(--accent);
+			}
+			.drop h2 {
+				font-size: 1.65rem;
+				margin-bottom: 10px;
+			}
+			.drop p {
+				margin: 8px 0;
+			}
+			.empty-card {
+				max-width: 820px;
+				margin: 35px auto;
+				padding: 32px;
+			}
+			.url-row {
+				display: flex;
+				gap: 8px;
+				margin: 20px 0 12px;
+			}
+			.url-row input {
+				flex: 1;
+			}
+			.source-strip {
+				margin-bottom: 18px;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				flex-wrap: wrap;
+			}
+			.source-strip .mono {
+				max-width: 260px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.original-thumb {
+				width: 42px;
+				height: 42px;
+				object-fit: cover;
+				background: #000;
+				border: 1px solid var(--border);
+			}
+			.set-tray {
+				margin-top: 18px;
+				display: grid;
+				gap: 8px;
+			}
+			.set-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				padding: 8px;
+				border: 1px solid var(--border);
+				border-radius: var(--radius);
+			}
+			.set-item.active {
+				border-color: var(--success);
+			}
+			/* Canvas layout: context across the top, a dedicated canvas, and a full-width save dock. */
+			.canvas-layout {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 16px;
+			}
+			.canvas-layout .preview-card {
+				order: 1;
+			}
+			.canvas-layout .controls {
+				order: 2;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 24px;
+			}
+			.canvas-layout .controls > h3 {
+				display: none;
+			}
+			.canvas-layout .controls .rule {
+				display: none;
+			}
+			.canvas-layout .stage {
+				height: 490px;
+			}
+			.canvas-layout .set-tray {
+				margin-top: 0;
+			}
+			.canvas-layout .frame-tabs {
+				max-width: 650px;
+				margin: auto;
+			}
+			.canvas-layout .crop-controls {
+				max-width: 800px;
+				margin: 20px auto 0;
+			}
+			.canvas-layout .controls .save-side {
+				border-left: 1px solid var(--border);
+				padding-left: 24px;
+			}
+			.step-strip {
+				display: flex;
+				gap: 28px;
+				padding: 14px 20px;
+				margin-bottom: 16px;
+				color: var(--text-muted);
+				font-size: 0.85rem;
+			}
+			.step-strip strong {
+				color: var(--accent-ink);
+			}
+			.result {
+				margin-bottom: 20px;
+				padding: 18px;
+			}
+			.result h3 {
+				font-size: 1.2rem;
+				margin-bottom: 5px;
+			}
+			.url {
+				width: 100%;
+				margin: 12px 0;
+				font-family: var(--font-geist-mono);
+				font-size: 0.72rem;
+			}
+			.result .next {
+				margin-top: 14px;
+				padding-top: 14px;
+				border-top: 1px solid var(--border);
+			}
+			.library-toolbar {
+				display: flex;
+				align-items: center;
+				gap: 14px;
+				margin-bottom: 22px;
+			}
+			.library-toolbar input {
+				width: 300px;
+			}
+			.group {
+				padding: 20px;
+				margin-bottom: 20px;
+			}
+			.group h3 {
+				font-size: 1.3rem;
+			}
+			.art-grid {
+				display: grid;
+				grid-template-columns: repeat(4, minmax(0, 1fr));
+				gap: 16px;
+				margin-top: 20px;
+			}
+			.art-item {
+				min-width: 0;
+			}
+			.thumb-well {
+				height: 158px;
+				background: #090b10;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border: 1px solid var(--border);
+				padding: 8px;
+				margin-bottom: 10px;
+			}
+			.thumb {
+				position: relative;
+				overflow: hidden;
+				background: #000;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.thumb img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			.art-title {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 6px;
+			}
+			.art-actions {
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+				margin-top: 9px;
+				font-size: 0.72rem;
+			}
+			.art-actions button {
+				color: var(--text-muted);
+				padding: 2px;
+			}
+			.art-copy {
+				width: 100%;
+				margin-top: 12px;
+			}
+			.empty-frame {
+				border: 1px dashed var(--border);
+				height: 158px;
+				display: grid;
+				place-items: center;
+				color: var(--text-muted);
+				font-size: 0.8rem;
+			}
+			.matrix {
+				border: 1px solid var(--card-border);
+				border-radius: var(--radius);
+				overflow: hidden;
+				background: var(--card-bg);
+			}
+			.matrix-head,
+			.matrix-row {
+				display: grid;
+				grid-template-columns: 180px repeat(4, minmax(0, 1fr));
+				gap: 0;
+			}
+			.matrix-head {
+				background: var(--surface-2);
+				font-size: 0.75rem;
+				color: var(--text-muted);
+			}
+			.matrix-head > *,
+			.matrix-row > div {
+				padding: 14px;
+				border-right: 1px solid var(--border);
+			}
+			.matrix-row {
+				border-top: 1px solid var(--border);
+			}
+			.matrix-row .thumb-well {
+				height: 90px;
+			}
+			.matrix-row .art-actions {
+				gap: 7px;
+			}
+			.matrix-row h3 {
+				font-size: 1rem;
+			}
+			.matrix-row .art-title {
+				display: none;
+			}
+			.matrix-row .mono {
+				font-size: 0.65rem;
+			}
+			.matrix-row .art-copy {
+				padding: 7px 4px;
+				font-size: 0.65rem;
+			}
+			.matrix-row .empty-frame {
+				height: 90px;
+			}
+			.matrix-row .group-label {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+			.mock-panel {
+				position: fixed;
+				right: 18px;
+				bottom: 18px;
+				width: 292px;
+				z-index: 30;
+				background: var(--surface-2);
+				border: 1px solid var(--border);
+				border-radius: var(--radius);
+				box-shadow: 0 10px 40px #0009;
+				padding: 12px;
+			}
+			.mock-panel summary {
+				font: 600 0.8rem var(--font-geist-mono);
+				display: flex;
+				justify-content: space-between;
+			}
+			.mock-panel summary:after {
+				content: '−';
+			}
+			.mock-panel:not([open]) summary:after {
+				content: '+';
+			}
+			.mock-panel .panel-grid {
+				display: grid;
+				grid-template-columns: 80px 1fr;
+				gap: 8px;
+				align-items: center;
+				margin-top: 14px;
+			}
+			.mock-panel label {
+				font-size: 0.7rem;
+				color: var(--text-muted);
+			}
+			.mock-panel select {
+				padding: 5px;
+				font-size: 0.7rem;
+				width: 100%;
+			}
+			.mock-panel p {
+				font-size: 0.65rem;
+				color: var(--text-muted);
+				margin-top: 10px;
+			}
+			dialog {
+				width: 500px;
+				max-width: 90vw;
+				background: var(--surface-1);
+				color: var(--text);
+				border: 1px solid var(--card-border);
+				border-radius: var(--radius);
+				padding: 26px;
+			}
+			dialog::backdrop {
+				background: #000b;
+				backdrop-filter: blur(4px);
+			}
+			dialog h2 {
+				font-size: 1.7rem;
+				margin-bottom: 16px;
+			}
+			dialog p {
+				margin: 10px 0 22px;
+				color: var(--text-muted);
+			}
+			dialog .row {
+				justify-content: flex-end;
+			}
+			#toast {
+				position: fixed;
+				bottom: 24px;
+				left: 24px;
+				padding: 13px 20px;
+				background: var(--surface-2);
+				border: 1px solid var(--success);
+				border-radius: var(--radius);
+				z-index: 50;
+				max-width: 430px;
+				font-size: 0.85rem;
+			}
+			.spinner {
+				width: 28px;
+				height: 28px;
+				border: 3px solid var(--border);
+				border-top-color: var(--accent);
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+				margin: 20px auto;
+			}
+			@keyframes spin {
+				to {
+					transform: rotate(360deg);
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				*,
+				*::before,
+				*::after {
+					animation: none !important;
+					transition: none !important;
+				}
+			}
+			@container (max-width:1050px) {
+				main {
+					padding: 24px 20px 130px;
+				}
+				.workbench {
+					grid-template-columns: minmax(0, 1fr) 278px;
+					gap: 14px;
+				}
+				.controls,
+				.preview-card {
+					padding: 16px;
+				}
+				.stage {
+					height: 400px;
+					padding: 12px;
+				}
+				.crop-controls {
+					gap: 14px;
+					flex-wrap: wrap;
+				}
+				.scale {
+					flex-basis: 100%;
+				}
+				.frame-tabs {
+					gap: 4px;
+				}
+				.frame-tabs button {
+					font-size: 0.72rem;
+				}
+				.matrix-head,
+				.matrix-row {
+					grid-template-columns: 135px repeat(4, minmax(0, 1fr));
+				}
+				.matrix-head > *,
+				.matrix-row > div {
+					padding: 10px;
+				}
+				.art-grid {
+					gap: 12px;
+				}
+				.art-actions {
+					gap: 8px;
+				}
+				.canvas-layout .stage {
+					height: 470px;
+				}
+				.topline {
+					align-items: flex-start;
+				}
+				.topline h1 {
+					font-size: 2.3rem;
+				}
+				.intro {
+					max-width: 400px;
+				}
+				.art-copy {
+					font-size: 0.67rem;
+					padding: 8px 5px;
+				}
+				.thumb-well {
+					height: 135px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div id="viewport">
+			<header class="brand-header">
+				<div class="brand-header-inner">
+					<a class="wordmark" href="#" data-action="home"
+						><span class="brand-icon">n</span
+						><span class="text-gradient">Nuvio Tools</span></a
+					>
+					<nav aria-label="Tools">
+						<a href="#" data-action="other">Listio</a
+						><a href="#" aria-current="page" data-action="home">ArtNuvio</a
+						><a href="#" data-action="other">Collectio</a>
+					</nav>
+				</div>
+			</header>
+			<main data-tool="artnuvio">
+				<div class="topline">
+					<div>
+						<p class="eyebrow">Your folders. Your artwork.</p>
+						<h1><span class="text-gradient">ArtNuvio</span></h1>
+						<p class="intro">
+							Change the art. Keep the URL. Your Nuvio folders update
+							themselves.
+						</p>
+					</div>
+					<nav class="tabs" aria-label="ArtNuvio">
+						<button class="btn btn-ghost" data-screen="editor">Editor</button
+						><button class="btn btn-ghost" data-screen="library">
+							Library <span id="library-count" class="badge"></span>
+						</button>
+					</nav>
+				</div>
+				<div id="content"></div>
+			</main>
+		</div>
+		<details class="mock-panel" data-tool="artnuvio" open>
+			<summary>Astra · mockup controls</summary>
+			<div class="panel-grid">
+				<label for="demo-screen">Screen</label
+				><select id="demo-screen">
+					<option value="editor">Editor</option>
+					<option value="library">Library</option></select
+				><label for="demo-state">State</label
+				><select id="demo-state">
+					<option value="empty">Empty</option>
+					<option value="loaded">Loaded</option>
+					<option value="loading">Loading</option>
+					<option value="error-page">Error · web page</option>
+					<option value="error-blocked">Error · blocked host</option>
+					<option value="saved">Saved</option>
+					<option value="duplicate">Name already used</option>
+					<option value="replace">Replace mode</option>
+					<option value="confirm-replace">Confirm replacement</option>
+					<option value="confirm-delete">Confirm deletion</option></select
+				><label for="demo-editor">Editor layout</label
+				><select id="demo-editor">
+					<option value="workbench">A · Workbench</option>
+					<option value="canvas">B · Canvas + save dock</option></select
+				><label for="demo-library">Library layout</label
+				><select id="demo-library">
+					<option value="shelves">A · Folder shelves</option>
+					<option value="matrix">B · Frame matrix</option></select
+				><label for="demo-frame">Frame</label
+				><select id="demo-frame">
+					<option>Hero</option>
+					<option>Landscape</option>
+					<option>Poster</option>
+					<option>Square</option></select
+				><label for="demo-width">Page width</label
+				><select id="demo-width">
+					<option>768</option>
+					<option>1024</option>
+					<option selected>1440</option>
+					<option>1920</option></select
+				><label for="demo-sample">Original</label
+				><select id="demo-sample">
+					<option value="hero">Hero · 3840×2160</option>
+					<option value="poster">Poster · 500×750</option>
+					<option value="landscape">Landscape · 2560×1440</option>
+				</select>
+			</div>
+			<p>
+				Local prototype · saving is simulated. Screen, state, layout, Frame,
+				crop and sample are shareable in the URL hash. Your files stay in this
+				tab.
+			</p>
+			<button
+				class="btn btn-ghost compact"
+				id="copy-state"
+				style="margin-top: 8px"
+			>
+				Copy this view link
+			</button>
+		</details>
+		<input type="file" id="file" accept="image/*" hidden />
+		<dialog id="dialog" data-tool="artnuvio"></dialog>
+		<div id="toast" role="status" hidden></div>
+		<script>
+			/* State and seeded Library. Only mockup view state goes in the hash; personal images stay in memory. */
+			const $ = (s, root = document) => root.querySelector(s);
+			const frames = {
+				Hero: [3840, 2160],
+				Landscape: [2560, 1440],
+				Poster: [1000, 1500],
+				Square: [1000, 1000],
+			};
+			const samples = {
+				hero: {
+					src: 'artnuvio_examples/hero_example.jpg',
+					width: 3840,
+					height: 2160,
+					label: 'hero_example.jpg',
+				},
+				poster: {
+					src: 'artnuvio_examples/poster_example.jpg',
+					width: 500,
+					height: 750,
+					label: 'poster_example.jpg',
+				},
+				landscape: {
+					src: 'artnuvio_examples/landscape_with_text_example.png',
+					width: 2560,
+					height: 1440,
+					label: 'landscape_with_text_example.png',
+				},
+			};
+			const defaults = {
+				screen: 'editor',
+				state: 'empty',
+				editor: 'workbench',
+				library: 'shelves',
+				frame: 'Hero',
+				width: '1440',
+				sample: 'hero',
+				name: 'Friday night favourites',
+				filter: '',
+				mode: 'cover',
+				scale: 1,
+				x: 0,
+				y: 0,
+				quality: '3840',
+			};
+			let state = { ...defaults },
+				original = { ...samples.hero },
+				artwork = [],
+				replacement = null,
+				lastSaved = null,
+				loadToken = 0,
+				cropSize = { w: 1, h: 1 },
+				dialogAction = null,
+				toastTimer;
+			const esc = (s) =>
+				String(s).replace(
+					/[&<>"']/g,
+					(c) =>
+						({
+							'&': '&amp;',
+							'<': '&lt;',
+							'>': '&gt;',
+							'"': '&quot;',
+							"'": '&#39;',
+						})[c]
+				);
+			function seed() {
+				const groups = [
+					['80s Slashers', ['Poster', 'Square']],
+					['A24 Horror', ['Hero', 'Poster']],
+					['Cozy Sunday cinema', ['Landscape']],
+					['Midnight Movies', ['Hero', 'Landscape', 'Poster', 'Square']],
+					['Sci-fi essentials', ['Hero', 'Square']],
+					['Serial Killer movies', ['Hero', 'Poster']],
+					['Studio Ghibli', ['Hero', 'Landscape', 'Poster']],
+					['World cinema', ['Poster']],
+				];
+				let id = 0;
+				for (const [name, list] of groups)
+					for (const frame of list) {
+						let sample =
+							frame === 'Poster'
+								? 'poster'
+								: frame === 'Landscape'
+									? 'landscape'
+									: 'hero';
+						artwork.push({
+							id: 'k7x' + (++id).toString().padStart(4, '0'),
+							name,
+							frame,
+							w: frames[frame][0],
+							h: frames[frame][1],
+							src: samples[sample].src,
+						});
+					}
+			}
+			seed();
+			function url(a) {
+				return `https://img.nuvio-tools.com/a/${a.id}-${a.frame.toLowerCase()}.jpg`;
+			}
+			function writeHash() {
+				const p = new URLSearchParams();
+				for (const [k, v] of Object.entries(state)) p.set(k, String(v));
+				history.replaceState(null, '', '#' + p.toString());
+			}
+			function readHash() {
+				const p = new URLSearchParams(location.hash.slice(1));
+				state = { ...defaults };
+				for (const k of Object.keys(defaults))
+					if (p.has(k)) state[k] = p.get(k);
+				for (const k of ['scale', 'x', 'y'])
+					state[k] = Number(state[k]) || defaults[k];
+				if (!frames[state.frame]) state.frame = 'Hero';
+				if (!samples[state.sample]) state.sample = 'hero';
+				if (!['768', '1024', '1440', '1920'].includes(state.width))
+					state.width = '1440';
+				state.scale = Math.max(0.1, Math.min(4, state.scale));
+				original = { ...samples[state.sample] };
+				replacement = null;
+				lastSaved = null;
+				prepareState();
+				render();
+			}
+			function prepareState() {
+				if (
+					[
+						'replace',
+						'confirm-replace',
+						'confirm-delete',
+						'duplicate',
+					].includes(state.state)
+				) {
+					replacement =
+						artwork.find(
+							(a) => a.name === state.name && a.frame === state.frame
+						) ||
+						artwork.find(
+							(a) => a.name === 'Serial Killer movies' && a.frame === 'Poster'
+						);
+					state.frame = replacement.frame;
+					state.name = replacement.name;
+					if (state.state === 'confirm-delete') state.screen = 'library';
+				}
+				if (state.state === 'saved') {
+					lastSaved = {
+						id: 'mock-saved',
+						name: state.name,
+						frame: state.frame,
+						w: frames[state.frame][0],
+						h: frames[state.frame][1],
+						src: original.src,
+					};
+				}
+			}
+			function setState(patch) {
+				Object.assign(state, patch);
+				render();
+				writeHash();
+			}
+			function notice(message) {
+				clearTimeout(toastTimer);
+				$('#toast').textContent = message;
+				$('#toast').hidden = false;
+				toastTimer = setTimeout(() => ($('#toast').hidden = true), 4500);
+			}
+			async function copy(text, label) {
+				try {
+					await navigator.clipboard.writeText(text);
+					notice(label);
+				} catch {
+					const area = document.createElement('textarea');
+					area.value = text;
+					document.body.append(area);
+					area.select();
+					const ok = document.execCommand('copy');
+					area.remove();
+					if (ok) notice(label);
+					else
+						showDialog(
+							'Copy URL',
+							`<p>Copy this address:</p><input class="url" value="${esc(text)}" readonly aria-label="URL to copy">`,
+							'Done',
+							() => {}
+						);
+				}
+			}
+			function resetCrop() {
+				state.mode = 'cover';
+				state.scale = 1;
+				state.x = state.y = 0;
+				state.quality = '3840';
+			}
+			function isReplace() {
+				return (
+					!!replacement && ['replace', 'confirm-replace'].includes(state.state)
+				);
+			}
+			function targetSize() {
+				return state.frame === 'Hero' &&
+					(!bigHero() || state.quality === '1920')
+					? [1920, 1080]
+					: frames[state.frame];
+			}
+			function bigHero() {
+				return original.width >= 3840 && original.height >= 2160;
+			}
+			function render() {
+				document.documentElement.dataset.page = 'artnuvio';
+				$('#viewport').style.width = state.width + 'px';
+				$('#library-count').textContent = artwork.length;
+				document
+					.querySelectorAll('[data-screen]')
+					.forEach((b) =>
+						b.setAttribute(
+							'aria-pressed',
+							String(b.dataset.screen === state.screen)
+						)
+					);
+				for (const key of [
+					'screen',
+					'state',
+					'editor',
+					'library',
+					'frame',
+					'width',
+					'sample',
+				])
+					$('#demo-' + key).value = state[key];
+				$('#demo-frame').disabled = isReplace();
+				$('#content').innerHTML =
+					state.screen === 'library' ? libraryHTML() : editorHTML();
+				bindContent();
+				requestAnimationFrame(layoutCrop);
+				if (
+					['duplicate', 'confirm-replace', 'confirm-delete'].includes(
+						state.state
+					)
+				)
+					requestAnimationFrame(() => openStateDialog());
+			}
+			function sourceBox() {
+				return `<div class="drop" id="drop"><p class="eyebrow">01 / Original</p><h2>Start with an image</h2><p class="muted">Paste an image URL, paste a copied image, or drop a file here.</p><div class="url-row"><input id="source-url" type="url" aria-label="Image URL" placeholder="https://…/your-image.jpg"><button class="btn" data-action="load-url">Load image</button></div><div class="row" style="justify-content:center"><button class="btn btn-ghost" data-action="file">Choose a file</button><span class="muted small">or paste with <kbd>⌘V</kbd> / <kbd>Ctrl+V</kbd></span></div><p class="small muted">Your image stays loaded while you make the whole set.</p></div><div class="sample-row" style="margin-top:20px"><span class="small muted">Try an Original:</span>${Object.keys(
+					samples
+				)
+					.map(
+						(k) =>
+							`<button class="btn btn-ghost compact" data-sample="${k}">${k === 'hero' ? 'Large Hero' : k === 'poster' ? 'Small Poster' : 'Landscape + text'}</button>`
+					)
+					.join('')}</div>`;
+			}
+			function editorHTML() {
+				let status = '';
+				if (isReplace())
+					status = `<div class="notice warning row"><div><p class="eyebrow">Replacing existing Artwork · URL stays the same</p><strong>${esc(replacement.name)} / ${replacement.frame}</strong><p class="mono muted">${url(replacement)}</p></div><span class="spacer"></span><button class="btn btn-ghost compact" data-action="cancel-replace">Cancel replacement</button></div>`;
+				if (
+					state.state === 'empty' ||
+					state.state.startsWith('error') ||
+					state.state === 'loading'
+				) {
+					return `${state.state.startsWith('error') ? `<div class="notice error" role="alert"><strong>We couldn't load that Original.</strong><p>${state.state === 'error-page' ? "That's a web page, not an image. Right-click the image and choose <em>Open image in new tab</em>, then copy that URL." : "That site won't let ArtNuvio fetch the image. Right-click it, choose <em>Copy image</em>, and paste it here instead."}</p></div>` : ''}<section class="card empty-card">${state.state === 'loading' ? '<div role="status" style="text-align:center"><div class="spinner"></div><h2>Loading your Original…</h2><p class="muted">Checking the image and its size.</p><button class="btn btn-ghost" data-action="cancel-load" style="margin-top:20px">Cancel</button></div>' : sourceBox()}</section>`;
+				}
+				return (
+					status +
+					savedHTML() +
+					`${state.editor === 'canvas' ? '<div class="card step-strip"><span>01 <strong>Original loaded</strong></span><span>02 <strong>Choose a Frame & compose</strong></span><span>03 Name & save below ↓</span></div>' : ''}<div class="source-strip"><img class="original-thumb" src="${esc(original.src)}" alt="Original" onerror="this.hidden=true"><strong class="small">Original</strong><span class="mono muted">${esc(original.label)} · ${original.width}×${original.height}</span><button class="btn btn-ghost compact" data-action="change-original">Change Original</button><span class="small muted">Paste or drop a new image anywhere in the editor</span></div><div class="${state.editor === 'canvas' ? 'canvas-layout' : 'workbench'}"><section class="card preview-card"><div class="frame-tabs" aria-label="Frame">${Object.keys(
+						frames
+					)
+						.map(
+							(f) =>
+								`<button class="btn btn-ghost" data-frame="${f}" aria-pressed="${state.frame === f}" ${isReplace() ? 'disabled' : ''}>${f}${isReplace() && f === state.frame ? ' · locked' : ''}<small>${f === 'Poster' ? '2:3' : f === 'Square' ? '1:1' : '16:9'}</small></button>`
+						)
+						.join(
+							''
+						)}</div><div class="stage"><div class="crop" id="crop" tabindex="0" role="img" aria-label="${state.frame} preview. Drag to reposition. Use arrow keys to adjust."><img id="crop-image" src="${esc(original.src)}" alt="" draggable="false"><span id="missing" hidden style="position:absolute;inset:0;display:grid;place-items:center;color:#aaa;font-size:12px">Sample unavailable · choose a file</span></div></div><div class="stage-caption"><span><strong>${state.frame}</strong> · <span id="output-size">${targetSize().join('×')}</span></span><span>Drag to position · arrow keys to fine-tune</span></div><div class="crop-controls"><div class="mode-radio"><label><input type="radio" name="mode" value="fit" ${state.mode === 'fit' ? 'checked' : ''}> Fit</label><label><input type="radio" name="mode" value="cover" ${state.mode === 'cover' ? 'checked' : ''}> Cover</label></div><div class="scale"><label class="row" for="scale">Scale <output id="scale-output" class="mono" style="margin-left:auto"></output></label><input type="range" id="scale" class="ref-range" min="10" max="400" value="${state.scale * 100}"></div><button class="btn btn-ghost compact" data-action="reset">Reset</button></div><p id="soft" class="small" style="color:var(--warning);min-height:22px;margin-top:10px"></p></section><aside class="card controls"><h3>${isReplace() ? 'Replace Artwork' : 'Save Artwork'}</h3><div class="settings-side">${state.frame === 'Hero' ? `<div class="field"><label for="hero-size">Hero saved size</label><select id="hero-size">${bigHero() ? `<option value="3840" ${state.quality === '3840' ? 'selected' : ''}>3840×2160 (1.4 MB)</option>` : ''}<option value="1920" ${!bigHero() || state.quality === '1920' ? 'selected' : ''}>1920×1080 (0.5 MB)</option></select>${!bigHero() ? '<p class="small muted">This Original is below 3840×2160. Hero is saved at 1920×1080.</p>' : '<p class="small muted">Full size is available for this Original.</p>'}</div>` : `<div class="field"><span class="eyebrow">Saved size</span><strong class="mono">${targetSize().join('×')}</strong><p class="small muted">Exactly the right shape for Nuvio.</p></div>`}<div class="rule"></div><div class="field"><label for="art-name">Name <span class="muted">· your Nuvio folder</span></label><input id="art-name" value="${esc(state.name)}" ${isReplace() ? 'readonly' : ''} placeholder="e.g. Midnight Movies" maxlength="100"><p class="small muted">${isReplace() ? 'Name and Frame are fixed for this replacement.' : 'One Artwork per Frame for this name.'}</p></div></div><div class="save-side"><button class="btn" style="width:100%;margin-top:18px" data-action="save">${isReplace() ? 'Replace image' : `Save ${state.frame}`}</button><p class="small muted" style="margin-top:9px">${isReplace() ? 'Same permanent URL. Nuvio updates in a few minutes.' : 'A permanent URL, ready to paste into Nuvio.'}</p>${setHTML()}</div></aside></div>`
+				);
+			}
+			function setHTML() {
+				let list = artwork.filter(
+					(a) => a.name.toLowerCase() === state.name.trim().toLowerCase()
+				);
+				return `<div class="set-tray"><p class="eyebrow">${esc(state.name || 'Your folder')} · Frames</p>${Object.keys(
+					frames
+				)
+					.map((f) => {
+						let a = list.find((a) => a.frame === f);
+						return `<div class="set-item ${lastSaved?.frame === f ? 'active' : ''}"><span class="small">${f} <span class="muted">${a ? '✓' : ''}</span></span>${a ? `<button class="btn btn-ghost compact" data-copy="${a.id}">Copy ${f} URL</button>` : `<button class="btn btn-ghost compact" data-frame="${f}" ${isReplace() ? 'disabled' : ''}>Make ${f} →</button>`}</div>`;
+					})
+					.join('')}</div>`;
+			}
+			function savedHTML() {
+				if (!lastSaved || state.state !== 'saved') return '';
+				const a = lastSaved;
+				return `<section class="card result"><div class="row"><h3 class="success-text">✓ ${esc(a.name)} · ${a.frame} saved</h3><span class="spacer"></span><span class="badge">Permanent URL</span></div><p class="small muted">Paste this into Nuvio’s <strong>${a.frame}</strong> slot. Replace the image later and keep this exact URL.</p><input class="url" readonly aria-label="Saved ${a.frame} URL" value="${url(a)}"><div class="row"><button class="btn" data-action="copy-saved">Copy ${a.frame} URL</button><a class="link small" href="${esc(a.src)}" target="_blank" rel="noopener">Open ↗</a><span class="small muted">${a.w}×${a.h}</span></div><div class="next row wrap"><strong class="small">Same Original. Next Frame?</strong>${Object.keys(
+					frames
+				)
+					.filter((f) => f !== a.frame)
+					.map(
+						(f) =>
+							`<button class="btn btn-ghost compact" data-frame="${f}">Make ${f} →</button>`
+					)
+					.join('')}</div></section>`;
+			}
+			function thumbHTML(a) {
+				const ratio = frames[a.frame][0] / frames[a.frame][1];
+				return `<div class="thumb-well"><div class="thumb" style="aspect-ratio:${ratio};${ratio < 1 ? 'height:100%' : 'width:100%'}"><img src="${esc(a.src)}" alt="${esc(a.name)} ${a.frame}" loading="lazy" onerror="this.hidden=true;this.parentElement.textContent='No preview'"></div></div>`;
+			}
+			function artHTML(a) {
+				return `<article class="art-item">${thumbHTML(a)}<div class="art-title"><strong class="small">${a.frame}</strong></div><p class="mono muted">${a.w}×${a.h}</p><button class="btn btn-ghost art-copy" data-copy="${a.id}">Copy ${a.frame} URL</button><div class="art-actions"><a class="link" href="${esc(a.src)}" target="_blank" rel="noopener">Open ↗</a><button data-rename="${a.id}">Rename</button><button data-replace="${a.id}">Replace</button><button class="danger" data-delete="${a.id}">Delete</button></div></article>`;
+			}
+			function libraryHTML() {
+				return `<div class="section-bar"><div><h2>Your Library</h2><p class="muted small">Replace the image whenever you like. Every Artwork keeps its URL for life.</p></div><button class="btn" data-action="new">+ New Artwork</button></div><div class="library-toolbar"><input id="filter" value="${esc(state.filter)}" type="search" aria-label="Filter Library by name" placeholder="Filter by folder name…"><span class="eyebrow" id="group-count"></span><span class="spacer"></span><span class="small muted">Names A–Z</span></div><div id="groups">${groupsHTML(state.filter)}</div>`;
+			}
+			function groupsHTML(filter) {
+				const names = [...new Set(artwork.map((a) => a.name))]
+					.filter((n) => n.toLowerCase().includes(filter.toLowerCase()))
+					.sort((a, b) => a.localeCompare(b));
+				if (!names.length)
+					return '<div class="card group"><h3>No Artwork found</h3><p class="muted">Try another folder name, or create your first Artwork.</p></div>';
+				const head =
+					state.library === 'matrix'
+						? `<div class="matrix"><div class="matrix-head"><span>Folder name</span>${Object.keys(
+								frames
+							)
+								.map((f) => `<strong>${f}</strong>`)
+								.join('')}</div>`
+						: '';
+				return (
+					head +
+					names
+						.map((name) => {
+							const list = artwork.filter((a) => a.name === name);
+							return state.library === 'matrix'
+								? `<section class="matrix-row"><div class="group-label"><h3>${esc(name)}</h3><span class="mono muted">${list.length} Artwork</span></div>${Object.keys(
+										frames
+									)
+										.map(
+											(f) =>
+												`<div>${list.find((a) => a.frame === f) ? artHTML(list.find((a) => a.frame === f)) : `<button class="empty-frame" style="width:100%" data-make-name="${esc(name)}" data-make-frame="${f}">+ ${f}</button>`}</div>`
+										)
+										.join('')}</section>`
+								: `<section class="card group"><div class="section-bar"><h3>${esc(name)}</h3><span class="badge">${list.length} ${list.length === 1 ? 'Frame' : 'Frames'}</span></div><div class="art-grid">${Object.keys(
+										frames
+									)
+										.map((f) =>
+											list.find((a) => a.frame === f)
+												? artHTML(list.find((a) => a.frame === f))
+												: `<div><button class="empty-frame" style="width:100%" data-make-name="${esc(name)}" data-make-frame="${f}">+ Make ${f}</button></div>`
+										)
+										.join('')}</div></section>`;
+						})
+						.join('') +
+					(state.library === 'matrix' ? '</div>' : '')
+				);
+			}
+			/* Crop geometry is measured in frame-relative units, so resizing never changes the saved composition. */
+			function layoutCrop() {
+				const crop = $('#crop');
+				if (!crop) return;
+				const stage = crop.parentElement,
+					ratio = frames[state.frame][0] / frames[state.frame][1],
+					availableW = stage.clientWidth - 42,
+					availableH = stage.clientHeight - 42;
+				cropSize.w = Math.min(availableW, availableH * ratio);
+				cropSize.h = cropSize.w / ratio;
+				crop.style.width = cropSize.w + 'px';
+				crop.style.height = cropSize.h + 'px';
+				paintCrop();
+			}
+			function geometry() {
+				const cover = Math.max(
+						cropSize.w / original.width,
+						cropSize.h / original.height
+					),
+					fit = Math.min(
+						cropSize.w / original.width,
+						cropSize.h / original.height
+					);
+				if (state.mode === 'cover') state.scale = 1;
+				if (state.mode === 'fit') state.scale = fit / cover;
+				const w = original.width * cover * state.scale,
+					h = original.height * cover * state.scale;
+				return { w, h, cover };
+			}
+			function paintCrop() {
+				const image = $('#crop-image');
+				if (!image) return;
+				const { w, h, cover } = geometry();
+				const boundX = Math.abs(w - cropSize.w) / 2 / cropSize.w,
+					boundY = Math.abs(h - cropSize.h) / 2 / cropSize.h;
+				state.x = Math.max(-boundX, Math.min(boundX, state.x));
+				state.y = Math.max(-boundY, Math.min(boundY, state.y));
+				Object.assign(image.style, {
+					width: w + 'px',
+					height: h + 'px',
+					left: (cropSize.w - w) / 2 + state.x * cropSize.w + 'px',
+					top: (cropSize.h - h) / 2 + state.y * cropSize.h + 'px',
+				});
+				$('#scale').value = state.scale * 100;
+				$('#scale').style.setProperty(
+					'--fill',
+					((state.scale * 100 - 10) / 390) * 100 + '%'
+				);
+				$('#scale-output').textContent =
+					Math.round(state.scale * 100) +
+					'%' +
+					(!state.mode ? ' · custom' : '');
+				const [tw, th] = targetSize();
+				const enlargement = cover * state.scale * (tw / cropSize.w);
+				$('#soft').textContent =
+					enlargement > 1.05
+						? '⚠ May look soft. This Original is being enlarged for the saved size.'
+						: '';
+				$('#output-size').textContent = tw + '×' + th;
+			}
+			function bindContent() {
+				if ($('#filter')) {
+					$('#filter').addEventListener('input', (e) => {
+						$('#groups').innerHTML = groupsHTML(e.target.value);
+						updateGroupCount(e.target.value);
+						state.filter = e.target.value;
+						writeHash();
+					});
+					updateGroupCount(state.filter);
+				}
+				const crop = $('#crop');
+				if (!crop) return;
+				$('#crop-image').addEventListener('error', () => {
+					$('#missing').hidden = false;
+					$('#crop-image').hidden = true;
+				});
+				$('#crop-image').addEventListener('load', () => {
+					$('#missing').hidden = true;
+				});
+				if ($('#crop-image').complete && !$('#crop-image').naturalWidth) {
+					$('#missing').hidden = false;
+					$('#crop-image').hidden = true;
+				}
+				$('#scale').addEventListener('input', (e) => {
+					state.mode = '';
+					state.scale = Number(e.target.value) / 100;
+					document
+						.querySelectorAll('[name=mode]')
+						.forEach((i) => (i.checked = false));
+					paintCrop();
+					writeHash();
+				});
+				document.querySelectorAll('[name=mode]').forEach((r) =>
+					r.addEventListener('change', () => {
+						state.mode = r.value;
+						state.x = state.y = 0;
+						paintCrop();
+						writeHash();
+					})
+				);
+				$('#art-name').addEventListener('input', (e) => {
+					state.name = e.target.value;
+					writeHash();
+				});
+				$('#art-name').addEventListener('change', () => {
+					const tray = $('.set-tray');
+					if (tray) tray.outerHTML = setHTML();
+					writeHash();
+				});
+				$('#hero-size')?.addEventListener('change', (e) => {
+					state.quality = e.target.value;
+					paintCrop();
+					writeHash();
+				});
+				let drag = null;
+				crop.addEventListener('pointerdown', (e) => {
+					drag = { x: e.clientX, y: e.clientY, ox: state.x, oy: state.y };
+					crop.setPointerCapture(e.pointerId);
+				});
+				crop.addEventListener('pointermove', (e) => {
+					if (!drag) return;
+					state.x = drag.ox + (e.clientX - drag.x) / cropSize.w;
+					state.y = drag.oy + (e.clientY - drag.y) / cropSize.h;
+					paintCrop();
+				});
+				const finish = () => {
+					drag = null;
+					writeHash();
+				};
+				crop.addEventListener('pointerup', finish);
+				crop.addEventListener('pointercancel', finish);
+				crop.addEventListener('keydown', (e) => {
+					const moves = {
+						ArrowLeft: [-1, 0],
+						ArrowRight: [1, 0],
+						ArrowUp: [0, -1],
+						ArrowDown: [0, 1],
+					};
+					if (!moves[e.key]) return;
+					e.preventDefault();
+					state.x += (moves[e.key][0] * (e.shiftKey ? 10 : 1)) / cropSize.w;
+					state.y += (moves[e.key][1] * (e.shiftKey ? 10 : 1)) / cropSize.h;
+					paintCrop();
+					writeHash();
+				});
+			}
+			function updateGroupCount(filter) {
+				$('#group-count').textContent =
+					[
+						...new Set(
+							artwork
+								.filter((a) =>
+									a.name.toLowerCase().includes(filter.toLowerCase())
+								)
+								.map((a) => a.name)
+						),
+					].length + ' folders';
+			}
+			function useSample(key) {
+				if ($('#dialog').open) $('#dialog').close();
+				original = { ...samples[key] };
+				state.sample = key;
+				resetCrop();
+				state.state = isReplace() ? 'replace' : 'loaded';
+				lastSaved = null;
+				render();
+				writeHash();
+			}
+			function changeFrame(f) {
+				if (isReplace()) return;
+				state.frame = f;
+				resetCrop();
+				state.state = 'loaded';
+				render();
+				writeHash();
+			}
+			function beginReplace(a) {
+				replacement = a;
+				lastSaved = null;
+				state.name = a.name;
+				state.frame = a.frame;
+				state.screen = 'editor';
+				state.state = 'replace';
+				resetCrop();
+				render();
+				writeHash();
+				notice(
+					'Choose, paste or drop a new Original for ' + a.name + ' · ' + a.frame
+				);
+			}
+			function showDialog(title, body, action, callback, danger = false) {
+				const dialog = $('#dialog');
+				dialog.innerHTML = `<h2>${title}</h2>${body}<div class="row"><button class="btn btn-ghost" id="dialog-cancel">Cancel</button><button class="btn ${danger ? 'danger btn-ghost' : ''}" id="dialog-confirm">${action}</button></div>`;
+				dialogAction = callback;
+				$('#dialog-cancel').onclick = () => dialog.close();
+				$('#dialog-confirm').onclick = () => {
+					if (dialogAction() !== false) dialog.close();
+				};
+				if (!dialog.open) dialog.showModal();
+				$('#dialog-cancel').focus();
+			}
+			function confirmReplace() {
+				state.state = 'confirm-replace';
+				writeHash();
+				showDialog(
+					'Replace this image?',
+					`<p>This will replace the current image for <strong>${esc(replacement.name)} (${replacement.frame})</strong>. Nuvio will show the new one within a few minutes. Are you sure?</p><div class="notice"><span class="eyebrow">URL stays the same</span><p class="mono" style="margin:8px 0;overflow-wrap:anywhere">${url(replacement)}</p></div>`,
+					'Replace image',
+					() => saveArtwork(replacement)
+				);
+			}
+			function confirmDelete(a) {
+				replacement = a;
+				state.state = 'confirm-delete';
+				writeHash();
+				showDialog(
+					'Delete Artwork?',
+					`<p>Delete <strong>${esc(a.name)} (${a.frame})</strong>? Any Nuvio folder using this URL will lose its image. This can't be undone.</p>`,
+					'Delete Artwork',
+					() => {
+						artwork = artwork.filter((x) => x.id !== a.id);
+						replacement = null;
+						state.state = 'loaded';
+						state.screen = 'library';
+						render();
+						writeHash();
+						notice(a.name + ' · ' + a.frame + ' deleted');
+					},
+					true
+				);
+			}
+			function duplicate(a) {
+				replacement = a;
+				state.state = 'duplicate';
+				writeHash();
+				showDialog(
+					'Name already used',
+					`<p><strong>${esc(a.name)}</strong> already has a <strong>${a.frame}</strong>. Replace it?</p><p>The existing ${a.frame} URL will stay the same.</p>`,
+					'Review replacement',
+					() => {
+						beginReplace(a);
+						return true;
+					}
+				);
+			}
+			function openStateDialog() {
+				if (state.state === 'duplicate') duplicate(replacement);
+				if (state.state === 'confirm-replace') confirmReplace();
+				if (state.state === 'confirm-delete') confirmDelete(replacement);
+			}
+			function saveArtwork(existing) {
+				const [w, h] = targetSize();
+				const a = existing || {
+					id: 'mock' + Math.random().toString(36).slice(2, 10),
+					name: state.name.trim(),
+					frame: state.frame,
+				};
+				Object.assign(a, { w, h, src: previewData() || original.src });
+				if (!existing) artwork.push(a);
+				lastSaved = a;
+				replacement = null;
+				state.name = a.name;
+				state.state = 'saved';
+				render();
+				writeHash();
+				notice(
+					a.frame +
+						' saved. ' +
+						(existing ? 'Same URL.' : 'Copy its URL into Nuvio.')
+				);
+			}
+			function previewData() {
+				try {
+					const canvas = document.createElement('canvas');
+					const [w, h] = targetSize();
+					canvas.width = Math.round(w / Math.max(1, w / 1000));
+					canvas.height = Math.round(h / Math.max(1, w / 1000));
+					const ctx = canvas.getContext('2d');
+					ctx.fillStyle = '#000';
+					ctx.fillRect(0, 0, canvas.width, canvas.height);
+					const image = $('#crop-image');
+					const g = geometry();
+					const factor = canvas.width / cropSize.w;
+					ctx.drawImage(
+						image,
+						((cropSize.w - g.w) / 2 + state.x * cropSize.w) * factor,
+						((cropSize.h - g.h) / 2 + state.y * cropSize.h) * factor,
+						g.w * factor,
+						g.h * factor
+					);
+					return canvas.toDataURL('image/jpeg', 0.86);
+				} catch {
+					return null;
+				}
+			}
+			async function loadImage(src, label, file = false) {
+				const token = ++loadToken;
+				const replacing =
+					!!replacement &&
+					[
+						'replace',
+						'confirm-replace',
+						'loading',
+						'error-page',
+						'error-blocked',
+					].includes(state.state);
+				state.state = 'loading';
+				render();
+				const image = new Image();
+				image.onload = () => {
+					if (token !== loadToken) return;
+					original = {
+						src,
+						width: image.naturalWidth,
+						height: image.naturalHeight,
+						label,
+					};
+					resetCrop();
+					state.state = replacing ? 'replace' : 'loaded';
+					lastSaved = null;
+					render();
+					writeHash();
+				};
+				image.onerror = () => {
+					if (token !== loadToken) return;
+					state.state = 'error-blocked';
+					render();
+					writeHash();
+				};
+				image.src = src;
+				writeHash();
+			}
+			function loadFile(file) {
+				if (!file?.type.startsWith('image/')) {
+					notice('Choose an image file, such as JPG, PNG or WebP.');
+					return;
+				}
+				loadImage(URL.createObjectURL(file), file.name, true);
+			}
+			/* Delegated controls also work on cards inserted by the filter. */
+			document.addEventListener('click', (e) => {
+				const b = e.target.closest('button,a');
+				if (!b) return;
+				if (b.getAttribute('href') === '#') e.preventDefault();
+				if (b.dataset.screen) {
+					setState({ screen: b.dataset.screen });
+					return;
+				}
+				if (b.dataset.frame) {
+					changeFrame(b.dataset.frame);
+					return;
+				}
+				if (b.dataset.sample) {
+					useSample(b.dataset.sample);
+					return;
+				}
+				if (b.dataset.copy) {
+					const a = artwork.find((a) => a.id === b.dataset.copy);
+					copy(url(a), a.name + ' · ' + a.frame + ' URL copied');
+					return;
+				}
+				if (b.dataset.replace) {
+					beginReplace(artwork.find((a) => a.id === b.dataset.replace));
+					return;
+				}
+				if (b.dataset.delete) {
+					confirmDelete(artwork.find((a) => a.id === b.dataset.delete));
+					return;
+				}
+				if (b.dataset.rename) {
+					const a = artwork.find((a) => a.id === b.dataset.rename);
+					showDialog(
+						'Rename ' + a.frame,
+						`<p>The permanent URL will stay the same. This renames only this ${a.frame} Artwork.</p><label class="field">Name<input id="rename-name" value="${esc(a.name)}" maxlength="100"></label><p id="rename-error" class="danger small"></p>`,
+						'Save name',
+						() => {
+							const n = $('#rename-name').value.trim();
+							if (!n) {
+								$('#rename-error').textContent = 'Enter a name.';
+								return false;
+							}
+							if (
+								artwork.some(
+									(x) =>
+										x.id !== a.id &&
+										x.name.toLowerCase() === n.toLowerCase() &&
+										x.frame === a.frame
+								)
+							) {
+								$('#rename-error').textContent =
+									n + ' already has a ' + a.frame + '.';
+								return false;
+							}
+							a.name = n;
+							state.state = 'loaded';
+							render();
+							writeHash();
+							notice(a.frame + ' renamed. Same URL.');
+						}
+					);
+					return;
+				}
+				if (b.dataset.makeName) {
+					replacement = null;
+					state.name = b.dataset.makeName;
+					state.frame = b.dataset.makeFrame;
+					state.screen = 'editor';
+					state.state = 'loaded';
+					resetCrop();
+					render();
+					writeHash();
+					return;
+				}
+				const action = b.dataset.action;
+				if (action === 'home' || action === 'new') {
+					replacement = null;
+					lastSaved = null;
+					setState({ screen: 'editor', state: 'empty' });
+				}
+				if (action === 'other') notice('This exploration focuses on ArtNuvio.');
+				if (action === 'file') $('#file').click();
+				if (action === 'cancel-load') {
+					loadToken++;
+					setState({ state: 'empty' });
+				}
+				if (action === 'load-url') {
+					const value = $('#source-url').value.trim();
+					if (!value) return;
+					try {
+						const u = new URL(value);
+						if (!['http:', 'https:'].includes(u.protocol)) throw Error();
+						if ($('#dialog').open) $('#dialog').close();
+						if (/\.html?($|\?)/i.test(value)) {
+							setState({ state: 'error-page' });
+							return;
+						}
+						loadImage(value, u.hostname);
+					} catch {
+						notice('Enter an image URL beginning with https://.');
+					}
+				}
+				if (action === 'change-original') {
+					showDialog(
+						'Change Original',
+						sourceBox(),
+						'Keep current image',
+						() => {}
+					);
+					$('#dialog .drop').id = 'dialog-drop';
+				}
+				if (action === 'reset') {
+					resetCrop();
+					paintCrop();
+					writeHash();
+				}
+				if (action === 'cancel-replace') {
+					replacement = null;
+					setState({ screen: 'library', state: 'loaded' });
+				}
+				if (action === 'save') {
+					state.name = $('#art-name').value.trim();
+					if (!state.name) {
+						$('#art-name').focus();
+						notice('Give this Artwork a name first.');
+						return;
+					}
+					if (isReplace()) {
+						confirmReplace();
+						return;
+					}
+					const a = artwork.find(
+						(a) =>
+							a.name.toLowerCase() === state.name.toLowerCase() &&
+							a.frame === state.frame
+					);
+					if (a) duplicate(a);
+					else saveArtwork();
+				}
+				if (action === 'copy-saved')
+					copy(
+						url(lastSaved),
+						lastSaved.name + ' · ' + lastSaved.frame + ' URL copied'
+					);
+			});
+			$('#dialog').addEventListener('close', () => {
+				if (state.state === 'confirm-replace') state.state = 'replace';
+				if (state.state === 'duplicate') state.state = 'loaded';
+				if (state.state === 'confirm-delete') state.state = 'loaded';
+				writeHash();
+			});
+			$('#file').addEventListener('change', (e) => {
+				if (e.target.files[0]) {
+					if ($('#dialog').open) $('#dialog').close();
+					loadFile(e.target.files[0]);
+				}
+				e.target.value = '';
+			});
+			document.addEventListener('paste', (e) => {
+				const item = [...e.clipboardData.items].find((i) =>
+					i.type.startsWith('image/')
+				);
+				if (item && state.screen === 'editor') {
+					e.preventDefault();
+					if ($('#dialog').open) $('#dialog').close();
+					loadFile(item.getAsFile());
+				}
+			});
+			document.addEventListener('dragover', (e) => {
+				if (state.screen === 'editor') {
+					e.preventDefault();
+					$('#drop')?.classList.add('dragover');
+				}
+			});
+			document.addEventListener('dragleave', () =>
+				$('#drop')?.classList.remove('dragover')
+			);
+			document.addEventListener('drop', (e) => {
+				e.preventDefault();
+				if (state.screen === 'editor') {
+					if ($('#dialog').open) $('#dialog').close();
+					loadFile(e.dataTransfer.files[0]);
+				}
+			});
+			for (const key of [
+				'screen',
+				'state',
+				'editor',
+				'library',
+				'frame',
+				'width',
+				'sample',
+			])
+				$('#demo-' + key).addEventListener('change', (e) => {
+					if ($('#dialog').open) $('#dialog').close();
+					if (key === 'frame') {
+						changeFrame(e.target.value);
+						return;
+					}
+					if (key === 'sample') {
+						useSample(e.target.value);
+						return;
+					}
+					state[key] = e.target.value;
+					if (key === 'state') {
+						replacement = null;
+						lastSaved = null;
+						state.screen =
+							state.state === 'confirm-delete' ? 'library' : 'editor';
+						prepareState();
+					}
+					render();
+					writeHash();
+				});
+			$('#copy-state').onclick = () =>
+				copy(
+					location.href,
+					'View link copied. Local uploads are not included.'
+				);
+			window.addEventListener('hashchange', readHash);
+			new ResizeObserver(layoutCrop).observe($('#viewport'));
+			readHash();
+		</script>
+	</body>
+</html>
