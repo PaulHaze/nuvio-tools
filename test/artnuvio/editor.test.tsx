@@ -4,7 +4,12 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Editor from '../../src/tools/artnuvio/components/Editor';
 import { FRAMES, FRAME_IDS } from '../../src/tools/artnuvio/frames';
-import { placeMode } from '../../src/tools/artnuvio/framing';
+import {
+	panBy,
+	placeMode,
+	scaleRange,
+	zoomTo,
+} from '../../src/tools/artnuvio/framing';
 import { drawPlacement } from '../../src/tools/artnuvio/drawPlacement';
 
 vi.mock('../../src/tools/artnuvio/drawPlacement', () => ({
@@ -187,4 +192,174 @@ it('ignores files dropped outside the preview and reports non-image pastes', asy
 	expect(host.querySelector('[role="alert"]')!.textContent).toBe(
 		"That isn't an image"
 	);
+});
+
+function modeInput(mode: 'fit' | 'cover' | 'custom') {
+	return host.querySelector<HTMLInputElement>(
+		`input[name="mode"][value="${mode}"]`
+	)!;
+}
+function lastPlacement() {
+	return vi.mocked(drawPlacement).mock.calls.at(-1)![3];
+}
+async function changeScale(scale: number) {
+	const input = host.querySelector<HTMLInputElement>('#scale-in')!;
+	// Use the native setter so React receives a genuine input value change.
+	Object.getOwnPropertyDescriptor(
+		HTMLInputElement.prototype,
+		'value'
+	)!.set!.call(input, String(scale));
+	await act(async () =>
+		input.dispatchEvent(new Event('input', { bubbles: true }))
+	);
+}
+
+it('clears Fit/Cover with the slider and resets scale and position on either radio', async () => {
+	await choose();
+	const size = FRAMES.hero.sizes[0];
+	const range = scaleRange(bitmap, size);
+	const slider = host.querySelector<HTMLInputElement>('#scale-in')!;
+	expect(Number(slider.min)).toBe(range.min);
+	expect(Number(slider.max)).toBe(range.max);
+	expect(modeInput('cover').checked).toBe(true);
+	await act(async () => modeInput('fit').click());
+	expect(lastPlacement()).toEqual(placeMode(bitmap, size, 'fit'));
+	await changeScale(5);
+	expect(lastPlacement()).toEqual(
+		zoomTo(bitmap, size, placeMode(bitmap, size, 'fit'), 5)
+	);
+	expect(modeInput('fit').checked).toBe(false);
+	expect(modeInput('cover').checked).toBe(false);
+	await act(async () => modeInput('cover').click());
+	expect(lastPlacement()).toEqual(placeMode(bitmap, size, 'cover'));
+	await changeScale(4);
+	await choose(new File(['next'], 'next.png', { type: 'image/png' }));
+	expect(lastPlacement()).toEqual(placeMode(bitmap, size, 'cover'));
+	expect(modeInput('cover').checked).toBe(true);
+	await act(async () => modeInput('fit').click());
+	await act(async () =>
+		host
+			.querySelector<HTMLInputElement>('input[name="frame"][value="poster"]')!
+			.click()
+	);
+	expect(lastPlacement()).toEqual(
+		placeMode(bitmap, FRAMES.poster.sizes[0], 'cover')
+	);
+	expect(modeInput('cover').checked).toBe(true);
+});
+
+it('captures dragging in Frame pixels, preserves the mode, and resets an already selected radio', async () => {
+	await choose();
+	const canvas = host.querySelector('canvas')!;
+	vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({
+		width: 600,
+		height: 337.5,
+	} as DOMRect);
+	const capture = vi.fn();
+	const release = vi.fn();
+	canvas.setPointerCapture = capture;
+	canvas.hasPointerCapture = () => true;
+	canvas.releasePointerCapture = release;
+	async function pointer(type: string, x: number, y: number, id = 1) {
+		await act(async () =>
+			canvas.dispatchEvent(
+				new PointerEvent(type, {
+					bubbles: true,
+					pointerId: id,
+					button: 0,
+					clientX: x,
+					clientY: y,
+				})
+			)
+		);
+	}
+	await pointer('pointerdown', 100, 100);
+	expect(capture).toHaveBeenCalledWith(1);
+	expect(host.querySelector('.preview')!.getAttribute('data-panning')).toBe(
+		'1'
+	);
+	await pointer('pointermove', 100, 110, 2);
+	expect(lastPlacement()).toEqual(
+		placeMode(bitmap, FRAMES.hero.sizes[0], 'cover')
+	);
+	await pointer('pointermove', 100, 110);
+	expect(lastPlacement()).toEqual(
+		panBy(
+			bitmap,
+			FRAMES.hero.sizes[0],
+			placeMode(bitmap, FRAMES.hero.sizes[0], 'cover'),
+			0,
+			64
+		)
+	);
+	expect(modeInput('cover').checked).toBe(true);
+	await pointer('pointerup', 100, 110);
+	expect(release).toHaveBeenCalledWith(1);
+	expect(host.querySelector('.preview')!.getAttribute('data-panning')).toBe(
+		'0'
+	);
+	await act(async () => modeInput('cover').click());
+	expect(lastPlacement()).toEqual(
+		placeMode(bitmap, FRAMES.hero.sizes[0], 'cover')
+	);
+	await act(async () => modeInput('fit').click());
+	await pointer('pointerdown', 100, 100);
+	await pointer('pointermove', 90, 100);
+	expect(modeInput('fit').checked).toBe(true);
+	await pointer('pointercancel', 90, 100);
+	expect(host.querySelector('.preview')!.getAttribute('data-panning')).toBe(
+		'0'
+	);
+	await act(async () => modeInput('fit').click());
+	expect(lastPlacement()).toEqual(
+		placeMode(bitmap, FRAMES.hero.sizes[0], 'fit')
+	);
+});
+
+it('shows Custom and its hint after a slider move, and Fit/Cover snap back', async () => {
+	await choose();
+	const hint = () => host.querySelector('.c-fit .ctl-hint')!.textContent;
+	const cap = () => host.querySelector('.cap-right')!.textContent;
+	expect(modeInput('custom').checked).toBe(false);
+	await changeScale(5);
+	expect(cap()).toBe('Custom');
+	expect(modeInput('custom').checked).toBe(true);
+	expect(hint()).toBe('Custom sizing');
+	expect(host.querySelector('.marks')).toBeNull();
+	await act(async () => modeInput('fit').click());
+	expect(modeInput('custom').checked).toBe(false);
+	expect(cap()).toBe('Fit');
+});
+
+it('ignores non-primary pointerdown and ends a drag on lostpointercapture', async () => {
+	await choose();
+	const canvas = host.querySelector('canvas')!;
+	vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({
+		width: 600,
+		height: 337.5,
+	} as DOMRect);
+	const capture = vi.fn();
+	canvas.setPointerCapture = capture;
+	canvas.hasPointerCapture = () => false;
+	const fire = (type: string, button = 0) =>
+		act(async () =>
+			canvas.dispatchEvent(
+				new PointerEvent(type, {
+					bubbles: true,
+					pointerId: 1,
+					button,
+					clientX: 10,
+					clientY: 10,
+				})
+			)
+		);
+	const panning = () =>
+		host.querySelector('.preview')!.getAttribute('data-panning');
+	await fire('pointerdown', 2);
+	expect(capture).not.toHaveBeenCalled();
+	expect(panning()).toBe('0');
+	await fire('pointerdown');
+	expect(panning()).toBe('1');
+	await fire('lostpointercapture');
+	expect(panning()).toBe('0');
 });

@@ -60,9 +60,16 @@
 	/* Canvas stays at the whole Frame aspect, contained within the preview area. */
 	:where(&) .preview {
 		@apply absolute inset-[40px_14px_14px] grid place-items-center overflow-hidden;
+		@apply touch-none;
 
 		canvas {
-			@apply block bg-black;
+			@apply block cursor-grab bg-black;
+			max-width: 100%;
+			max-height: 100%;
+		}
+
+		&[data-panning='1'] canvas {
+			@apply cursor-grabbing;
 		}
 	}
 
@@ -151,22 +158,7 @@
 	}
 }
 
-/* Scale: the slider with Fit and Cover marks under the track. */
-.range-wrap {
-	@apply relative pb-[1.1rem];
-
-	:where(&) .marks {
-		@apply absolute inset-x-[7px] bottom-0 h-[1.1rem];
-
-		:where(&) .mark {
-			@apply absolute -translate-x-1/2 rounded-[2px] px-[0.2rem] font-mono text-[0.62rem] leading-[normal] font-medium tracking-[0.06em] text-muted uppercase;
-
-			&::before {
-				@apply absolute top-[-9px] left-1/2 h-[6px] w-px bg-muted content-[''];
-			}
-		}
-	}
-}
+/* Scale: the slider. */
 .c-scale {
 	:where(&) .scale-out {
 		@apply font-mono tracking-normal text-fg normal-case;

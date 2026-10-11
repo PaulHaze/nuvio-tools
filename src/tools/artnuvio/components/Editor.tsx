@@ -4,9 +4,17 @@ import {
 	useRef,
 	useState,
 	type CSSProperties,
+	type PointerEvent,
 } from 'react';
-import { FRAME_IDS, FRAMES, type FrameId } from '../frames';
-import { placeMode, type Placement } from '../framing';
+import { FRAME_IDS, FRAMES, type FrameId, type OutputSize } from '../frames';
+import {
+	panBy,
+	placeMode,
+	scaleRange,
+	zoomTo,
+	type Mode,
+	type Placement,
+} from '../framing';
 import { drawPlacement } from '../drawPlacement';
 import {
 	loadOriginal,
@@ -20,7 +28,11 @@ type EditorState = {
 	frame: FrameId;
 	placement: Placement | null;
 };
-const fillHint = 'Cover fills the whole Frame. Fit shows the whole image.';
+const fillHints = {
+	cover: 'Cover the frame with the image',
+	fit: 'Fit the whole image into frame',
+	custom: 'Custom sizing',
+};
 
 function Glyph({ frame, size = 12 }: { frame: FrameId; size?: number }) {
 	const { width, height } = FRAMES[frame].aspect;
@@ -72,6 +84,8 @@ export default function Editor() {
 	const [message, setMessage] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [dragging, setDragging] = useState(false);
+	const [panning, setPanning] = useState(false);
+	const panRef = useRef<{ id: number; x: number; y: number } | null>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const previewRef = useRef<HTMLDivElement>(null);
@@ -80,6 +94,58 @@ export default function Editor() {
 	const { original, frame, placement } = editor;
 	const spec = FRAMES[frame];
 	const frameSize = spec.sizes[0];
+	const range = original ? scaleRange(original, frameSize) : { min: 0, max: 1 };
+	const hint = fillHints[placement?.mode ?? 'custom'];
+	const scalePercent = (scale: number) =>
+		`${((scale - range.min) / (range.max - range.min)) * 100}%`;
+
+	const updatePlacement = (
+		change: (
+			original: Original,
+			size: OutputSize,
+			placement: Placement
+		) => Placement
+	) =>
+		setEditor((current) =>
+			current.original && current.placement
+				? {
+						...current,
+						placement: change(
+							current.original,
+							FRAMES[current.frame].sizes[0],
+							current.placement
+						),
+					}
+				: current
+		);
+	const selectMode = (mode: Exclude<Mode, null>) =>
+		updatePlacement((original, size) => placeMode(original, size, mode));
+
+	const movePointer = (event: PointerEvent<HTMLCanvasElement>) => {
+		const pan = panRef.current;
+		if (!pan || pan.id !== event.pointerId) return;
+		const rect = event.currentTarget.getBoundingClientRect();
+		if (rect.width <= 0 || rect.height <= 0) return;
+		const dx = event.clientX - pan.x;
+		const dy = event.clientY - pan.y;
+		panRef.current = { id: pan.id, x: event.clientX, y: event.clientY };
+		updatePlacement((original, size, placement) =>
+			panBy(
+				original,
+				size,
+				placement,
+				(dx * size.width) / rect.width,
+				(dy * size.height) / rect.height
+			)
+		);
+	};
+	const stopPointer = (event: PointerEvent<HTMLCanvasElement>) => {
+		if (panRef.current?.id !== event.pointerId) return;
+		panRef.current = null;
+		setPanning(false);
+		if (event.currentTarget.hasPointerCapture(event.pointerId))
+			event.currentTarget.releasePointerCapture(event.pointerId);
+	};
 
 	const load = useCallback(async (blob: Blob, source: OriginalSource) => {
 		const request = ++requestRef.current;
@@ -165,10 +231,21 @@ export default function Editor() {
 			if (ctx)
 				drawPlacement(ctx, original.bitmap, frameSize, placement, canvas);
 		};
-		// ResizeObserver fires once on observe, which performs the first draw.
-		const observer = new ResizeObserver(draw);
+		// Keep the existing canvas scaled in CSS while the window is moving, then
+		// resize its backing store and redraw once the layout settles. Reallocating
+		// a high-DPI canvas for every resize notification can stall Firefox during
+		// rapid window resizing and leave the editor unresponsive to file drops.
+		let resizeTimer: number | undefined;
+		const observer = new ResizeObserver(() => {
+			window.clearTimeout(resizeTimer);
+			resizeTimer = window.setTimeout(draw, 120);
+		});
 		observer.observe(area);
-		return () => observer.disconnect();
+		draw();
+		return () => {
+			observer.disconnect();
+			window.clearTimeout(resizeTimer);
+		};
 	}, [original, placement, frameSize]);
 
 	const pickFrame = (frame: FrameId) =>
@@ -231,15 +308,42 @@ export default function Editor() {
 								</span>
 							</span>
 							<span className="cap-right">
-								{loading ? 'Loading Original…' : original ? 'Cover' : ''}
+								{loading
+									? 'Loading Original…'
+									: placement?.mode === 'cover'
+										? 'Cover'
+										: placement?.mode === 'fit'
+											? 'Fit'
+											: original
+												? 'Custom'
+												: ''}
 							</span>
 						</div>
 						{original ? (
-							<div className="preview" ref={previewRef}>
+							<div
+								className="preview"
+								ref={previewRef}
+								data-panning={panning ? '1' : '0'}
+							>
 								<canvas
 									ref={canvasRef}
 									aria-label={`${spec.label} Frame preview`}
 									role="img"
+									onPointerDown={(event) => {
+										if (event.button !== 0 || panRef.current) return;
+										event.preventDefault();
+										event.currentTarget.setPointerCapture(event.pointerId);
+										panRef.current = {
+											id: event.pointerId,
+											x: event.clientX,
+											y: event.clientY,
+										};
+										setPanning(true);
+									}}
+									onPointerMove={movePointer}
+									onPointerUp={stopPointer}
+									onPointerCancel={stopPointer}
+									onLostPointerCapture={stopPointer}
 								/>
 							</div>
 						) : (
@@ -368,12 +472,20 @@ export default function Editor() {
 							))}
 						</div>
 					</fieldset>
-					<div className="adjust">
-						<fieldset className="ctl c-fit is-disabled">
+					<div className="adjust" role="group" aria-label="Adjust">
+						<fieldset className={`ctl c-fit ${original ? '' : 'is-disabled'}`}>
 							<legend className="eyebrow">Fill</legend>
 							<div className="seg">
 								<label>
-									<input type="radio" name="mode" value="fit" disabled />
+									<input
+										type="radio"
+										name="mode"
+										value="fit"
+										checked={placement?.mode === 'fit'}
+										onClick={() => selectMode('fit')}
+										readOnly
+										disabled={!original}
+									/>
 									Fit
 								</label>
 								<label>
@@ -381,15 +493,28 @@ export default function Editor() {
 										type="radio"
 										name="mode"
 										value="cover"
-										checked={!!original}
-										disabled
+										checked={placement?.mode === 'cover'}
+										onClick={() => selectMode('cover')}
+										readOnly
+										disabled={!original}
 									/>
 									Cover
 								</label>
+								<label>
+									<input
+										type="radio"
+										name="mode"
+										value="custom"
+										checked={!!placement && placement.mode === null}
+										readOnly
+										disabled={!original}
+									/>
+									Custom
+								</label>
 							</div>
-							<p className="ctl-hint">{fillHint}</p>
+							<p className="ctl-hint">{hint}</p>
 						</fieldset>
-						<div className="ctl c-scale is-disabled">
+						<div className={`ctl c-scale ${original ? '' : 'is-disabled'}`}>
 							<label className="eyebrow ctl-label" htmlFor="scale-in">
 								Scale{' '}
 								<output className="scale-out" htmlFor="scale-in">
@@ -401,37 +526,27 @@ export default function Editor() {
 									id="scale-in"
 									className="range"
 									type="range"
-									min="0"
-									max="1000"
-									step="1"
-									value="500"
-									style={{ '--fill': '50%' } as CSSProperties}
-									disabled
+									min={range.min}
+									max={range.max}
+									step="any"
+									value={placement?.scale ?? 0}
+									style={
+										{
+											'--fill': scalePercent(placement?.scale ?? 0),
+										} as CSSProperties
+									}
+									onChange={(event) => {
+										const scale = event.currentTarget.valueAsNumber;
+										updatePlacement((original, size, placement) =>
+											zoomTo(original, size, placement, scale)
+										);
+									}}
+									disabled={!original}
 								/>
-								<div className="marks" aria-hidden="true">
-									<button
-										type="button"
-										className="mark"
-										tabIndex={-1}
-										style={{ left: '30%' }}
-										disabled
-									>
-										Fit
-									</button>
-									<button
-										type="button"
-										className="mark"
-										tabIndex={-1}
-										style={{ left: '50%' }}
-										disabled
-									>
-										Cover
-									</button>
-								</div>
 							</div>
 							<p className="soft" aria-live="polite" />
 						</div>
-						<p className="ctl-hint adj-hint">{fillHint}</p>
+						<p className="ctl-hint adj-hint">{hint}</p>
 						<fieldset className="ctl c-size is-disabled">
 							<legend className="eyebrow">Saved size</legend>
 							<div className="size-body">
