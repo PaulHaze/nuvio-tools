@@ -5,89 +5,105 @@
 }
 
 /* Buttons: the shell .btn, plus a small size and a real disabled state. */
-.artnuvio-main .btn {
-	@apply whitespace-nowrap;
-}
-.artnuvio-main .btn svg {
-	@apply size-[1em] flex-none;
-}
-.btn-sm {
-	@apply gap-[0.4rem] px-3 py-[0.45rem] text-[0.78rem];
-}
-.artnuvio-main .btn:disabled {
-	@apply cursor-not-allowed opacity-45;
-}
-.artnuvio-main .btn:disabled:hover {
-	@apply bg-accent shadow-none;
-}
-.artnuvio-main .btn-ghost:disabled:hover {
-	@apply border-border bg-transparent;
-}
+.artnuvio-main {
+	.btn {
+		@apply whitespace-nowrap;
 
-/* Text fields: the same look as Listio's. */
-.artnuvio-main
+		svg {
+			@apply size-[1em] flex-none;
+		}
+
+		&:disabled {
+			@apply cursor-not-allowed opacity-45;
+		}
+
+		&:disabled:hover {
+			@apply bg-accent shadow-none;
+		}
+	}
+
+	.btn-ghost:disabled:hover {
+		@apply border-border bg-transparent;
+	}
+
+	/* Text fields: the same look as Listio's. */
+
 	:is(
 		input:not([type='checkbox'], [type='radio'], [type='range']),
 		select,
 		textarea
 	) {
-	@apply min-w-0 rounded-(--radius) border border-border bg-surface-2 px-3 py-[0.6rem] text-fg;
-	font: inherit;
-}
-.artnuvio-main :is(input, textarea)::placeholder {
-	@apply text-muted;
-}
-.artnuvio-main
+		@apply min-w-0 rounded-(--radius) border border-border bg-surface-2 px-3 py-[0.6rem] text-fg;
+		font: inherit;
+	}
+
+	:is(input, textarea)::placeholder {
+		@apply text-muted;
+	}
+
 	:is(
 		input:not([type='checkbox'], [type='radio']),
 		select,
 		textarea
 	):focus-visible {
-	@apply outline-offset-2;
+		@apply outline-offset-2;
+	}
+}
+.btn-sm {
+	@apply gap-[0.4rem] px-3 py-[0.45rem] text-[0.78rem];
 }
 
 /* A labelled control: label or legend on top, then the control and its hint. */
 .ctl {
 	@apply flex min-w-0 flex-col gap-2;
-}
-.ctl > .seg {
-	@apply self-start;
-}
-.ctl > legend,
-.ctl-label {
-	@apply mb-2 flex w-full items-baseline justify-between p-0;
+
+	> .seg {
+		@apply self-start;
+	}
+
+	> legend,
+	:where(&) .ctl-label {
+		@apply mb-2 flex w-full items-baseline justify-between p-0;
+	}
 }
 .ctl-hint {
 	@apply text-[0.78rem] leading-[1.45] text-muted;
 }
 .is-disabled {
 	@apply opacity-45;
-}
-.is-disabled * {
-	@apply cursor-not-allowed!;
+
+	* {
+		@apply cursor-not-allowed!;
+	}
 }
 
 /* Segmented control (radio group). */
 .seg {
 	@apply inline-flex gap-[2px] rounded-(--radius) border border-border bg-surface-2 p-[2px];
-}
-.seg label {
-	@apply relative inline-flex cursor-pointer items-center gap-[0.4rem] rounded-[3px] px-[0.85rem] py-[0.42rem] text-[0.8rem] font-semibold whitespace-nowrap text-muted;
-}
-.seg input {
-	@apply pointer-events-none absolute opacity-0;
-}
-.seg label:has(input:checked) {
-	@apply bg-accent text-on-accent;
-}
-.seg label:has(input:focus-visible) {
-	@apply outline-2 outline-offset-2 outline-accent;
-}
-.seg label:not(:has(input:checked)) {
-	@apply hover:text-fg;
-}
-.seg label:has(input:disabled) {
-	@apply cursor-not-allowed opacity-50;
+
+	label {
+		@apply relative inline-flex cursor-pointer items-center gap-[0.4rem] rounded-[3px] px-[0.85rem] py-[0.42rem] text-[0.8rem] font-semibold whitespace-nowrap text-muted;
+
+		&:has(input:checked) {
+			@apply bg-accent text-on-accent;
+		}
+
+		&:has(input:focus-visible) {
+			@apply outline-2 outline-offset-2 outline-accent;
+		}
+
+		&:not(:has(input:checked)) {
+			@apply hover:text-fg;
+		}
+
+		&:has(input:disabled) {
+			@apply cursor-not-allowed opacity-50;
+		}
+	}
+
+	input {
+		@apply pointer-events-none absolute opacity-0;
+	}
 }
 
 .check {
@@ -104,18 +120,22 @@
 		var(--accent) var(--fill),
 		var(--border) var(--fill)
 	);
-}
-.range::-webkit-slider-thumb {
-	@apply size-[15px] appearance-none rounded-full border-2 border-fg bg-accent;
-}
-.range::-moz-range-track {
-	@apply bg-transparent;
-}
-.range::-moz-range-thumb {
-	@apply size-[11px] rounded-full border-2 border-fg bg-accent;
-}
-.range:disabled {
-	@apply cursor-not-allowed;
+
+	&::-webkit-slider-thumb {
+		@apply size-[15px] appearance-none rounded-full border-2 border-fg bg-accent;
+	}
+
+	&::-moz-range-track {
+		@apply bg-transparent;
+	}
+
+	&::-moz-range-thumb {
+		@apply size-[11px] rounded-full border-2 border-fg bg-accent;
+	}
+
+	&:disabled {
+		@apply cursor-not-allowed;
+	}
 }
 
 /* Frame shape glyph: a tiny outline at the Frame's real proportions (size set inline). */

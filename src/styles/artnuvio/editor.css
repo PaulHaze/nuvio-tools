@@ -1,3 +1,4 @@
+/* Use :where(&) for newly scoped descendants to retain their original specificity. */
 /* ArtNuvio editor pieces: preview (stage + drop zone), Original bar, Frame picker,
    Fill + Scale, Saved size, Name + Save and the Folder set. Placement is in layout.css. */
 /* Preview. */
@@ -7,190 +8,241 @@
 	.stage-cap {
 		@apply pointer-events-none absolute inset-x-0 top-0 z-3 flex h-10 items-center justify-between gap-4 px-4 font-mono text-[0.7rem] leading-[normal] font-medium tracking-[0.1em] text-muted uppercase;
 
-		.drop {
+		:where(&) .cap-left {
 			@apply flex items-center gap-[0.55rem] whitespace-nowrap text-fg;
 		}
+
 		.cap-right {
 			@apply truncate;
 		}
 	}
-}
 
-/* Empty state: the whole stage is the drop zone, with one paste box as the obvious start. */
-.drop {
-	@apply absolute inset-[40px_14px_14px] z-4 grid place-items-center overflow-auto rounded-(--radius) border-[1.5px] border-dashed border-(--card-border) p-5 text-center;
-	background: color-mix(in srgb, var(--accent) 3%, #05070e);
-}
-.drop-inner {
-	@apply flex w-full max-w-[34rem] flex-col items-center;
-}
-.drop-icon {
-	@apply mb-[0.9rem] grid size-[2.6rem] place-items-center rounded-(--radius) border border-(--card-border) bg-accent-tint text-accent-ink;
-}
-.drop-icon svg {
-	@apply size-[1.3rem];
-}
-.drop-title {
-	@apply text-[1.45rem] tracking-[-0.02em];
-}
-.drop-lead {
-	@apply mt-[0.3rem] text-[0.9rem] text-muted;
-}
-.paste-row {
-	@apply mt-[1.1rem] flex w-full gap-2;
-}
-.artnuvio-main .paste-row input {
-	@apply flex-1 border-(--card-border) px-4 py-[0.8rem];
-}
-.drop-or {
-	@apply mt-4 mb-[0.85rem] flex w-full items-center gap-3 text-[0.75rem] text-muted;
-}
-.drop-or::before,
-.drop-or::after {
-	@apply flex-1 border-t border-border content-[''];
-}
-.drop-file {
-	@apply flex flex-wrap items-center justify-center gap-[0.8rem] text-[0.85rem];
+	/* Empty state: the whole stage is the drop zone, with one paste box as the obvious start. */
+
+	:where(&) .drop {
+		@apply absolute inset-[40px_14px_14px] z-4 grid place-items-center overflow-auto rounded-(--radius) border-[1.5px] border-dashed border-(--card-border) p-5 text-center;
+		background: color-mix(in srgb, var(--accent) 3%, #05070e);
+
+		:where(&) .drop-inner {
+			@apply flex w-full max-w-[34rem] flex-col items-center;
+
+			:where(&) .drop-icon {
+				@apply mb-[0.9rem] grid size-[2.6rem] place-items-center rounded-(--radius) border border-(--card-border) bg-accent-tint text-accent-ink;
+
+				svg {
+					@apply size-[1.3rem];
+				}
+			}
+
+			:where(&) .drop-title {
+				@apply text-[1.45rem] tracking-[-0.02em];
+			}
+
+			:where(&) .drop-lead {
+				@apply mt-[0.3rem] text-[0.9rem] text-muted;
+			}
+
+			:where(&) .paste-row {
+				@apply mt-[1.1rem] flex w-full gap-2;
+
+				.artnuvio-main & input {
+					@apply flex-1 border-(--card-border) px-4 py-[0.8rem];
+				}
+			}
+
+			:where(&) .drop-or {
+				@apply mt-4 mb-[0.85rem] flex w-full items-center gap-3 text-[0.75rem] text-muted;
+
+				&::before,
+				&::after {
+					@apply flex-1 border-t border-border content-[''];
+				}
+			}
+
+			:where(&) .drop-file {
+				@apply flex flex-wrap items-center justify-center gap-[0.8rem] text-[0.85rem];
+			}
+		}
+	}
 }
 
 /* Original bar. */
 .orig-bar {
 	@apply flex min-h-[3.6rem] items-center gap-[0.9rem] rounded-(--radius) border border-border bg-(--card-bg) px-3 py-[0.6rem];
-}
-.orig-thumb {
-	@apply grid size-10 flex-none place-items-center overflow-hidden rounded-[2px] bg-surface-2;
-}
-.orig-thumb svg {
-	@apply size-[1.1rem] text-muted;
-}
-.orig-meta {
-	@apply flex min-w-0 flex-1 flex-col leading-[1.35];
-}
-.orig-name {
-	@apply truncate text-[0.88rem] font-semibold;
-}
-.orig-dims {
-	@apply font-mono text-[0.72rem] text-muted;
+
+	:where(&) .orig-thumb {
+		@apply grid size-10 flex-none place-items-center overflow-hidden rounded-[2px] bg-surface-2;
+
+		svg {
+			@apply size-[1.1rem] text-muted;
+		}
+	}
+
+	:where(&) .orig-meta {
+		@apply flex min-w-0 flex-1 flex-col leading-[1.35];
+
+		:where(&) .orig-name {
+			@apply truncate text-[0.88rem] font-semibold;
+		}
+
+		:where(&) .orig-dims {
+			@apply font-mono text-[0.72rem] text-muted;
+		}
+	}
 }
 
 /* Frame picker: glyph on the left, name and output size on the right. */
 .fpick {
 	@apply grid grid-cols-2 gap-2;
-}
-.fopt {
-	@apply relative grid cursor-pointer grid-cols-[26px_1fr] grid-rows-[auto_auto] items-center gap-x-[0.6rem] rounded-(--radius) border border-border bg-surface-2 px-[0.65rem] py-[0.55rem];
-	transition:
-		border-color 0.16s,
-		background 0.16s;
-}
-.fopt input {
-	@apply pointer-events-none absolute opacity-0;
-}
-.fopt .fshape {
-	@apply row-[1/3] grid size-[26px] place-items-center text-muted;
-}
-.fopt .fname {
-	@apply flex items-center gap-[0.35rem] text-[0.85rem] leading-[1.2] font-semibold;
-}
-.fopt .fsize {
-	@apply font-mono text-[0.68rem] leading-[1.3] text-muted;
-}
-.fopt:has(input:checked) {
-	@apply border-accent bg-accent-tint;
-}
-.fopt:has(input:checked) .fshape {
-	@apply text-accent-ink;
-}
-.fopt:has(input:focus-visible) {
-	@apply outline-2 outline-offset-2 outline-accent;
-}
-.fopt:has(input:disabled) {
-	@apply cursor-not-allowed opacity-40;
-}
-.fopt:not(:has(input:checked, input:disabled)) {
-	@apply hover:border-(--card-border);
+
+	:where(&) .fopt {
+		@apply relative grid cursor-pointer grid-cols-[26px_1fr] grid-rows-[auto_auto] items-center gap-x-[0.6rem] rounded-(--radius) border border-border bg-surface-2 px-[0.65rem] py-[0.55rem];
+		transition:
+			border-color 0.16s,
+			background 0.16s;
+
+		input {
+			@apply pointer-events-none absolute opacity-0;
+		}
+
+		.fshape {
+			@apply row-[1/3] grid size-[26px] place-items-center text-muted;
+		}
+
+		.fname {
+			@apply flex items-center gap-[0.35rem] text-[0.85rem] leading-[1.2] font-semibold;
+		}
+
+		.fsize {
+			@apply font-mono text-[0.68rem] leading-[1.3] text-muted;
+		}
+
+		&:has(input:checked) {
+			@apply border-accent bg-accent-tint;
+
+			.fshape {
+				@apply text-accent-ink;
+			}
+		}
+
+		&:has(input:focus-visible) {
+			@apply outline-2 outline-offset-2 outline-accent;
+		}
+
+		&:has(input:disabled) {
+			@apply cursor-not-allowed opacity-40;
+		}
+
+		&:not(:has(input:checked, input:disabled)) {
+			@apply hover:border-(--card-border);
+		}
+	}
 }
 
 /* Scale: the slider with Fit and Cover marks under the track. */
 .range-wrap {
 	@apply relative pb-[1.1rem];
+
+	:where(&) .marks {
+		@apply absolute inset-x-[7px] bottom-0 h-[1.1rem];
+
+		:where(&) .mark {
+			@apply absolute -translate-x-1/2 rounded-[2px] px-[0.2rem] font-mono text-[0.62rem] leading-[normal] font-medium tracking-[0.06em] text-muted uppercase;
+
+			&::before {
+				@apply absolute top-[-9px] left-1/2 h-[6px] w-px bg-muted content-[''];
+			}
+		}
+	}
 }
-.marks {
-	@apply absolute inset-x-[7px] bottom-0 h-[1.1rem];
-}
-.mark {
-	@apply absolute -translate-x-1/2 rounded-[2px] px-[0.2rem] font-mono text-[0.62rem] leading-[normal] font-medium tracking-[0.06em] text-muted uppercase;
-}
-.mark::before {
-	@apply absolute top-[-9px] left-1/2 h-[6px] w-px bg-muted content-[''];
-}
-.scale-out {
-	@apply font-mono tracking-normal text-fg normal-case;
-}
-.soft {
-	@apply flex min-h-10 items-start gap-[0.45rem] text-[0.78rem] leading-[1.4] text-muted;
+.c-scale {
+	:where(&) .scale-out {
+		@apply font-mono tracking-normal text-fg normal-case;
+	}
+
+	:where(&) .soft {
+		@apply flex min-h-10 items-start gap-[0.45rem] text-[0.78rem] leading-[1.4] text-muted;
+	}
 }
 
 /* Saved size. */
 .size-body {
 	@apply flex min-h-[4.6rem] flex-col gap-[0.35rem];
-}
-.size-opt {
-	@apply flex cursor-pointer items-center gap-[0.55rem] py-[0.15rem] text-[0.85rem];
-}
-.size-opt .font-mono {
-	@apply text-[0.8rem];
-}
-.size-opt .text-muted {
-	@apply text-[0.78rem];
+
+	:where(&) .size-opt {
+		@apply flex cursor-pointer items-center gap-[0.55rem] py-[0.15rem] text-[0.85rem];
+
+		.font-mono {
+			@apply text-[0.8rem];
+		}
+
+		.text-muted {
+			@apply text-[0.78rem];
+		}
+	}
 }
 
 /* Name + Save. The input and Save share a row wrapper; in the rail it dissolves, so
    the order is Name, hint, Save. layout.css turns it into a real row when stacked. */
-.name-label-hint {
-	@apply font-sans text-[0.75rem] font-normal tracking-normal text-muted normal-case;
-}
-.name-wrap {
-	@apply relative;
-}
-.c-save input {
-	@apply w-full;
-}
-.name-hint {
-	@apply order-1 flex min-h-[2.3rem] items-start gap-[0.4rem] text-[0.78rem] leading-[1.4] text-muted;
-}
-.btn-save {
-	@apply order-2 w-full py-[0.8rem] text-[0.9rem];
-}
-.save-row {
-	@apply contents;
+.c-save {
+	:where(&) .name-label-hint {
+		@apply font-sans text-[0.75rem] font-normal tracking-normal text-muted normal-case;
+	}
+
+	input {
+		@apply w-full;
+	}
+
+	:where(&) .name-hint {
+		@apply order-1 flex min-h-[2.3rem] items-start gap-[0.4rem] text-[0.78rem] leading-[1.4] text-muted;
+	}
+
+	:where(&) .save-row {
+		@apply contents;
+
+		:where(&) .name-wrap {
+			@apply relative;
+		}
+
+		:where(&) .btn-save {
+			@apply order-2 w-full py-[0.8rem] text-[0.9rem];
+		}
+	}
 }
 
 /* Folder set: the folder's four Frames. */
 .setstrip {
 	@apply rounded-(--radius) border border-border bg-(--card-bg) px-4 py-[0.85rem];
-}
-.set-head {
-	@apply mb-[0.7rem] flex flex-wrap items-baseline gap-[0.6rem] text-[0.88rem];
-}
-.set-slots {
-	@apply grid grid-cols-4 gap-3;
-}
-.slot {
-	@apply flex min-w-0 flex-col items-start gap-[0.35rem] rounded-(--radius) border border-transparent p-2 text-left;
-}
-.slot-hit {
-	@apply flex w-full flex-col items-start gap-[0.35rem] rounded-[2px] text-left;
-}
-.slot .thumb {
-	@apply h-14;
-}
-.slot.cur {
-	@apply border-accent bg-accent-tint;
-}
-.slot-name {
-	@apply flex items-center gap-[0.35rem] text-[0.8rem] font-semibold;
-}
-.slot-stat {
-	@apply text-[0.7rem] leading-[1.3] text-muted;
+
+	:where(&) .set-head {
+		@apply mb-[0.7rem] flex flex-wrap items-baseline gap-[0.6rem] text-[0.88rem];
+	}
+
+	:where(&) .set-slots {
+		@apply grid grid-cols-4 gap-3;
+
+		:where(&) .slot {
+			@apply flex min-w-0 flex-col items-start gap-[0.35rem] rounded-(--radius) border border-transparent p-2 text-left;
+
+			:where(&) .slot-hit {
+				@apply flex w-full flex-col items-start gap-[0.35rem] rounded-[2px] text-left;
+
+				:where(&) .slot-name {
+					@apply flex items-center gap-[0.35rem] text-[0.8rem] font-semibold;
+				}
+
+				:where(&) .slot-stat {
+					@apply text-[0.7rem] leading-[1.3] text-muted;
+				}
+			}
+
+			.thumb {
+				@apply h-14;
+			}
+
+			&.cur {
+				@apply border-accent bg-accent-tint;
+			}
+		}
+	}
 }
