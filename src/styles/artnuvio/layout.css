@@ -1,0 +1,333 @@
+/* ArtNuvio page column, tool header and editor layout A, with the breakpoint overrides.
+   Kept last so the breakpoint rules override the pieces in controls.css and editor.css.
+   Breakpoints: 1024px (rail vs stacked), 600px (phone), 1360px and 1800px (wider column). */
+/* Page column: the editor wants more room than the 64rem site column on big screens.
+   The header and footer follow it on this page so their edges line up. */
+.artnuvio-main {
+	@apply mx-auto max-w-5xl px-6 pb-16;
+	overflow-x: clip;
+
+	/* the title aurora bleeds 20px past the column on phones */
+}
+@media (min-width: 1360px) {
+	.artnuvio-main,
+	[data-page='artnuvio'] :is(.brand-header-inner, .site-credits) {
+		@apply max-w-[80rem];
+	}
+}
+@media (min-width: 1800px) {
+	.artnuvio-main,
+	[data-page='artnuvio'] :is(.brand-header-inner, .site-credits) {
+		@apply max-w-[92rem];
+	}
+}
+
+/* Tool header: title and pitch on the left, Editor / Library tabs on the right. */
+.tool-head {
+	@apply flex flex-wrap items-end justify-between gap-6 pt-9 pb-6;
+
+	:where(&) .tool-title {
+		@apply mt-[0.35rem] mb-[0.4rem] text-[2.6rem] leading-[1.05] tracking-[-0.04em];
+	}
+
+	:where(&) .tool-sub {
+		@apply max-w-[36rem] text-[0.95rem] text-muted;
+	}
+
+	:where(&) .tool-tabs {
+		@apply flex gap-2;
+
+		.btn[aria-pressed='false'] {
+			@apply border-border bg-transparent text-fg hover:border-accent hover:bg-accent-tint hover:shadow-none;
+		}
+
+		:where(&) .tab-count {
+			@apply font-mono text-[0.72rem] font-medium opacity-80;
+		}
+	}
+}
+
+/* ---------- Layout A, from 1024px: stage column + one sticky settings rail ---------- */
+@media (min-width: 1024px) {
+	.ed {
+		@apply grid grid-cols-[minmax(0,1fr)_21rem] items-start gap-5;
+
+		.stage {
+			height: clamp(380px, 40vw, 680px);
+		}
+	}
+	.ed-col .orig-bar,
+	.ed-col .setstrip {
+		@apply mt-3;
+	}
+	.rail {
+		@apply sticky top-4 flex flex-col gap-[0.9rem] p-[1.1rem];
+	}
+	/* A divider above every rail section after the Frame picker. */
+	.rail > .ctl:not(:first-child),
+	.adjust > .ctl {
+		@apply border-t border-border pt-[0.85rem];
+	}
+	.adjust {
+		@apply contents;
+
+		:where(&) .adj-hint {
+			@apply hidden;
+		}
+	}
+}
+
+/* ---------- Layout A, stacked below 1024px ----------
+   Both columns dissolve into one: Frame row > preview > Original bar > Fill + Scale box
+   > Name/Save + Folder set card. That card is drawn by .ed::before behind rows 5 and 6,
+   because Save lives in the rail and the Folder set in the stage column. */
+@media (max-width: 1023.98px) {
+	.ed {
+		@apply grid grid-cols-[minmax(0,1fr)] gap-[0.85rem];
+
+		.stage {
+			@apply row-2;
+			height: clamp(320px, 54vw, 520px);
+		}
+
+		&::before {
+			@apply col-1 row-[5/7] glass-card content-[''];
+		}
+	}
+	.ed-col,
+	.rail {
+		@apply contents;
+	}
+	/* Every row is placed explicitly: an auto-placed item would dodge .ed::before. */
+	.ed-col > *,
+	.rail > * {
+		@apply col-1;
+	}
+	.c-pick {
+		@apply row-1;
+
+		> legend {
+			@apply mb-[0.45rem];
+		}
+	}
+	.orig-bar {
+		@apply row-3;
+	}
+	.adjust {
+		@apply row-4;
+
+		.c-fit .ctl-hint {
+			@apply hidden;
+		}
+
+		.c-fit > legend,
+		.c-scale > .ctl-label {
+			@apply mb-[0.35rem];
+		}
+
+		.range-wrap {
+			@apply -mt-[2px];
+		}
+
+		.soft {
+			@apply mt-[0.15rem] min-h-0;
+
+			&:empty {
+				@apply hidden;
+			}
+		}
+
+		.adj-hint {
+			@apply col-span-full mt-[0.4rem] block;
+		}
+
+		.c-size {
+			@apply col-span-full mt-3 gap-[0.2rem] border-t border-border pt-[0.7rem];
+
+			> legend {
+				@apply float-left mb-[0.3rem] w-full;
+			}
+		}
+
+		.size-body {
+			@apply min-h-0 flex-row flex-wrap items-baseline gap-x-[1.1rem] gap-y-[0.2rem];
+
+			[role='radiogroup'] {
+				@apply flex flex-wrap gap-x-[1.1rem] gap-y-[0.1rem];
+			}
+
+			.ctl-hint {
+				@apply basis-full;
+			}
+		}
+	}
+	.c-save {
+		@apply relative row-5;
+
+		.save-row {
+			@apply flex items-stretch gap-[0.6rem];
+		}
+
+		.name-wrap {
+			@apply min-w-0 flex-1;
+		}
+
+		.btn-save {
+			@apply w-auto flex-none px-[1.4rem];
+		}
+
+		.name-hint {
+			@apply min-h-[1.3rem];
+		}
+	}
+	.setstrip {
+		@apply relative row-6;
+	}
+	.fpick {
+		@apply grid-cols-4;
+	}
+
+	/* Fill + Scale: one box, Fit/Cover and the slider on one row, one hint line under both. */
+	.adjust {
+		@apply grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-6 gap-y-0 glass-card px-[1.1rem] py-[0.9rem];
+	}
+
+	/* Name + Save card: Name on the left, Save on the right, the Folder set underneath.
+	   The card padding is the side margins here; .ed::before draws the card itself. */
+	.c-save {
+		@apply mx-[calc(1.1rem+1px)] pt-[calc(1rem+1px)];
+	}
+	/* Pull the set up by the row gap, less the card's own gap and the divider margin. */
+	.setstrip {
+		@apply mx-[calc(1.1rem+1px)] mt-[calc(0.2rem+0.35rem-0.85rem)] mb-[calc(1rem+1px)] rounded-none border-0 border-t border-border bg-transparent px-0 pt-[0.85rem] pb-0;
+	}
+}
+
+/* Header below 1024px. */
+@media (max-width: 1023.98px) {
+	.tool-head {
+		@apply pt-[1.6rem] pb-[1.1rem];
+
+		:where(&) .tool-title {
+			@apply text-[2.2rem];
+		}
+	}
+}
+
+/* ---------- Phone, below 600px ---------- */
+@media (max-width: 599.98px) {
+	.artnuvio-main {
+		@apply px-4;
+	}
+	.tool-head {
+		@apply gap-[0.9rem] pt-5 pb-4;
+
+		:where(&) .tool-title {
+			@apply text-[2rem];
+		}
+
+		:where(&) .tool-sub {
+			@apply text-[0.85rem];
+		}
+
+		:where(&) .tool-tabs {
+			@apply w-full;
+
+			.btn {
+				@apply flex-1;
+			}
+		}
+	}
+
+	/* Frame row: four compact stacked tiles. */
+	.fpick {
+		@apply gap-[0.35rem];
+
+		:where(&) .fopt {
+			@apply grid-cols-1 justify-items-center gap-y-[0.2rem] px-1 pt-2 pb-[0.45rem] text-center;
+
+			.fshape {
+				@apply row-auto h-[22px];
+			}
+
+			.fname {
+				@apply text-[0.74rem];
+			}
+
+			.fsize {
+				@apply hidden;
+			}
+		}
+	}
+
+	.ed {
+		.stage {
+			height: clamp(260px, 78vw, 360px);
+		}
+
+		.stage[data-has='0'] {
+			@apply h-[400px];
+		}
+	}
+	.stage-cap {
+		@apply px-3;
+
+		.cap-right {
+			@apply hidden;
+		}
+	}
+	.drop {
+		@apply inset-[40px_8px_8px] p-[0.9rem];
+
+		:where(&) .drop-icon {
+			@apply hidden;
+		}
+
+		:where(&) .drop-title {
+			@apply text-[1.15rem];
+		}
+
+		:where(&) .drop-lead {
+			@apply text-[0.82rem];
+		}
+
+		:where(&) .drop-anywhere {
+			@apply hidden;
+		}
+	}
+
+	.orig-bar {
+		@apply flex-wrap gap-y-2;
+
+		:where(&) .orig-meta {
+			@apply basis-[calc(100%-3.5rem)];
+		}
+
+		.btn {
+			@apply ml-auto;
+		}
+	}
+
+	.adjust {
+		@apply gap-x-4 px-[0.9rem] py-[0.85rem];
+
+		.seg label {
+			@apply px-[0.7rem];
+		}
+	}
+
+	.c-save {
+		@apply mx-[calc(0.9rem+1px)] pt-[calc(0.9rem+1px)];
+
+		.btn-save {
+			@apply px-4;
+		}
+	}
+	.setstrip {
+		@apply mx-[calc(0.9rem+1px)] mb-[calc(0.9rem+1px)];
+
+		:where(&) .set-slots {
+			@apply grid-cols-2 gap-2;
+		}
+	}
+}

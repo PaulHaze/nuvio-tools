@@ -1,11 +1,11 @@
 import type { MiddlewareHandler } from 'astro';
 import { env } from 'cloudflare:workers';
 
-// HTTP Basic Auth in front of Listio only (/listio and everything under it).
-// Home, ArtNuvio, Collectio and robots.txt are public. The Listio addon stays
-// open too: Nuvio can't log in, so it's guarded by ADDON_SECRET in the URL.
-// Fails closed when the credentials aren't configured.
-const PROTECTED_DIR = '/listio';
+// HTTP Basic Auth in front of the private tools: /listio and /artnuvio, and
+// everything under them. Home, Collectio, robots.txt and the 404 page are public.
+// The Listio addon stays open too: Nuvio can't log in, so it's guarded by
+// ADDON_SECRET in the URL. Fails closed when the credentials aren't configured.
+const PROTECTED_DIRS = ['/listio', '/artnuvio'];
 const PUBLIC_DIRS = ['/listio/addon/'];
 
 // Checked on the fully decoded path, because the router decodes it too: an
@@ -24,9 +24,10 @@ function needsLogin(rawPathname: string): boolean {
 	if (pathname.split('/').some((part) => part === '.' || part === '..')) {
 		return true;
 	}
-	const inListio =
-		pathname === PROTECTED_DIR || pathname.startsWith(`${PROTECTED_DIR}/`);
-	return inListio && !PUBLIC_DIRS.some((dir) => pathname.startsWith(dir));
+	const inProtected = PROTECTED_DIRS.some(
+		(dir) => pathname === dir || pathname.startsWith(`${dir}/`)
+	);
+	return inProtected && !PUBLIC_DIRS.some((dir) => pathname.startsWith(dir));
 }
 
 const encoder = new TextEncoder();

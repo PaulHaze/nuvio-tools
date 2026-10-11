@@ -1,26 +1,19 @@
 ---
 import Layout from '@/lib/ui/Layout.astro';
+import '@/styles/artnuvio/index.css';
+import ToolHead from '@/tools/artnuvio/components/ToolHead.astro';
+import Editor from '@/tools/artnuvio/components/Editor.astro';
 
 export const prerender = false;
 ---
 
 <Layout
 	title="ArtNuvio · Nuvio Tools"
-	description="ArtNuvio is coming soon."
+	description="ArtNuvio frames art at Nuvio's exact shapes and hosts it at a permanent URL."
 	tool="artnuvio"
 >
-	<main class="shell-main">
-		<section class="hero-aurora shell-hero">
-			<p class="eyebrow">ArtNuvio / Coming soon</p>
-			<h1>
-				<span class="text-gradient">ArtNuvio</span>
-			</h1>
-			<p class="hero-copy">Coming soon.</p>
-			<div class="hero-actions">
-				<a class="btn btn-ghost" href="/">
-					← Back to Nuvio Tools
-				</a>
-			</div>
-		</section>
+	<main class="artnuvio-main">
+		<ToolHead />
+		<Editor />
 	</main>
 </Layout>

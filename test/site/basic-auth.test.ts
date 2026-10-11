@@ -42,6 +42,34 @@ describe('basic auth middleware', () => {
 		}
 	});
 
+	it('challenges ArtNuvio pages and API without credentials', async () => {
+		for (const path of [
+			'/artnuvio',
+			'/artnuvio/',
+			'/artnuvio/api/anything',
+			'/ARTNUVIO',
+			'//artnuvio',
+			'/artnuvi%6F',
+		]) {
+			const res = await call(path);
+			expect(res.status).toBe(401);
+			expect(res.headers.get('WWW-Authenticate')).toMatch(/^Basic /);
+		}
+	});
+
+	it('lets the right credentials through to ArtNuvio', async () => {
+		for (const path of [
+			'/artnuvio',
+			'/artnuvio/',
+			'/artnuvio/api/anything',
+			'/ARTNUVIO',
+			'//artnuvio',
+			'/artnuvi%6F',
+		]) {
+			expect(await call(path, basic('paul', 'correct horse'))).toBe(passed);
+		}
+	});
+
 	it('uses the Nuvio Tools realm', async () => {
 		const res = await call('/listio');
 		expect(res.headers.get('WWW-Authenticate')).toBe(
@@ -73,8 +101,8 @@ describe('basic auth middleware', () => {
 		expect(await call('/robots.txt')).toBe(passed);
 	});
 
-	it('leaves Home, ArtNuvio and Collectio open', async () => {
-		for (const path of ['/', '/artnuvio', '/collectio', '/listiox', '/404']) {
+	it('leaves Home and Collectio open', async () => {
+		for (const path of ['/', '/collectio', '/listiox', '/artnuviox', '/404']) {
 			expect(await call(path)).toBe(passed);
 		}
 	});

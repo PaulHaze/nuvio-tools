@@ -50,25 +50,25 @@ Read first: [epic README](./README.md), the ArtNuvio section of [`CONTEXT.md`](.
 
 ## Build tasks (phase 2)
 
-- [ ] `src/middleware.ts`: protect `/artnuvio` and everything under it, exactly like
+- [x] `src/middleware.ts`: protect `/artnuvio` and everything under it, exactly like
       `/listio` (same decoding, case and duplicate-slash rules). Keep `/listio/addon/` open.
       Home, Collectio and `robots.txt` stay public. Update the comment at the top.
-- [ ] `test/site/basic-auth.test.ts`: add cases for `/artnuvio`, `/artnuvio/`,
+- [x] `test/site/basic-auth.test.ts`: add cases for `/artnuvio`, `/artnuvio/`,
       `/artnuvio/api/anything`, `/ARTNUVIO`, `//artnuvio` and `/artnuvi%6F` (all challenged
       without credentials, pass with the right ones). Existing tests must still pass.
-- [ ] `src/tools/artnuvio/frames.ts`: the single source of truth for Frames:
+- [x] `src/tools/artnuvio/frames.ts`: the single source of truth for Frames:
       `type FrameId = 'hero' | 'landscape' | 'poster' | 'square'` and a `FRAMES` table with
       label, aspect and output size. Hero has two sizes: `full` 3840×2160 and `standard`
       1920×1080. Landscape 2560×1440, Poster 1000×1500, Square 1000×1000. Export a helper
       that returns the output size for a Frame (and, for Hero, the chosen size).
-- [ ] `test/artnuvio/frames.test.ts`: every Frame's size matches its aspect exactly; Hero's
+- [x] `test/artnuvio/frames.test.ts`: every Frame's size matches its aspect exactly; Hero's
       two sizes are both 16:9.
-- [ ] `src/pages/artnuvio/index.astro`: replace "Coming soon" with the **empty editor
+- [x] `src/pages/artnuvio/index.astro`: replace "Coming soon" with the **empty editor
       layout from "Chosen layout"**: the Frame picker, the preview area and the empty panels
       in their chosen places, using the site's tokens and shell classes (not the mock's CSS).
       It must work from 768px wide upwards. Keep the page thin: component code lives in
       `src/tools/artnuvio/`.
-- [ ] Copy the chosen layout's key decisions (one short paragraph) into the
+- [x] Copy the chosen layout's key decisions (one short paragraph) into the
       [epic README](./README.md) under "Decisions every sprint relies on".
 
 ## Done when

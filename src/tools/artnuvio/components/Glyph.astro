@@ -1,0 +1,23 @@
+---
+// A tiny outline of a Frame at its real proportions. `size` is the long side in px;
+// Square is drawn a little smaller so it doesn't look bigger than the others.
+import { FRAMES, type FrameId } from '../frames';
+
+interface Props {
+	frame: FrameId;
+	size?: number;
+}
+
+const { frame, size = 12 } = Astro.props;
+const { width, height } = FRAMES[frame].aspect;
+const ratio = width / height;
+const side = ratio === 1 ? size * 0.85 : size;
+const w = ratio >= 1 ? side : side * ratio;
+const h = ratio >= 1 ? side / ratio : side;
+---
+
+<span
+	class="glyph"
+	style={`width:${w.toFixed(1)}px;height:${h.toFixed(1)}px`}
+	aria-hidden="true"
+></span>

@@ -1,0 +1,30 @@
+---
+// The Frame picker: one option per Frame, from the FRAMES table. Hero is picked by
+// default. A 2x2 grid in the rail, a row of four when stacked, tiles on phones.
+// No behaviour yet: picking a Frame only changes the highlight.
+import { FRAME_IDS, FRAMES } from '../frames';
+import Glyph from './Glyph.astro';
+
+const picked = FRAME_IDS[0];
+---
+
+<fieldset class="ctl c-pick">
+	<legend class="eyebrow">Frame</legend>
+	<div class="fpick">
+		{FRAME_IDS.map((id) => {
+			const { label, sizes } = FRAMES[id];
+			return (
+				<label class="fopt">
+					<input type="radio" name="frame" value={id} checked={id === picked} />
+					<span class="fshape">
+						<Glyph frame={id} size={20} />
+					</span>
+					<span class="fname">{label}</span>
+					<span class="fsize">
+						{sizes[0].width}×{sizes[0].height}
+					</span>
+				</label>
+			);
+		})}
+	</div>
+</fieldset>
