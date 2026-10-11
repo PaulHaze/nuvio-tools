@@ -25,9 +25,9 @@ database, going public (Turnstile, rate limits, takedowns). See "After the MVP" 
 | Poster    | 2:3   | 1000×1500                                                         |
 | Square    | 1:1   | 1000×1000                                                         |
 
-- **Hero size:** 3840×2160 is offered only when the part of the Original inside the Frame has
-  at least 3840×2160 real pixels (no enlarging). Then the user picks 3840×2160 or 1920×1080,
-  each shown with its file size. Otherwise only 1920×1080 is offered. You can't force 4K.
+- **Hero size:** 3840×2160 is offered only when the Original is not enlarged (scale ≤ 1). Then the
+  user picks 3840×2160 or 1920×1080, each shown with its file size. Otherwise only 1920×1080 is
+  offered. You can't force 4K. (Revisit once live.)
 - **Editor:** starts in **Cover** whenever an Original loads or the Frame changes. **Fit/Cover**
   radios. Moving the scale slider clears the radio; clicking a radio snaps back to that mode
   (scale and position reset). Slider range: ½ the Fit scale to 4× the Cover scale, zooming
@@ -63,20 +63,20 @@ database, going public (Turnstile, rate limits, takedowns). See "After the MVP" 
 
 ## Sprints
 
-| #   | Sprint                                                                       | Status  |
-| --- | ---------------------------------------------------------------------------- | ------- |
-| 01  | [Layout mockups, login and page shell](./01_Mockups_Login_And_Page_Shell.md) | planned |
-| 02  | [Framing maths](./02_Framing_Maths.md)                                       | planned |
-| 03  | [Load an Original locally](./03_Load_Original_Locally.md)                    | planned |
-| 04  | [Editor controls](./04_Editor_Controls.md)                                   | planned |
-| 05  | [Export and download](./05_Export_And_Download.md)                           | planned |
-| 06  | [Image proxy](./06_Image_Proxy.md)                                           | planned |
-| 07  | [Load from a URL](./07_Load_From_URL.md)                                     | planned |
-| 08  | [Storage layer](./08_Storage_Layer.md)                                       | planned |
-| 09  | [Save](./09_Save.md)                                                         | planned |
-| 10  | [Library](./10_Library.md)                                                   | planned |
-| 11  | [Replace and Delete](./11_Replace_And_Delete.md)                             | planned |
-| 12  | [Go live (private)](./12_Go_Live_Private.md)                                 | planned |
+| #   | Sprint                                                                       | Status    |
+| --- | ---------------------------------------------------------------------------- | --------- |
+| 01  | [Layout mockups, login and page shell](./01_Mockups_Login_And_Page_Shell.md) | completed |
+| 02  | [Framing maths](./02_Framing_Maths.md)                                       | completed |
+| 03  | [Load an Original locally](./03_Load_Original_Locally.md)                    | planned   |
+| 04  | [Editor controls](./04_Editor_Controls.md)                                   | planned   |
+| 05  | [Export and download](./05_Export_And_Download.md)                           | planned   |
+| 06  | [Image proxy](./06_Image_Proxy.md)                                           | planned   |
+| 07  | [Load from a URL](./07_Load_From_URL.md)                                     | planned   |
+| 08  | [Storage layer](./08_Storage_Layer.md)                                       | planned   |
+| 09  | [Save](./09_Save.md)                                                         | planned   |
+| 10  | [Library](./10_Library.md)                                                   | planned   |
+| 11  | [Replace and Delete](./11_Replace_And_Delete.md)                             | planned   |
+| 12  | [Go live (private)](./12_Go_Live_Private.md)                                 | planned   |
 
 Sprints 01–05 need no server or storage: by 05 the tool can frame and download.
 Sprint 01 starts with HTML layout mockups that the owner chooses from. Its build phase (and

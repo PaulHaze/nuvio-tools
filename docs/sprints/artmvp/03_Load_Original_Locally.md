@@ -23,6 +23,9 @@ things go and how they look.
       while typing in a text field).
 - [ ] Checks before decoding: an image type, and **≤ 25 MB**. Clear messages otherwise
       ("That isn't an image", "That image is over 25 MB"). Show a message if decoding fails.
+- [ ] Reject an Original whose decoded width or height is zero or not finite, with a clear
+      message, before it reaches `framing.ts`. The framing functions assume positive, finite
+      sizes and do not check (see sprint 02 audit).
 - [ ] Remember where the Original came from: `{ kind: 'file', fileName }` or
       `{ kind: 'paste' }`. Sprint 09 saves this in the Artwork's record.
 - [ ] Preview: a `<canvas>` showing the whole Frame at its aspect, scaled to fit the preview

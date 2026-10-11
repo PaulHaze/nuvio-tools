@@ -1,6 +1,6 @@
 # Sprint 02 — Framing maths
 
-**Status:** planned
+**Status:** completed
 
 ## Goal
 
@@ -30,7 +30,7 @@ The drawn image is `iw * scale` by `ih * scale`, centred at `(cx, cy)`.
 
 ## Tasks
 
-- [ ] `src/tools/artnuvio/framing.ts` with these pure functions:
+- [x] `src/tools/artnuvio/framing.ts` with these pure functions:
   - `coverScale(image, frame)` = `max(fw / iw, fh / ih)`; `fitScale` = `min(...)`.
   - `scaleRange(image, frame)` → `{ min: 0.5 * fitScale, max: 4 * coverScale }`.
   - `placeMode(image, frame, mode)` → a centred Placement at that mode's scale.
@@ -48,7 +48,7 @@ The drawn image is `iw * scale` by `ih * scale`, centred at `(cx, cy)`.
     1920×1080 Hero). `isSoft(...)` is true when that is **> 1.35**.
   - `heroFullSizeAllowed(placement)` → true when `scale <= 1` for the 3840×2160 Hero, so
     the visible part has at least 3840×2160 real pixels.
-- [ ] `test/artnuvio/framing.test.ts`: cover and fit for wide, tall and square Originals in
+- [x] `test/artnuvio/framing.test.ts`: cover and fit for wide, tall and square Originals in
       every Frame; slider limits; zoom keeps the centre point fixed; clamping on each axis in
       both the "bigger" and "smaller" cases (no gaps, never off the Frame); panning can't
       escape; the softness threshold either side of 1.35; Hero full size allowed at exactly
@@ -58,3 +58,7 @@ The drawn image is `iw * scale` by `ih * scale`, centred at `(cx, cy)`.
 
 - `pnpm test` passes with the new tests, and every rule above has at least one test.
 - `framing.ts` imports nothing from the DOM or Astro.
+
+## Verification
+
+- `pnpm test`: 25 test files and 266 tests passed, including 36 framing tests.
