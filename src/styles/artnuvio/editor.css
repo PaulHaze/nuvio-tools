@@ -60,6 +60,12 @@
 	/* Canvas stays at the whole Frame aspect, contained within the preview area. */
 	:where(&) .preview {
 		@apply absolute inset-[40px_14px_14px] grid place-items-center overflow-hidden;
+		touch-action: none;
+		cursor: grab;
+
+		&[data-panning='1'] {
+			cursor: grabbing;
+		}
 
 		canvas {
 			@apply block bg-black;

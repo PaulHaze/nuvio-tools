@@ -4,9 +4,19 @@ import {
 	useRef,
 	useState,
 	type CSSProperties,
+	type PointerEvent,
 } from 'react';
 import { FRAME_IDS, FRAMES, type FrameId } from '../frames';
-import { placeMode, type Placement } from '../framing';
+import {
+	fitScale,
+	coverScale,
+	panBy,
+	placeMode,
+	scaleRange,
+	zoomTo,
+	type Mode,
+	type Placement,
+} from '../framing';
 import { drawPlacement } from '../drawPlacement';
 import {
 	loadOriginal,
@@ -72,6 +82,8 @@ export default function Editor() {
 	const [message, setMessage] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [dragging, setDragging] = useState(false);
+	const [panning, setPanning] = useState(false);
+	const panRef = useRef<{ id: number; x: number; y: number } | null>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const previewRef = useRef<HTMLDivElement>(null);
@@ -80,6 +92,54 @@ export default function Editor() {
 	const { original, frame, placement } = editor;
 	const spec = FRAMES[frame];
 	const frameSize = spec.sizes[0];
+	const range = original ? scaleRange(original, frameSize) : { min: 0, max: 1 };
+	const scalePercent = (scale: number) =>
+		`${((scale - range.min) / (range.max - range.min)) * 100}%`;
+
+	const selectMode = (mode: Exclude<Mode, null>) =>
+		setEditor((current) =>
+			current.original
+				? {
+						...current,
+						placement: placeMode(
+							current.original,
+							FRAMES[current.frame].sizes[0],
+							mode
+						),
+					}
+				: current
+		);
+
+	const movePointer = (event: PointerEvent<HTMLCanvasElement>) => {
+		const pan = panRef.current;
+		if (!pan || pan.id !== event.pointerId) return;
+		const rect = event.currentTarget.getBoundingClientRect();
+		if (rect.width <= 0 || rect.height <= 0) return;
+		const dx = event.clientX - pan.x;
+		const dy = event.clientY - pan.y;
+		panRef.current = { id: pan.id, x: event.clientX, y: event.clientY };
+		setEditor((current) => {
+			if (!current.original || !current.placement) return current;
+			const size = FRAMES[current.frame].sizes[0];
+			return {
+				...current,
+				placement: panBy(
+					current.original,
+					size,
+					current.placement,
+					(dx * size.width) / rect.width,
+					(dy * size.height) / rect.height
+				),
+			};
+		});
+	};
+	const stopPointer = (event: PointerEvent<HTMLCanvasElement>) => {
+		if (panRef.current?.id !== event.pointerId) return;
+		panRef.current = null;
+		setPanning(false);
+		if (event.currentTarget.hasPointerCapture(event.pointerId))
+			event.currentTarget.releasePointerCapture(event.pointerId);
+	};
 
 	const load = useCallback(async (blob: Blob, source: OriginalSource) => {
 		const request = ++requestRef.current;
@@ -231,15 +291,42 @@ export default function Editor() {
 								</span>
 							</span>
 							<span className="cap-right">
-								{loading ? 'Loading Original…' : original ? 'Cover' : ''}
+								{loading
+									? 'Loading Original…'
+									: placement?.mode === 'cover'
+										? 'Cover'
+										: placement?.mode === 'fit'
+											? 'Fit'
+											: original
+												? 'Custom'
+												: ''}
 							</span>
 						</div>
 						{original ? (
-							<div className="preview" ref={previewRef}>
+							<div
+								className="preview"
+								ref={previewRef}
+								data-panning={panning ? '1' : '0'}
+							>
 								<canvas
 									ref={canvasRef}
 									aria-label={`${spec.label} Frame preview`}
 									role="img"
+									onPointerDown={(event) => {
+										if (event.button !== 0 || panRef.current) return;
+										event.preventDefault();
+										event.currentTarget.setPointerCapture(event.pointerId);
+										panRef.current = {
+											id: event.pointerId,
+											x: event.clientX,
+											y: event.clientY,
+										};
+										setPanning(true);
+									}}
+									onPointerMove={movePointer}
+									onPointerUp={stopPointer}
+									onPointerCancel={stopPointer}
+									onLostPointerCapture={stopPointer}
 								/>
 							</div>
 						) : (
@@ -368,12 +455,20 @@ export default function Editor() {
 							))}
 						</div>
 					</fieldset>
-					<div className="adjust">
-						<fieldset className="ctl c-fit is-disabled">
+					<div className="adjust" role="group" aria-label="Adjust">
+						<fieldset className={`ctl c-fit ${original ? '' : 'is-disabled'}`}>
 							<legend className="eyebrow">Fill</legend>
 							<div className="seg">
 								<label>
-									<input type="radio" name="mode" value="fit" disabled />
+									<input
+										type="radio"
+										name="mode"
+										value="fit"
+										checked={placement?.mode === 'fit'}
+										onClick={() => selectMode('fit')}
+										readOnly
+										disabled={!original}
+									/>
 									Fit
 								</label>
 								<label>
@@ -381,15 +476,17 @@ export default function Editor() {
 										type="radio"
 										name="mode"
 										value="cover"
-										checked={!!original}
-										disabled
+										checked={placement?.mode === 'cover'}
+										onClick={() => selectMode('cover')}
+										readOnly
+										disabled={!original}
 									/>
 									Cover
 								</label>
 							</div>
 							<p className="ctl-hint">{fillHint}</p>
 						</fieldset>
-						<div className="ctl c-scale is-disabled">
+						<div className={`ctl c-scale ${original ? '' : 'is-disabled'}`}>
 							<label className="eyebrow ctl-label" htmlFor="scale-in">
 								Scale{' '}
 								<output className="scale-out" htmlFor="scale-in">
@@ -401,20 +498,45 @@ export default function Editor() {
 									id="scale-in"
 									className="range"
 									type="range"
-									min="0"
-									max="1000"
-									step="1"
-									value="500"
-									style={{ '--fill': '50%' } as CSSProperties}
-									disabled
+									min={range.min}
+									max={range.max}
+									step="any"
+									value={placement?.scale ?? 0}
+									style={
+										{
+											'--fill': scalePercent(placement?.scale ?? 0),
+										} as CSSProperties
+									}
+									onChange={(event) => {
+										const scale = event.currentTarget.valueAsNumber;
+										setEditor((current) =>
+											current.original && current.placement
+												? {
+														...current,
+														placement: zoomTo(
+															current.original,
+															FRAMES[current.frame].sizes[0],
+															current.placement,
+															scale
+														),
+													}
+												: current
+										);
+									}}
+									disabled={!original}
 								/>
 								<div className="marks" aria-hidden="true">
 									<button
 										type="button"
 										className="mark"
 										tabIndex={-1}
-										style={{ left: '30%' }}
-										disabled
+										style={{
+											left: original
+												? scalePercent(fitScale(original, frameSize))
+												: '30%',
+										}}
+										onClick={() => selectMode('fit')}
+										disabled={!original}
 									>
 										Fit
 									</button>
@@ -422,8 +544,13 @@ export default function Editor() {
 										type="button"
 										className="mark"
 										tabIndex={-1}
-										style={{ left: '50%' }}
-										disabled
+										style={{
+											left: original
+												? scalePercent(coverScale(original, frameSize))
+												: '50%',
+										}}
+										onClick={() => selectMode('cover')}
+										disabled={!original}
 									>
 										Cover
 									</button>
