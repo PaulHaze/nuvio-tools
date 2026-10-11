@@ -34,7 +34,7 @@
   user manages sprint branches. (`/new-task` is the exception: it owns branch
   creation, merging and deletion between sprints.)
 - Implementation agent: `gpt-6.1-sol` at medium reasoning effort.
-- Audit agent: `gpt-6-astra` at high reasoning effort, run manually by the
+- Audit agent: `gpt-6-astra` at medium reasoning effort, run manually by the
   owner in a fresh context after the implementation commit is complete. Write
   only the declared audit report; do not implement audit findings.
 - Sprints are completed one at a time in numeric order within an epic, as
